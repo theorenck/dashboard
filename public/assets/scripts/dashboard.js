@@ -1,4 +1,4 @@
-moment.locale('pt-br');
+﻿moment.locale('pt-br');
 var timer;
 
 var Indicadores = {
@@ -10,8 +10,8 @@ var Indicadores = {
   },
 
   periodo : {
-    inicio    : (moment({ day: 30, month : 10, year : 2013 }).subtract(29,'days').format("YYYY-MM-DD 00:00:00")),
-    fim       : (moment({ day: 30, month : 10, year : 2013 }).format("YYYY-MM-DD 00:00:00")),
+    inicio    : (moment().subtract(29,'days').format("YYYY-MM-DD 00:00:00")),
+    fim       : (moment().format("YYYY-MM-DD 00:00:00")),
     duracao   : function(grandeza) {
       var grandeza  = grandeza || 'days';
       var fim       = moment(Indicadores.periodo.fim);
@@ -108,7 +108,7 @@ var Dashboard = {
         }
       },
       series: [
-        { name: 'Volume de vendas diário', data : valores.contratosDia},
+        { name: 'Contratos', data : valores.contratosDia},
       ]
     });
 
