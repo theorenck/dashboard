@@ -421,3 +421,7 @@ section{
 .table thead tr{
   background: #FFF;
 }
+
+[data-type="big-loader"] .loader{
+  min-height: 300px;
+}
