@@ -391,7 +391,7 @@ var Dashboard = {
           };
           dataset.push([ "OUTROS", 100 - total ]);
         }
-        Dashboard.renderPie('[data-type=clientes-mais-compraram] .pie', dataset, colors, '<h3>Clientes que mais locaram (%)</h3>');
+        Dashboard.renderPie('[data-type=clientes-mais-compraram] .pie', dataset, colors, '<h3>Maior faturamento por cliente</h3>');
         Dashboard.loader('[data-type=clientes-mais-compraram]', 'hide');
       });
     }
