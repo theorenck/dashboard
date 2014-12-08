@@ -4,6 +4,7 @@ var timer;
 var Indicadores = {
 
   situacao : "'LOC Locado'",
+  situacoes : "'LOC Locado', 'LOC Finalizado', 'LOC Cancelado'",
 
   items : {
     "volumeVendasTotal" : false
@@ -25,8 +26,8 @@ var Indicadores = {
     valorTotalReceita   : "SELECT SUM(f.valorfluxo) AS \"VALOR_TOTAL_RECEITA\" FROM zw14fflu f WHERE f.modalidade IN ('P','R') AND f.estimativa = 'C' AND f.pagarreceber = 'R' AND {FN TIMESTAMPADD (SQL_TSI_DAY, f.datafluxo-72687, {D '2000-01-01'})} BETWEEN {TS :inicio} AND {TS :fim}",
     valorInadimplencia  : "SELECT SUM(f.valorfluxo) AS \"VALOR_INADIMPLENCIA\" FROM zw14fflu f WHERE f.modalidade = 'P' AND f.estimativa = 'C' AND f.pagarreceber = 'R' AND {FN TIMESTAMPADD (SQL_TSI_DAY, f.datafluxo-72687, {D '2000-01-01'})} BETWEEN {TS :inicio} AND {TS :fim}",
     volumeVendasTotal   : "SELECT {FN CONVERT(SUM(p.valortotal), SQL_FLOAT)} AS \"VOLUME_VENDAS\" FROM zw14vped p WHERE p.situacao = :situacao AND {FN TIMESTAMPADD (SQL_TSI_DAY, p.dataemiss-72687, {D '2000-01-01'})} BETWEEN {TS :inicio} AND {TS :fim}",
-    contratosPeriodo    : "SELECT COUNT(*) AS \"CONTRATOS_PERIODO\" FROM zw14vped p WHERE p.situacao = :situacao AND {FN TIMESTAMPADD (SQL_TSI_DAY, p.dataemiss-72687, {D '2000-01-01'})} BETWEEN {TS :inicio} AND {TS :fim}",
-    novosContratosDia   : "SELECT {FN CONVERT({FN TIMESTAMPADD (SQL_TSI_DAY, p.dataemiss-72687, {D '2000-01-01'})},SQL_DATE)} AS \"DATA_EMISSAO\", count(*) AS \"QUANTIDADE\" FROM zw14vped p WHERE  p.situacao IN ('LOC Locado', 'LOC Finalizado', 'LOC Cancelado')  AND {FN TIMESTAMPADD (SQL_TSI_DAY, p.dataemiss-72687, {D '2000-01-01'})}   BETWEEN {TS :inicio} AND {TS :fim} GROUP BY  p.dataemiss  ORDER BY  p.dataemiss DESC",
+    novosContratos      : "SELECT COUNT(*) AS \"CONTRATOS_PERIODO\" FROM zw14vped p WHERE p.situacao IN(:situacoes) AND {FN TIMESTAMPADD (SQL_TSI_DAY, p.dataemiss-72687, {D '2000-01-01'})} BETWEEN {TS :inicio} AND {TS :fim}",
+    novosContratosDia   : "SELECT {FN CONVERT({FN TIMESTAMPADD (SQL_TSI_DAY, p.dataemiss-72687, {D '2000-01-01'})},SQL_DATE)} AS \"DATA_EMISSAO\", count(*) AS \"QUANTIDADE\" FROM zw14vped p WHERE  p.situacao IN (:situacoes)  AND {FN TIMESTAMPADD (SQL_TSI_DAY, p.dataemiss-72687, {D '2000-01-01'})}   BETWEEN {TS :inicio} AND {TS :fim} GROUP BY  p.dataemiss  ORDER BY  p.dataemiss DESC",
     clientesMaisLocaram : "SELECT V.NOMECLIENTE AS \"CLIENTE\", {FN CONVERT({FN ROUND(SUM(V.VALORTOTALGERAL),2)},SQL_FLOAT)} AS \"TOTAL\" FROM ZW14VPED V WHERE V.SITUACAO = :situacao AND {FN TIMESTAMPADD (SQL_TSI_DAY, V.DATAEMISS-72687, {D '2000-01-01'})} BETWEEN {TS :inicio} AND {TS :fim} GROUP BY V.NOMECLIENTE ORDER BY 1",
     pedidosPorSituacao  : "SELECT p.situacao AS \"SITUACAO\", count(*) AS \"QUANTIDADE\" FROM  zw14vped p WHERE p.situacao IS NOT NULL AND {FN TIMESTAMPADD (SQL_TSI_DAY, p.dataemiss-72687, {D '2000-01-01'})} BETWEEN {TS :inicio} AND {TS :fim} GROUP BY   p.situacao"
   }
@@ -331,11 +332,12 @@ var Dashboard = {
       situacao  : Indicadores.situacao,
       inicio    : "'" + (moment({ day: 01, month : 01, year : 2000 }).format("YYYY-MM-DD 00:00:00")) + "'",
       fim       : "'" + Indicadores.periodo.fim + "'",
-      duracao   : Indicadores.periodo.duracao()
+      duracao   : Indicadores.periodo.duracao(),
+      situacoes : Indicadores.situacao
     };
 
     /* Contratos Ativos */
-    Dashboard.getStatement(Indicadores.statements.contratosPeriodo, params).done(function(data){
+    Dashboard.getStatement(Indicadores.statements.novosContratos, params).done(function(data){
       var valor = data.statement.rows[0][0] || 0;
       Dashboard.renderIndicador('[data-type=contratos-ativos]', valor);
       Dashboard.loader("[data-type=contratos-ativos]", 'hide');
@@ -344,7 +346,6 @@ var Dashboard = {
 
     /* Faturamento */
     params.inicio = "'" + Indicadores.periodo.inicio + "'";
-    console.log(params);
     Dashboard.getStatement(Indicadores.statements.valorTotalReceita, params).done(function(data){
       var valor = data.statement.rows[0][0] || 0;
       Indicadores.items.volumeVendasTotal = valor;
@@ -353,7 +354,8 @@ var Dashboard = {
     });
 
     /* Novos Contratos */
-    Dashboard.getStatement(Indicadores.statements.contratosPeriodo, params).done(function(data){
+    params.situacoes = Indicadores.situacoes;
+    Dashboard.getStatement(Indicadores.statements.novosContratos, params).done(function(data){
       var valor = data.statement.rows[0][0] || 0;
       Dashboard.renderIndicador('[data-type=contratos-novos]', valor);
       Dashboard.loader("[data-type=contratos-novos]", 'hide');
