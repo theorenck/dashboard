@@ -320,6 +320,8 @@ var Dashboard = {
 
     if (valores.length > 1)
       $(container).find('.grandeza').html(valores[1]);
+    else
+      $(container).find('.grandeza').html('');
 
     $(container).find('.valor').html(valores[0]);
   },
@@ -332,16 +334,6 @@ var Dashboard = {
       duracao   : Indicadores.periodo.duracao()
     };
 
-
-    /* Volume total de vendas */
-    Dashboard.getStatement(Indicadores.statements.volumeVendasTotal, params).done(function(data){
-      var valor = data.statement.rows[0][0] || 0;
-      Indicadores.items.volumeVendasTotal = valor;
-      Dashboard.renderIndicador('[data-type=volume-total-de-vendas]', valor);
-      Dashboard.loader("[data-type=volume-total-de-vendas]", 'hide');
-    });
-
-
     /* Contratos Ativos */
     Dashboard.getStatement(Indicadores.statements.contratosPeriodo, params).done(function(data){
       var valor = data.statement.rows[0][0] || 0;
@@ -350,8 +342,17 @@ var Dashboard = {
     });
 
 
-    /* Novos Contratos */
+    /* Faturamento */
     params.inicio = "'" + Indicadores.periodo.inicio + "'";
+    console.log(params);
+    Dashboard.getStatement(Indicadores.statements.volumeVendasTotal, params).done(function(data){
+      var valor = data.statement.rows[0][0] || 0;
+      Indicadores.items.volumeVendasTotal = valor;
+      Dashboard.renderIndicador('[data-type=volume-total-de-vendas]', valor);
+      Dashboard.loader("[data-type=volume-total-de-vendas]", 'hide');
+    });
+
+    /* Novos Contratos */
     Dashboard.getStatement(Indicadores.statements.contratosPeriodo, params).done(function(data){
       var valor = data.statement.rows[0][0] || 0;
       Dashboard.renderIndicador('[data-type=contratos-novos]', valor);
