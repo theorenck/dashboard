@@ -1,5 +1,5 @@
 moment.locale('pt-br');
-API = { address : "http://localhost:3000/api" };
+API = Configuration.api;
 
 var editor;
 
