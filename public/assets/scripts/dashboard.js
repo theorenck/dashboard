@@ -269,8 +269,8 @@ var Dashboard = {
         },
         format : 'DD/MM/YYYY',
         showDropdowns : true,
-        startDate: moment({year : 2013,month : 10, day : 1}),
-        endDate: moment({year : 2013,month : 10, day : 30}),
+        startDate: moment().subtract(29,'days'),
+        endDate: moment(),
         locale: {
           applyLabel: 'Aplicar',
           cancelLabel: 'Limpar',
@@ -306,6 +306,13 @@ var Dashboard = {
           Dashboard.fetchIndicadores();
       }
     );
+
+    var i = document.createElement("input");
+        i.setAttribute("type", "date");
+    if(i.type !== "text"){
+      $('[name=daterangepicker_start]').attr('type','date');
+      $('[name=daterangepicker_end]').attr('type','date');
+    }
   },
 
   renderIndicador : function(container, qtd){

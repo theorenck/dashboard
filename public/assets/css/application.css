@@ -427,3 +427,22 @@ section{
 [data-type="big-loader"] .loader{
   min-height: 300px;
 }
+
+
+@media(max-width:768px){
+  .daterangepicker .calendar{
+    display:none !important;
+  }
+  .daterangepicker .ranges li:last-child{
+    display:none;
+  }
+}
+
+.daterangepicker .ranges .input-mini{
+  width: auto;
+}
+
+.daterangepicker .ranges .range_inputs .daterangepicker_end_input,
+.daterangepicker .ranges .range_inputs>div:nth-child(2){
+  padding-left: 0px;
+}
