@@ -436,13 +436,29 @@ section{
   .daterangepicker .ranges li:last-child{
     display:none;
   }
+  .daterangepicker .ranges{
+    width: 100%;
+  }
+  .daterangepicker.dropdown-menu{
+    width: calc(100% - 30px);
+  }
 }
 
 .daterangepicker .ranges .input-mini{
-  width: auto;
+  width: 100%;
 }
 
 .daterangepicker .ranges .range_inputs .daterangepicker_end_input,
-.daterangepicker .ranges .range_inputs>div:nth-child(2){
+.daterangepicker .ranges .range_inputs>div:nth-child(2),
+.daterangepicker .ranges .range_inputs>div{
   padding-left: 0px;
+  float:none;
+}
+
+.daterangepicker .ranges li{
+  padding: 10px  15px;
+}
+
+.daterangepicker.opensright .ranges{
+  margin: 0px;
 }
