@@ -256,6 +256,14 @@ var Dashboard = {
   },
 
   initDaterangepicker : function(){
+
+    var i = document.createElement("input");
+        i.setAttribute("type", "date");
+    hasInputDate = i.type !== "text";
+
+    format = hasInputDate ? 'YYYY-MM-DD' : 'DD/MM/YYYY';
+    console.log(hasInputDate, format);
+
     $('#reportrange').daterangepicker(
       {
         ranges: {
@@ -267,7 +275,7 @@ var Dashboard = {
           'Este Mês': [moment().startOf('month'), moment().endOf('month')],
           'Último Mês': [moment().subtract(1,'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         },
-        format : 'DD/MM/YYYY',
+        format : format,
         showDropdowns : true,
         startDate: moment().subtract(29,'days'),
         endDate: moment(),
@@ -307,9 +315,7 @@ var Dashboard = {
       }
     );
 
-    var i = document.createElement("input");
-        i.setAttribute("type", "date");
-    if(i.type !== "text"){
+    if(hasInputDate){
       $('[name=daterangepicker_start]').attr('type','date');
       $('[name=daterangepicker_end]').attr('type','date');
     }
