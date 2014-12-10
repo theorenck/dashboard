@@ -391,7 +391,7 @@ var Dashboard = {
           };
           dataset.push([ "OUTROS", 100 - total ]);
         }
-        Dashboard.renderPie('[data-type=clientes-mais-compraram] .pie', dataset, colors, '<h3>Maior faturamento por cliente</h3>');
+        Dashboard.renderPie('[data-type=clientes-mais-compraram] .pie', dataset, colors, '<h3>Faturamento por cliente</h3>');
         Dashboard.loader('[data-type=clientes-mais-compraram]', 'hide');
       });
     }
@@ -442,10 +442,12 @@ var Dashboard = {
     var valorTotal    = Dashboard.getStatement(Indicadores.statements.valorTotalReceita, params);
     var inadimplencia = Dashboard.getStatement(Indicadores.statements.valorInadimplencia, params);
     $.when(valorTotal, inadimplencia).done(function( v1, v2){
-      var valorTotal = v1[0].statement.rows[0][0];
-      var inadimplencia = v2[0].statement.rows[0][0];
+      var valorTotal         = v1[0].statement.rows[0][0];
+      var inadimplencia      = v2[0].statement.rows[0][0];
+      var valorInadimplencia = (inadimplencia / valorTotal) * 100;
+      valorInadimplencia     = isNaN(valorInadimplencia) ? 0 : valorInadimplencia;
 
-      Dashboard.renderIndicador('[data-type=percentual-inadimplentes]', (inadimplencia / valorTotal) * 100);
+      Dashboard.renderIndicador('[data-type=percentual-inadimplentes]', valorInadimplencia);
       Dashboard.loader("[data-type=percentual-inadimplentes]", 'hide');
     });
 

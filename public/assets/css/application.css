@@ -202,12 +202,14 @@ pre {
 
 
 [data-type="produtos-mais-vendidos"],
+[data-type="pedidos-por-situacao"],
 [data-type="clientes-mais-compraram"]{
   background-color: #FFF;
   position: relative;
 }
 
 [data-type="produtos-mais-vendidos"] .loader p,
+[data-type="pedidos-por-situacao"] .loader p,
 [data-type="clientes-mais-compraram"] .loader p{
   padding-top: 30%;
 }
