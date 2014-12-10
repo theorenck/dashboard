@@ -309,6 +309,10 @@ var Dashboard = {
   },
 
   renderIndicador : function(container, qtd){
+    qtdTooltip = (parseFloat(qtd)).toLocaleString("pt-br");
+    $(container).attr('title', qtdTooltip);
+    $(container).tooltip({ placement : "bottom" });
+
     var qtd = NumberHelpers.number_to_human(qtd, {
         labels : { thousand : 'mil', million : 'Mi', billion : 'Bi', trillion : 'Tri' },
         precision: 3,
@@ -316,6 +320,7 @@ var Dashboard = {
         separator : ",",
         delimiter : '.'
     });
+
 
     valores = qtd.split(' ');
 
