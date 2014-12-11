@@ -23,6 +23,7 @@ var Indicadores = {
   },
 
   statements : {
+    faturamento         : "SELECT SUM(f.valorfluxo) AS \"VALOR_TOTAL_RECEITA\" FROM zw14fflu f WHERE f.modalidade IN ('P','R') AND f.estimativa = 'C' AND f.pagarreceber = 'R' AND {FN TIMESTAMPADD (SQL_TSI_DAY, f.datalancamento-72687, {D '2000-01-01'})} BETWEEN {TS :inicio} AND {TS :fim}",
     valorTotalReceita   : "SELECT SUM(f.valorfluxo) AS \"VALOR_TOTAL_RECEITA\" FROM zw14fflu f WHERE f.modalidade IN ('P','R') AND f.estimativa = 'C' AND f.pagarreceber = 'R' AND {FN TIMESTAMPADD (SQL_TSI_DAY, f.datafluxo-72687, {D '2000-01-01'})} BETWEEN {TS :inicio} AND {TS :fim}",
     valorInadimplencia  : "SELECT SUM(f.valorfluxo) AS \"VALOR_INADIMPLENCIA\" FROM zw14fflu f WHERE f.modalidade = 'P' AND f.estimativa = 'C' AND f.pagarreceber = 'R' AND {FN TIMESTAMPADD (SQL_TSI_DAY, f.datafluxo-72687, {D '2000-01-01'})} BETWEEN {TS :inicio} AND {TS :fim}",
     volumeVendasTotal   : "SELECT {FN CONVERT(SUM(p.valortotal), SQL_FLOAT)} AS \"VOLUME_VENDAS\" FROM zw14vped p WHERE p.situacao = :situacao AND {FN TIMESTAMPADD (SQL_TSI_DAY, p.dataemiss-72687, {D '2000-01-01'})} BETWEEN {TS :inicio} AND {TS :fim}",
@@ -323,8 +324,11 @@ var Dashboard = {
 
   renderIndicador : function(container, qtd){
     qtdTooltip = (parseFloat(qtd)).toLocaleString("pt-br");
-    $(container).attr('title', qtdTooltip);
-    $(container).tooltip({ placement : "bottom" });
+
+    $(container)
+      .attr('title', qtdTooltip)
+      .attr('data-original-title', qtdTooltip)
+      .tooltip({ placement : "bottom", title : qtdTooltip });
 
     var qtd = NumberHelpers.number_to_human(qtd, {
         labels : { thousand : 'mil', million : 'Mi', billion : 'Bi', trillion : 'Tri' },
@@ -364,7 +368,7 @@ var Dashboard = {
 
     /* Faturamento */
     params.inicio = "'" + Indicadores.periodo.inicio + "'";
-    Dashboard.getStatement(Indicadores.statements.valorTotalReceita, params).done(function(data){
+    Dashboard.getStatement(Indicadores.statements.faturamento, params).done(function(data){
       var valor = data.statement.rows[0][0] || 0;
       Indicadores.items.volumeVendasTotal = valor;
       Dashboard.renderIndicador('[data-type=volume-total-de-vendas]', valor);
