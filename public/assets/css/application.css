@@ -3,8 +3,8 @@
   /*outline: 1px solid !important;*/
 }
 
-/* General Styles */
 
+/* General Styles */
 .caret.caret-reversed{
     border-top: 0px;
     border-bottom: 4px solid;
@@ -218,6 +218,14 @@ pre {
   max-width: 500px !important;
   width: 500px !important;
 }
+
+@media(max-width:500px){
+  .popover{
+    max-width: 500px !important;
+    width: 100% !important;
+  }
+}
+
 
 section{
   position: relative;
@@ -446,6 +454,8 @@ section{
 
 .daterangepicker .ranges .input-mini{
   width: 100%;
+  background: #FFF;
+
 }
 
 .daterangepicker .ranges .range_inputs .daterangepicker_end_input,
