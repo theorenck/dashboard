@@ -558,19 +558,18 @@ section{
 .daterangepicker select.yearselect,
 .daterangepicker .ranges .input-mini{
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  border:2px solid #dce4ec;
+  padding: 10px 15px;
+  font-size: 15px;
 }
 
 .daterangepicker select.monthselect {
   margin-right: 2%;
   width: 56%;
-  border:2px solid #dce4ec;
-  padding: 10px 15px;
 }
 
 .daterangepicker select.yearselect {
   width: 40%;
-  border:2px solid #dce4ec;
-  padding: 10px 15px;
 }
 
 .daterangepicker_end_input {
