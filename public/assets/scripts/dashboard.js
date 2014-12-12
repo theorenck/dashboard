@@ -278,6 +278,8 @@ var Dashboard = {
         },
         format : format,
         showDropdowns : true,
+        minDate : moment({year : 2000, month: 0, day: 1}),
+        maxDate : moment().add(1, 'month'),
         startDate: moment().subtract(29,'days'),
         endDate: moment(),
         locale: {
@@ -315,6 +317,8 @@ var Dashboard = {
           Dashboard.fetchIndicadores();
       }
     );
+
+    $('.daterangepicker').css('width', $('#reportrange').innerWidth() + 'px');
 
     if(hasInputDate){
       $('[name=daterangepicker_start]').attr('type','date');
