@@ -439,21 +439,6 @@ section{
 
 
 /* DATERANGEPICKER */
-@media(max-width:768px){
-  .daterangepicker .calendar{
-    display:none !important;
-  }
-  .daterangepicker .ranges li:last-child{
-    display:none;
-  }
-  .daterangepicker .ranges{
-    width: 100%;
-  }
-  .daterangepicker.dropdown-menu{
-    width: calc(100% - 30px);
-  }
-}
-
 .daterangepicker .calendar{
   width: 40%;
   max-width: none;
@@ -589,13 +574,25 @@ padding: 0px;
   width: 49%;
 }
 
-@media(max-width: 768px){
+@media(max-width:768px){
+  .daterangepicker .calendar{
+    display:none !important;
+  }
+  .daterangepicker .ranges li:last-child{
+    display:none;
+  }
+  .daterangepicker.opensright .ranges,
+  .daterangepicker .ranges{
+    width: 100%;
+  }
+  .daterangepicker.dropdown-menu{
+    width: calc(100% - 30px);
+  }
   .applyBtn, .cancelBtn{
     width: 100%;
     display: block;
   }
 }
-
 /*.prev.available,
 .next.available{
   background-color: #95a5a6;
