@@ -1,6 +1,17 @@
 ﻿moment.locale('pt-br');
+Highcharts.setOptions({
+  lang: {
+    months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    shortMonths : ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',  'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    thousandsSep : '.',
+    decimalPoint : ',',
+    weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+  }
+});
+
 var API = Configuration.api;
 var timer;
+
 var Indicadores = {
 
   situacao : "'LOC Locado'",
@@ -38,81 +49,230 @@ var Indicadores = {
 var Dashboard = {
 
   renderGraph : function(data){
-    var valores    = Dashboard.prepareDataset(data.statement.rows);
-    valores.labels = valores.labels.length > 31 ? false : valores.labels;
 
-    $('#volume-vendas').highcharts({
-      colors : ['#3498DB', "#16A085"],
-      chart: {
-        type: 'areaspline',
-        zoomType : 'x',
-        panning: true,
-        panKey: 'shift',
-        resetZoomButton: {
-          theme: {
-            fill: '#2c3e50',
-            stroke: '#2c3e50',
-            style: {
-              color: 'white',
+    var valores    = Dashboard.prepareDataset(data.statement.rows);
+    // valores.labels = valores.labels.length > 31 ? false : valores.labels;
+
+
+    $.each(valores.values, function(index, val) {
+      valores.values[index][0] = parseInt(val[0]);
+    });
+
+    function grafico(valores) {
+        chart = $('#volume-vendas').highcharts('StockChart', {
+            colors : ['#3498DB', "#16A085"],
+            title : {
+              text : "<h3>Novos contratos por dia</h3>",
+              useHtml : true,
+              style : {
+                fontFamily : "Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                fontSize : '19px'
+              }
             },
-            r: 0,
-            states: {
-              hover: {
-                fill: '#1a242f',
-                stroke: '#2c3e50',
-                style: {
-                  color: 'white',
-                  cursor: "pointer"
+
+            chart : {
+              zoomType : 'x',
+              panning: true,
+              panKey: 'shift',
+              resetZoomButton: {
+                theme: {
+                  fill: '#2c3e50',
+                  stroke: '#2c3e50',
+                  style: {
+                    color: 'white',
+                  },
+                  r: 0,
+                  states: {
+                    hover: {
+                      fill: '#1a242f',
+                      stroke: '#2c3e50',
+                      style: {
+                        color: 'white',
+                        cursor: "pointer"
+                      }
+                    }
+                  }
                 }
               }
-            }
-          }
-        }
-      },
-      title : {
-        text : "<h3>Novos contratos por dia</h3>",
-        useHtml : true,
-        style : {
-          fontFamily : "Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif",
-          fontSize : '19px'
-        }
-      },
-      legend: {
-          layout: 'vertical',
-          align: 'left',
-          verticalAlign: 'top',
-          x: 150,
-          y: 100,
-          floating: true,
-          borderWidth: 1,
-          backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-      },
-      xAxis: {
-          categories: valores.labels,
-          plotBands: valores.plotBands,
-          labels : { maxStaggerLines : 1 }
-      },
-      yAxis: {
-          title: {
-              text: false
-          }
-      },
-      tooltip: {
-          shared: true,
-          valuePreffix: 'R$ '
-      },
-      credits: {
-        enabled: false
-      },
-      plotOptions: {
-        areaspline: {
-          fillOpacity: 0.5
-        }
-      },
-      series: [
-        { name: 'Contratos', data : valores.contratosDia},
-      ]
-    });
+            },
+
+            navigation: {
+              buttonOptions: {
+                // height: 40,
+                width: 120,
+                // symbolSize: 24,
+                // symbolX: 23,
+                // symbolY: 21,
+                // symbolStrokeWidth: 2
+              }
+            },
+
+            navigator :{
+              enabled : false
+            },
+
+            credits : {
+              enabled: false
+            },
+
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top',
+                x: 150,
+                y: 100,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+            },
+
+            rangeSelector : {
+                buttonTheme: {
+                  width: 90,
+                  r : 0,
+                },
+
+                inputEnabled : false,
+                selected : 1,
+                buttons: [
+                {
+                  type: 'month',
+                  count: 1,
+                  text: '1m'
+                },
+                {
+                  type: 'month',
+                  count: 3,
+                  text: '3m'
+                },
+                {
+                  type: 'month',
+                  count: 6,
+                  text: '6m'
+                },
+                {
+                  type: 'all',
+                  // count: 6,
+                  text: 'Tudo'
+                }]
+            },
+
+            xAxis : {
+                type: 'datetime',
+                minRange: 14 * 24 * 3600000, // fourteen days
+                minTickInterval: 24 * 3600 * 1000,
+                plotBands: valores.plotBands,
+                labels : { maxStaggerLines : 1 }
+                // labels: {
+                //   formatter: function () {
+                //     return Highcharts.dateFormat('%e %b',this.value);
+                //   }
+                // }
+            },
+
+            plotOptions: {
+              areaspline: {
+                fillOpacity: 0.5
+              },
+              series: {
+                states: {
+                  hover: {
+                    lineWidthPlus: 10
+                  }
+                },
+              }
+            },
+
+            series : [{
+                type : 'areaspline',
+                name : 'Contratos',
+                data : valores.values,
+                lineWidth: 2,
+                marker : {
+                  enabled : true,
+                  radius : 3
+                },
+                tooltip: {
+                  valueDecimals: 2
+                }
+            }],
+        });
+    }
+
+    grafico(valores);
+
+    // $('#volume-vendas').highcharts({
+    //   colors : ['#3498DB', "#16A085"],
+    //   chart: {
+    //     type: 'areaspline',
+    //     zoomType : 'x',
+    //     panning: true,
+    //     panKey: 'shift',
+    //     resetZoomButton: {
+    //       theme: {
+    //         fill: '#2c3e50',
+    //         stroke: '#2c3e50',
+    //         style: {
+    //           color: 'white',
+    //         },
+    //         r: 0,
+    //         states: {
+    //           hover: {
+    //             fill: '#1a242f',
+    //             stroke: '#2c3e50',
+    //             style: {
+    //               color: 'white',
+    //               cursor: "pointer"
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   },
+    //   title : {
+    //     text : "<h3>Novos contratos por dia</h3>",
+    //     useHtml : true,
+    //     style : {
+    //       fontFamily : "Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif",
+    //       fontSize : '19px'
+    //     }
+    //   },
+    //   legend: {
+    //       layout: 'vertical',
+    //       align: 'left',
+    //       verticalAlign: 'top',
+    //       x: 150,
+    //       y: 100,
+    //       floating: true,
+    //       borderWidth: 1,
+    //       backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+    //   },
+    //   xAxis: {
+    //       categories: valores.labels,
+    //       plotBands: valores.plotBands,
+    //       labels : { maxStaggerLines : 1 }
+    //   },
+    //   yAxis: {
+    //       title: {
+    //           text: false
+    //       }
+    //   },
+    //   tooltip: {
+    //       shared: true,
+    //       valuePreffix: 'R$ '
+    //   },
+    //   credits: {
+    //     enabled: false
+    //   },
+    //   plotOptions: {
+    //     areaspline: {
+    //       fillOpacity: 0.5
+    //     }
+    //   },
+    //   series: [
+    //     { name: 'Contratos', data : valores.contratosDia},
+    //   ]
+    // });
 
   },
 
@@ -173,7 +333,7 @@ var Dashboard = {
     var dataFinal = moment(Indicadores.periodo.fim).format("YYYY-MM-DD");
 
     var valores   = {
-      contratosDia       : [],
+      values             : [],
       labels             : [],
       plotBands          : []
     };
@@ -194,21 +354,27 @@ var Dashboard = {
 
 
     $.each(dataSet, function(el, val){
-      data      = val[0].split('-');
+      // data      = val[0].split('-');
       diaSemana = moment(val[0]).format('dd');
 
-      valores.labels.push(diaSemana + ' ' + data[2]);
-      valores.contratosDia.push(val[1]);
-      // valores.valorMedioDoPedido.push(val[4]);
+
+      // valores.labels.push(diaSemana + ' ' + data[2]);
+      // valores.contratosDia.push(val[1]);
+
+      valores.values.push([moment(val[0]).format('x'), val[1]]);
 
       if (diaSemana === 'sáb') {
         valores.plotBands.push({
-          from: el - 0.5,
-          to: el + 1.5,
+          from: moment(val[0]).format('x'),
+          to: moment(val[0]).add(1,'day').format('x'),
           color: 'rgba(192, 192, 192, .2)'
         });
       }
 
+    });
+
+    valores.values = (valores.values).sort(function(a, b) {
+      return a[0] - b[0];
     });
 
     return valores;
@@ -263,7 +429,6 @@ var Dashboard = {
     hasInputDate = i.type !== "text";
 
     format = hasInputDate ? 'YYYY-MM-DD' : 'DD/MM/YYYY';
-    console.log(hasInputDate, format);
 
     $('#reportrange').daterangepicker(
       {
