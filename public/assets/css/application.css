@@ -101,7 +101,7 @@ pre {
   background:#ecf0f1;
 }
 
-.grafico-content #volume-vendas{
+.grafico-content .content{
   min-width: 310px;
   height: 400px;
   margin: 0 auto;
@@ -158,21 +158,28 @@ pre {
   text-align: right;
 }
 
-.indicador{
+.widget{
   position: relative;
+  padding: 15px;
+  margin-bottom: 21px;
+  min-height: 122px;
 }
 
-.indicador .title span{
+.widget .title{
+  margin-top: 0px;
+}
+
+.widget .title span{
   opacity:0.5;
   color:#FFF;
 }
 
-.indicador .title span:hover{
+.widget .title span:hover{
   opacity: 1;
   cursor: pointer;
 }
 
-.indicador .title button{
+.widget .title button{
   background: transparent;
   border: 0px;
   opacity: 1;
@@ -181,17 +188,17 @@ pre {
   opacity: 0.5;
 }
 
-.indicador .title button:hover,
-.indicador .title button:focus{
+.widget .title button:hover,
+.widget .title button:focus{
   opacity: 1;
 }
 
-.indicador .valor{
+.widget .valor{
   font-weight: bold;
 }
 
-.indicador .unidade,
-.indicador .grandeza{
+.widget .unidade,
+.widget .grandeza{
   opacity: 0.8;
 }
 
@@ -199,18 +206,19 @@ pre {
   border: 1px solid;
 }
 
+.widget.red{background-color: #e74c3c; border-color: #e74c3c; color: #FFF;}
+.widget.blue{background-color: #3498db; border-color: #3498db; color: #FFF; }
+.widget.green{background-color: #18bc9c; border-color: #18bc9c; color: #FFF; }
+.widget.orange{background-color: #f39c12; border-color: #f39c12; color: #FFF; }
 
 
-[data-type="produtos-mais-vendidos"],
-[data-type="pedidos-por-situacao"],
-[data-type="clientes-mais-compraram"]{
+
+[data-type="pie"]{
   background-color: #FFF;
   position: relative;
 }
 
-[data-type="produtos-mais-vendidos"] .loader p,
-[data-type="pedidos-por-situacao"] .loader p,
-[data-type="clientes-mais-compraram"] .loader p{
+[data-type="pie"] .loader p{
   padding-top: 30%;
 }
 
@@ -606,3 +614,74 @@ padding: 0px;
   background-color: #74898A;
   opacity: 1;
 }*/
+
+
+
+
+/* ETAPAS */
+.etapas-wrapper{
+  overflow: auto;
+  width: 100%;
+}
+
+.etapa{
+  width: 200px;
+  border: 1px dashed #555;
+  min-height: 500px;
+  display: inline-block;
+  float:left;
+  margin-left: -1px;
+  padding: 10px;
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.etapa:first-child{
+  margin-left: 0px;
+  border-left: 1px solid;
+  border-top: 1px solid;
+}
+
+.etapa h4{
+  margin: 5 auto;
+  text-align: center;
+}
+
+.etapa-cars{
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+}
+
+.etapa-cars li{
+  text-align: right;
+  border: 1px solid #3498db;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+  background: #3498db;
+  color: #FFF;
+  padding: 5px;
+  cursor: default;
+}
+
+.etapa-cars li .icon-wrap{
+  position: absolute;
+  left: -10px;
+  bottom: -10px;
+  opacity: 0.2;
+  color: #FFF;
+}
+
+.etapa-cars li:first-child{
+  margin-top: 0px;
+}
+
+.city-name{
+  font-size: 12px;
+}
+
+.car-name{
+  font-weight: bold;
+  font-size: 20px;
+}

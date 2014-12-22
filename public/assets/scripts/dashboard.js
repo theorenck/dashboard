@@ -385,6 +385,7 @@ var Dashboard = {
    * @var statement query a ser executada
    **/
   getStatement : function(statement, params){
+    console.log(statement);
     return $.ajax({
       type: "POST",
       contentType: "application/json",
