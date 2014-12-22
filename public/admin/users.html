@@ -48,47 +48,44 @@
   <!-- Fim Navbar -->
 
   <div class="container">
-    
 
     <div class="header-area">
       <div class="row">
         <div class="col-sm-12">
           <h1>
-            Dashboard <small></small>
+            User <small></small>
           </h1>
         </div>
       </div>
     </div>
-    
+
     <ul class="breadcrumb">
       <li><a href="#">Atlas</a></li>
-      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">User</a></li>
       <li class="active">new</li>
     </ul>
 
     <div class="row">
       <div class="col-md-12 col-lg-6">
         <div class="well">
-          <form id="formCadastro" action="http://127.0.0.1:9000/api/v1/dashboards" class="form-horizontal" method="POST">
+          <form id="formCadastro" action="http://127.0.0.1:9000/api/v1/users" class="form-horizontal" method="POST">
             <div class="form-group">
-              <label for="" class="col-lg-2 control-label">Name</label>
+              <label for="" class="col-lg-2 control-label">Email</label>
               <div class="col-lg-10">
-                <input class="form-control" type="text" name="name">
+                <input class="form-control" type="text" name="email">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="" class="col-lg-2 control-label">Username</label>
+              <div class="col-lg-10">
+                <input class="form-control" type="text" name="username">
               </div>
             </div>
 
             <div class="form-group">
-              <label for="" class="col-lg-2 control-label">Description</label>
+              <label for="" class="col-lg-2 control-label">Password</label>
               <div class="col-lg-10">
-                <input class="form-control" type="text" name="description">
-                <span class="help-block">Tem certeza que vai lembrar só pelo nome? Coloca uma descrição :)</span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="" class="col-lg-2 control-label">API server</label>
-              <div class="col-lg-10">
-                <select class="form-control" id="selectApi"></select>
+                <input class="form-control" type="password" name="password">
               </div>
             </div>
 
@@ -97,6 +94,7 @@
                 <button class="btn btn-success">SAVE</button>
               </div>
             </div>
+
           </form>
         </div>
       </div>
@@ -138,9 +136,10 @@
             "Authorization" : "Token token=4361a34b6472e4634cd27f8d3f37108e",
           },
           data: JSON.stringify({
-            "dashboard" : {
-              'name' : $("#formCadastro [name=name]").val(),
-              'description' : $("#formCadastro [name=description]").val()
+            "user" : {
+              'email' : $("#formCadastro [name=email]").val(),
+              'username' : $("#formCadastro [name=username]").val(),
+              'password' : $("#formCadastro [name=password]").val
             }
           }),
         })
@@ -158,17 +157,17 @@
 
     });
 
-    var Dashboard = {
+    var Indicator = {
 
       init : function(){
-        Dashboard.getApiServer();
-        $('form').on('submit', Dashboard.saveDashboard);
+        Indicator.getApiServer();
+        $('form').on('submit', Indicator.saveIndicator);
       },
 
       getApiServer : function(){
 
         $.ajax({
-          "url": "http://localhost:9000/api/v1/api_servers",
+          "url": "http://localhost:9000/api/v1/indicators",
           "contentType": "application/json",
           "type": 'GET',
           "headers": {
@@ -177,10 +176,46 @@
           
         })
         .done(function(data) {
-          console.log(data.api_servers);
-          $.each(data.api_servers,function(i,el){
+          console.log(data.indicators);
+          $.each(data.indicators,function(i,el){
             console.log(el.url)
-            $("#selectApi").append("<option value='"+el.id+"'>"+el.url+"</option>")
+            $("#selectIndicator").append("<option value='"+el.id+"'>"+el.name+"</option>")
+          })
+
+        })
+        .fail(function() {
+          console.log("error");
+        });
+
+        return false;
+      },
+
+    };
+    $(Indicator.init);
+
+    var Dashboard = {
+
+      init : function(){
+        Dashboard.getDashboard();
+        $('form').on('submit', Dashboard.saveDashboard);
+      },
+
+      getDashboard : function(){
+
+        $.ajax({
+          "url": "http://localhost:9000/api/v1/dashboards",
+          "contentType": "application/json",
+          "type": 'GET',
+          "headers": {
+            "Authorization" : "Token token=4361a34b6472e4634cd27f8d3f37108e",
+          },
+          
+        })
+        .done(function(data) {
+          console.log(data.dashboards);
+          $.each(data.dashboards,function(i,el){
+            console.log(el.url)
+            $("#selectDashboard").append("<option value='"+el.id+"'>"+el.name+"</option>")
           })
 
         })
@@ -193,8 +228,7 @@
 
     };
     $(Dashboard.init);
-
-  </script>
+</script>
 
 </body>
 </html>

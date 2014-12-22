@@ -37,6 +37,8 @@
             <li><a href="/admin/dashboard.html">Dashboard</a></li>
             <li><a href="/admin/indicator.html">Indicador</a></li>
             <li><a href="/admin/widgets.html">Widget</a></li>
+            <li><a href="/admin/users.html">Users</a></li>
+            <li><a href="/admin/permissions.html">Permission</a></li>
           </ul>
         </li>
       </ul>
@@ -126,6 +128,12 @@
               </div>
             </div>
 
+            <div class="form-group">
+              <label for="" class="col-lg-2 control-label">Dashboard</label>
+              <div class="col-lg-10">
+                <select class="form-control" id="selectDashboard"></select>
+              </div>
+            </div>
 
             <div class="form-group">
               <div class="col-lg-offset-2 col-lg-10">
@@ -173,9 +181,10 @@
             "Authorization" : "Token token=4361a34b6472e4634cd27f8d3f37108e",
           },
           data: JSON.stringify({
-            "dashboard" : {
-              'name' : $("#formCadastro [name=name]").val(),
-              'description' : $("#formCadastro [name=description]").val()
+            "widget" : {
+              'color' : $("#formCadastro [name=color]").val(),
+              'position' : $("#formCadastro [name=position]").val(),
+              'size' : $("#formCadastro [name=size]").val
             }
           }),
         })
@@ -228,6 +237,42 @@
 
     };
     $(Indicator.init);
+
+    var Dashboard = {
+
+      init : function(){
+        Dashboard.getDashboard();
+        $('form').on('submit', Dashboard.saveDashboard);
+      },
+
+      getDashboard : function(){
+
+        $.ajax({
+          "url": "http://localhost:9000/api/v1/dashboards",
+          "contentType": "application/json",
+          "type": 'GET',
+          "headers": {
+            "Authorization" : "Token token=4361a34b6472e4634cd27f8d3f37108e",
+          },
+          
+        })
+        .done(function(data) {
+          console.log(data.dashboards);
+          $.each(data.dashboards,function(i,el){
+            console.log(el.url)
+            $("#selectDashboard").append("<option value='"+el.id+"'>"+el.name+"</option>")
+          })
+
+        })
+        .fail(function() {
+          console.log("error");
+        });
+
+        return false;
+      },
+
+    };
+    $(Dashboard.init);
 </script>
 
 </body>
