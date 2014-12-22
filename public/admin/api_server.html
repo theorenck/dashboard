@@ -119,9 +119,21 @@
   <script src="/assets/scripts/helpers/number_helpers.js"></script>
 
   <script>
+
+  function getFormData(form){
+    formdata = {};
+
+    $(form).serializeArray().map(function(item) {
+      formdata[item.name] = item.value;
+    });
+
+    return formdata;
+  }
+
     $(function(){
       $('#formCadastro').on('submit', function(){
         var url = $(this).attr('action');
+
 
         $.ajax({
           "url": url,
@@ -131,16 +143,12 @@
             "Authorization" : "Token token=4361a34b6472e4634cd27f8d3f37108e",
           },
           data: JSON.stringify({
-            "api_server" : {
-              'name' : $("#formCadastro [name=name]").val(),
-              'url' : $("#formCadastro [name=url]").val(),
-              'description' : $("#formCadastro [name=description]").val()
-            }
+            "api_server" : getFormData('#formCadastro')
           }),
         })
         .done(function(data) {
-          alert('Deu certo');
-          console.log("success");
+          alert('Deu certo !');
+          $('form input').val('');
         })
         .fail(function() {
           alert('Deu pau');
