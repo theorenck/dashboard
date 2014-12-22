@@ -79,11 +79,15 @@
                 </select>
               </div>
             </div>
-
             <div class="form-group">
-              <label for="" class="col-lg-2 control-label">Position</label>
+              <label for="" class="col-lg-2 control-label">Type</label>
               <div class="col-lg-10">
-                <input class="form-control" type="text" name="position">
+                <select class="form-control">
+                  <option>Select</option>
+                  <option>Pie</option>
+                  <option>Status</option>
+                  <option>Line</option>
+                </select>
               </div>
             </div>
 
@@ -108,7 +112,21 @@
               </div>
             </div>
 
-            
+            <div class="form-group">
+              <label for="" class="col-lg-2 control-label">Position</label>
+              <div class="col-lg-10">
+                <input class="form-control" type="text" name="position">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="" class="col-lg-2 control-label">Indicator</label>
+              <div class="col-lg-10">
+                <select class="form-control" id="selectIndicator"></select>
+              </div>
+            </div>
+
+
             <div class="form-group">
               <div class="col-lg-offset-2 col-lg-10">
                 <button class="btn btn-success">SAVE</button>
@@ -174,6 +192,42 @@
       });
 
     });
+
+    var Indicator = {
+
+      init : function(){
+        Indicator.getApiServer();
+        $('form').on('submit', Indicator.saveIndicator);
+      },
+
+      getApiServer : function(){
+
+        $.ajax({
+          "url": "http://localhost:9000/api/v1/indicators",
+          "contentType": "application/json",
+          "type": 'GET',
+          "headers": {
+            "Authorization" : "Token token=4361a34b6472e4634cd27f8d3f37108e",
+          },
+          
+        })
+        .done(function(data) {
+          console.log(data.indicators);
+          $.each(data.indicators,function(i,el){
+            console.log(el.url)
+            $("#selectIndicator").append("<option value='"+el.id+"'>"+el.name+"</option>")
+          })
+
+        })
+        .fail(function() {
+          console.log("error");
+        });
+
+        return false;
+      },
+
+    };
+    $(Indicator.init);
 </script>
 
 </body>
