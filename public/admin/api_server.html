@@ -119,7 +119,6 @@
   <script src="/assets/scripts/helpers/number_helpers.js"></script>
 
   <script>
-
   function getFormData(form){
     formdata = {};
 
@@ -130,35 +129,35 @@
     return formdata;
   }
 
-    $(function(){
-      $('#formCadastro').on('submit', function(){
-        var url = $(this).attr('action');
+  $(function(){
+    $('#formCadastro').on('submit', function(){
+      var url = $(this).attr('action');
 
 
-        $.ajax({
-          "url": url,
-          "contentType": "application/json",
-          "type": 'POST',
-          "headers": {
-            "Authorization" : "Token token=4361a34b6472e4634cd27f8d3f37108e",
-          },
-          data: JSON.stringify({
-            "api_server" : getFormData('#formCadastro')
-          }),
-        })
-        .done(function(data) {
-          alert('Deu certo !');
-          $('form input').val('');
-        })
-        .fail(function() {
-          alert('Deu pau');
-          console.log("error");
-        });
-
-        return false;
+      $.ajax({
+        "url": url,
+        "contentType": "application/json",
+        "type": 'POST',
+        "headers": {
+          "Authorization" : "Token token=4361a34b6472e4634cd27f8d3f37108e",
+        },
+        data: JSON.stringify({
+          "api_server" : getFormData('#formCadastro')
+        }),
+      })
+      .done(function(data) {
+        alert('Deu certo !');
+        $('form input').val('');
+      })
+      .fail(function() {
+        alert('Deu pau');
+        console.log("error");
       });
 
+      return false;
     });
+
+  });
   </script>
 
 </body>
