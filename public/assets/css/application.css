@@ -102,9 +102,9 @@ pre {
 }
 
 .grafico-content .content{
-  min-width: 310px;
   height: 400px;
   margin: 0 auto;
+  min-width: 310px;
 }
 
 .loader{

@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="icon" href="/assets/images/online.png">
+  <title>Atlas Dashboard Admin</title>
+  <link rel="stylesheet" href="/assets/css/bootstrap-flatly.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/plugins/daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="/assets/css/application.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Inicio Navbar -->
+  <div class="navbar navbar-default">
+
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Atlas</a>
+      <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button> -->
+    </div>
+
+    <div class="navbar-collapse collapse" id="navbar-main">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="/indicador.html">DDashboard</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+  <!-- Fim Navbar -->
+
+  <div class="container">
+
+    <div class="header-area">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1>
+            Dashboard <small>Create API Server</small>
+          </h1>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-md-12 col-lg-6">
+        <div class="well">
+          <form id="formCadastro" action="http://127.0.0.1:9000/api/v1/api_servers" class="form-horizontal" method="POST">
+            <div class="form-group">
+              <label for="" class="col-lg-2 control-label">Nome</label>
+              <div class="col-lg-10">
+                <input class="form-control" type="text" name="name">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="" class="col-lg-2 control-label">Descrição</label>
+              <div class="col-lg-10">
+                <input class="form-control" type="text" name="description">
+                <span class="help-block">Tem certeza que vai lembrar só pelo nome? Coloca uma descrição :)</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="" class="col-lg-2 control-label">URL</label>
+              <div class="col-lg-10">
+                <input class="form-control" type="text" name="url" placeholder="HTTP://127.0.0.1/api/v1/">
+                <span class="help-block">Qual é o servidor que vamos apontar?</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-lg-offset-2 col-lg-10">
+                <button class="btn btn-success">CADASTRAR</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- <div class="col-md-12 col-lg-6">
+        <ul>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+          <li></li>
+        </ul>
+      </div> -->
+    </div>
+
+
+  </div>
+
+
+  <!-- scripts externos -->
+  <script src="/assets/plugins/jquery/jquery.min.js"></script>
+  <script src="/assets/plugins/bootstrap/bootstrap.min.js"></script>
+  <script src="/assets/plugins/moment/moment-with-locales.js"></script>
+  <script src="/assets/plugins/highstock/highstock.js"></script>
+  <script src="/assets/plugins/daterangepicker/daterangepicker.js"></script>
+  <script src="/assets/plugins/lodash/lodash.min.js"></script>
+  <script src="/assets/scripts/helpers/number_helpers.js"></script>
+  <script>
+    $(function(){
+      $('#formCadastro').on('submit', function(){
+        var url = $(this).attr('action');
+
+        $.ajax({
+          "url": url,
+          "contentType": "application/json",
+          "type": 'POST',
+          "headers": {
+            "Authorization" : "Token token=4361a34b6472e4634cd27f8d3f37108e",
+          },
+          data: JSON.stringify({
+            "api_server" : {
+              'name' : $("#formCadastro [name=name]").val(),
+              'url' : $("#formCadastro [name=url]").val(),
+              'description' : $("#formCadastro [name=description]").val()
+            }
+          }),
+        })
+        .done(function(data) {
+          alert('Deu certo');
+          console.log("success");
+        })
+        .fail(function() {
+          alert('Deu pau');
+          console.log("error");
+        });
+
+        return false;
+      });
+
+    });
+  </script>
+
+</body>
+</html>
