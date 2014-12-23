@@ -206,10 +206,17 @@ Atlas.controller('ApiServerController', [
 Atlas.controller('dashboardController', [
   '$scope',
   'Dashboards',
+  'ApiServers',
 
-  function($scope, Dashboards){
+  function($scope, Dashboards, ApiServers){
     $scope.dashboard     = {};
     $scope.dashboardList = [];
+    $scope.availableApiServers = [];
+
+    ApiServers.get(function(data){
+      console.log(data.api_servers);
+      $scope.availableApiServers = data.api_servers;
+    });
 
     $scope.renderList = function(){
       Dashboards.get(function(data){
@@ -218,7 +225,35 @@ Atlas.controller('dashboardController', [
     }
 
     $scope.loadDashboard = function(dash){
+      console.log(dash);
       $scope.dashboard = dash;
+    }
+
+    $scope.salvar = function(){
+      var data =  { "dashboard" : $scope.dashboard };
+
+      if ($scope.dashboard.id) {
+        Dashboards.update(data, function(){
+          $scope.renderList();
+          $scope.dashboard = {};
+        });
+      }else{
+        Dashboards.save(data, function(data){
+          $scope.renderList();
+          $scope.dashboard = {};
+        });
+      }
+    };
+
+    $scope.deleteApiServer = function(id){
+      var data = { "id" : id };
+      ApiServers.remove(data, function(data){
+        $scope.renderList();
+      });
+    }
+
+    $scope.cancelar = function(){
+      $scope.dashboard = {};
     }
 
 
@@ -305,19 +340,23 @@ Atlas.controller('usersController', [
 
 
 /**
- * USERS CONTROLLER
+ * PERMISSIONS CONTROLLER
  */
 Atlas.controller('permissionsController', [
   '$scope',
   'Permissions',
+  'Users',
 
-  function($scope, Permissions){
+  function($scope, Permissions, Users){
     $scope.permission     = {};
     $scope.permissionList = [];
 
+    Users.get(function(data){
+      $scope.availableUsers = data.users;
+    })
+
     $scope.renderList = function(){
       Permissions.get(function(data){
-        console.log(data.permissions);
         $scope.permissionList = data.permissions;
       });
     }

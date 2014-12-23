@@ -20,7 +20,9 @@
 
       <form id="formCadastro" class="form-horizontal">
         <label  class="control-label">User</label>
-        <select class="form-control" id="selectUser"></select>
+        <select class="form-control">
+          <option ng-repeat="user in availableUsers" value="{{ user.id }}">{{user.username}}</option>
+        </select>
 
         <label  class="control-label">Dashboard</label>
         <select class="form-control" id="selectDashboard"></select>

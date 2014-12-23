@@ -27,7 +27,9 @@
         <input ng-model="dashboard.description" class="form-control" type="text" name="description">
 
         <label  class="control-label">API server</label>
-        <select ng-model="dashboard.api_server" class="form-control" id="selectApi"></select>
+        <select ng-model="dashboard.api_server_id" class="form-control">
+          <option ng-repeat="api in availableApiServers" value="{{ api.id }}">{{api.name}}</option>
+        </select>
 
         <br>
         <button ng-click="salvar()" class="btn btn-success" type="button">Salvar</button>
