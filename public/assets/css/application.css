@@ -247,28 +247,40 @@ section{
 
 
 /* Table Editable */
-[data-behaivor="table-editable"] thead td,
-[data-behaivor="table-editable"]{
+.table-editable thead td,
+.table-editable{
   cursor: default !important;
 }
 
-[data-behaivor="table-editable"] tbody td{
+
+.table-editable tbody tr td{
   cursor: pointer;
+  padding: 0px;
 }
 
+.table-editable tbody td .form-control{
+  background: none;
+  cursor: default;
+  border: 2px solid transparent;
+}
 
-[data-behaivor="table-editable"]{
+.table-editable tbody td .form-control:focus,
+.table-editable tbody td .form-control:active{
+  border-color: #2c3e50;
+}
+
+.table-editable{
   border: 2px solid #dce4ec;
   background-color: #FFF;
 }
 
-[data-behaivor="table-editable"] td{
+.table-editable td{
   height: 35px;
 }
 
-/*[data-behaivor="table-editable"] + input:focus,
-[data-behaivor="table-editable"] + input:active,
-[data-behaivor="table-editable"] + input
+/*.table-editable + input:focus,
+.table-editable + input:active,
+.table-editable + input
 {
   border: 2px solid #2c3e50 !important;
   outline: 0px solid #2c3e50 !important;
@@ -343,7 +355,7 @@ section{
   display: none !important;
 }
 
-#query-area.disabled [data-behaivor="table-editable"] td:focus{
+#query-area.disabled .table-editable td:focus{
   outline: 0 !important;
   cursor: default;
 }

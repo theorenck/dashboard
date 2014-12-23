@@ -202,6 +202,7 @@ Atlas.controller('ApiServerController', [
 
 /**
  * DASHBOARD CONTROLLER
+ * @todo  Salvar api_server no dashboard
  */
 Atlas.controller('dashboardController', [
   '$scope',
@@ -214,7 +215,6 @@ Atlas.controller('dashboardController', [
     $scope.availableApiServers = [];
 
     ApiServers.get(function(data){
-      console.log(data.api_servers);
       $scope.availableApiServers = data.api_servers;
     });
 
@@ -225,7 +225,6 @@ Atlas.controller('dashboardController', [
     }
 
     $scope.loadDashboard = function(dash){
-      console.log(dash);
       $scope.dashboard = dash;
     }
 
@@ -245,10 +244,11 @@ Atlas.controller('dashboardController', [
       }
     };
 
-    $scope.deleteApiServer = function(id){
+    $scope.delete = function(id){
       var data = { "id" : id };
-      ApiServers.remove(data, function(data){
+      Dashboards.remove(data, function(data){
         $scope.renderList();
+        $scope.dashboard = {};
       });
     }
 
@@ -269,12 +269,35 @@ Atlas.controller('indicatorController', [
   'Indicators',
 
   function($scope, Indicators){
+    $scope.data_types    = ['datetime', 'string', 'int'];
+    $scope.indicatorList = [];
     $scope.indicator     = {
       "query" : {
         "parameters" : [],
       }
     };
-    $scope.indicatorList = [];
+
+    $scope.salvar = function(){
+      var data =  { "indicator" : $scope.indicator };
+
+      $scope.indicator.query.parameters.forEach(function(el, i){
+        if ((el.name === '' || el.name === null) && (el.default_value === '' || el.default_value === null))
+          delete $scope.indicator.query.parameters[i];
+      });
+
+      if ($scope.indicator.id) {
+        Indicators.update(data, function(){
+          $scope.renderList();
+          $scope.indicator = {};
+        });
+      }else{
+        Indicators.save(data, function(data){
+          $scope.renderList();
+          $scope.indicator = {};
+        });
+      }
+    };
+
 
     $scope.renderList = function(){
       Indicators.get(function(data){
@@ -287,7 +310,15 @@ Atlas.controller('indicatorController', [
     }
 
     $scope.addParam = function(){
-      $scope.indicator.query.parameters.push(['','']);
+      $scope.indicator.query.parameters.push({});
+    }
+
+    $scope.delete = function (id) {
+      var data = { "id" : id };
+      Indicators.remove(data, function(data){
+        $scope.renderList();
+        $scope.cancelar();
+      });
     }
 
     $scope.cancelar = function(){
