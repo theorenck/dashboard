@@ -1,115 +1,56 @@
-<!DOCTYPE HTML>
-<html ng-app="Atlas">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link rel="icon" href="/assets/images/online.png">
-  <title>Atlas Dashboard Admin</title>
-  <link rel="stylesheet" href="/assets/css/bootstrap-flatly.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/plugins/daterangepicker/daterangepicker.css">
-  <link rel="stylesheet" href="/assets/css/application.css" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/font-awesome.min.css" rel="stylesheet">
-</head>
-<body ng-controller="appController">
-
-  <!-- Inicio Navbar -->
-  <div class="navbar navbar-default">
-
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Atlas</a>
-      <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button> -->
+<div class="header-area">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>
+        API Server
+      </h1>
     </div>
-
-    <div class="navbar-collapse collapse" id="navbar-main">
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="/indicador.html">Dashboard</a>
-        </li>
-
-        <li class="dropdown" ng-click="open = !open" ng-class="open ? 'open' : ''">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Entities <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="/admin/api_server.html">API Server</a></li>
-            <li><a href="/admin/dashboard.html">Dashboard</a></li>
-            <li><a href="/admin/indicator.html">Indicador</a></li>
-            <li><a href="/admin/widgets.html">Widget</a></li>
-            <li><a href="/admin/users.html">Users</a></li>
-            <li><a href="/admin/permissions.html">Permission</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-
   </div>
-  <!-- Fim Navbar -->
+</div>
 
-  <div class="container">
+<ul class="breadcrumb">
+  <li><a href="#">Atlas</a></li>
+  <li><a href="#">API Server</a></li>
+  <li class="active">new</li>
+</ul>
 
+<div class="row">
+  <div class="col-md-12 col-lg-6">
+    <div class="well">
+      <form id="formCadastro" class="form-horizontal" ng-submit="saveApiServer()">
+        <label class="control-label">Name</label>
+        <input ng-model="api_server.name" class="form-control" type="text" name="name">
 
-    <div class="header-area">
-      <div class="row">
-        <div class="col-sm-12">
-          <h1>
-            API Server
-          </h1>
-        </div>
-      </div>
-    </div>
+        <label class="control-label">Description</label>
+        <input ng-model="api_server.description" class="form-control" type="text" name="description">
 
-    <ul class="breadcrumb">
-      <li><a href="#">Atlas</a></li>
-      <li><a href="#">API Server</a></li>
-      <li class="active">new</li>
-    </ul>
+        <label class="control-label">URL</label>
+        <input ng-model="api_server.url" class="form-control" type="text" name="url" placeholder="http://127.0.0.1/api/v1/">
 
-    <div class="row">
-      <div class="col-md-12 col-lg-6">
-        <div class="well">
-          <form id="formCadastro" action="http://127.0.0.1:9000/api/v1/api_servers" class="form-horizontal" method="POST">
-            <label class="control-label">Name</label>
-            <input ng-model="api_server.name" class="form-control" type="text" name="name">
+        <br>
+        <button ng-click="saveApiServer()" class="btn btn-success" type="button">Salvar</button>
+        <button ng-click="cancelarApiServer()" class="btn btn-link" type="button">Cancelar</button>
 
-            <label class="control-label">Description</label>
-            <input ng-model="api_server.description" class="form-control" type="text" name="description">
-
-            <label class="control-label">URL</label>
-            <input ng-model="api_server.url" class="form-control" type="text" name="url" placeholder="http://127.0.0.1/api/v1/">
-
-            <br>
-            <button ng-click="saveApiServer()" class="btn btn-success" type="button">Salvar</button>
-            <button ng-click="cancelarApiServer()" class="btn btn-link" type="button">Cancelar</button>
-
-          </form>
-        </div>
-      </div>
-      <div class="col-md-12 col-lg-6">
-        <div class="list-group striped" data-behaivor="history-list">
-          <div ng-repeat="server in serverList" href="javascript:;" class="list-group-item" ng-click="loadApiServer(server)">
-            <p class="list-group-item-text">
-              <span class="close-history-item" ng-click="deleteApiServer(server.id)">
-                <span class="fa fa-close"></span>
-              </span>
-              <strong>{{ server.name }}</strong>
-            </p>
-
-            <p class="list-group-item-text">{{ server.description }}</p>
-            <p class="list-group-item-text"><small>
-              <a href="">{{ server.url }}</a>
-            </small></p>
-
-          </div>
-        </div>
-      </div>
+      </form>
     </div>
   </div>
 
-  <script type="text/javascript" src="/assets/libs/angular-1.3.8/angular.min.js"></script>
-  <script type="text/javascript" src="/assets/libs/angular-1.3.8/angular-resource.min.js"></script>
-  <script type="text/javascript" src="/assets/scripts/admin/api_server.js"></script>
+  <div class="col-md-12 col-lg-6">
+    <div class="list-group striped" data-behaivor="history-list">
+      <div ng-repeat="server in serverList" href="javascript:;" class="list-group-item" ng-click="loadApiServer(server)">
+        <p class="list-group-item-text">
+          <span class="close-history-item" ng-click="deleteApiServer(server.id)">
+            <span class="fa fa-close"></span>
+          </span>
+          <strong>{{ server.name }}</strong>
+        </p>
 
-</body>
-</html>
+        <p class="list-group-item-text">{{ server.description }}</p>
+        <p class="list-group-item-text"><small>
+          <a href="">{{ server.url }}</a>
+        </small></p>
+
+      </div>
+    </div>
+  </div>
+</div>

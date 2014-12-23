@@ -1,174 +1,63 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link rel="icon" href="/assets/images/online.png">
-  <title>Atlas Dashboard Admin</title>
-  <link rel="stylesheet" href="/assets/css/bootstrap-flatly.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/plugins/daterangepicker/daterangepicker.css">
-  <link rel="stylesheet" href="/assets/css/application.css" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/font-awesome.min.css" rel="stylesheet">
-</head>
-<body>
-
-  <!-- Inicio Navbar -->
-  <div class="navbar navbar-default">
-
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Atlas</a>
-      <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button> -->
+<div class="header-area">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>
+        Indicator <small></small>
+      </h1>
     </div>
-
-    <div class="navbar-collapse collapse" id="navbar-main">
-      <ul class="nav navbar-nav">
-        <li>
-          <a href="/indicador.html">Dashboard</a>
-        </li>
-
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Entities <b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="/admin/api_server.html">API Server</a></li>
-            <li><a href="/admin/dashboard.html">Dashboard</a></li>
-            <li><a href="/admin/indicator.html">Indicador</a></li>
-            <li><a href="/admin/widgets.html">Widget</a></li>
-            <li><a href="/admin/users.html">Users</a></li>
-            <li><a href="/admin/permissions.html">Permission</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-
   </div>
-  <!-- Fim Navbar -->
+</div>
 
-  <div class="container">
+<ul class="breadcrumb">
+  <li><a href="#">Atlas</a></li>
+  <li><a href="#">Indicator</a></li>
+  <li class="active">new</li>
+</ul>
 
-    <div class="header-area">
-      <div class="row">
-        <div class="col-sm-12">
-          <h1>
-            Indicator <small></small>
-          </h1>
-        </div>
-      </div>
+<div class="row">
+  <div class="col-md-12 col-lg-6">
+    <div class="well">
+      <form id="formCadastro" class="form-horizontal">
+        <label class="control-label">Name</label>
+        <input ng-model="indicator.name" class="form-control" type="text" name="name">
+
+        <label class="control-label">Description</label>
+        <input ng-model="indicator.description" class="form-control" type="text" name="description">
+
+        <label class="control-label">Unity</label>
+        <select ng-model="indicator.unity" class="form-control">
+          <option>R$</option>
+          <option>%</option>
+        </select>
+
+        <label class="control-label">Query</label>
+        <textarea ng-model="indicator.query.statement" class="form-control" name="query"></textarea>
+        <input ng-model="indicator.type" type="hidden" name="type" value="SingleResultQuery">
+
+        <br>
+        <button ng-click="salvar()" class="btn btn-success" type="button">Salvar</button>
+        <button ng-click="cancelar()" class="btn btn-link" type="button">Cancelar</button>
+
+      </form>
     </div>
-
-    <ul class="breadcrumb">
-      <li><a href="#">Atlas</a></li>
-      <li><a href="#">Indicator</a></li>
-      <li class="active">new</li>
-    </ul>
-
-    <div class="row">
-      <div class="col-md-12 col-lg-6">
-        <div class="well">
-          <form id="formCadastro" action="http://127.0.0.1:9000/api/v1/indicators" class="form-horizontal" method="POST">
-            <div class="form-group">
-              <label for="" class="col-lg-2 control-label">Name</label>
-              <div class="col-lg-10">
-                <input class="form-control" type="text" name="name">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="" class="col-lg-2 control-label">Description</label>
-              <div class="col-lg-10">
-                <input class="form-control" type="text" name="description">
-                <span class="help-block">Tem certeza que vai lembrar só pelo nome? Coloca uma descrição :)</span>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="" class="col-lg-2 control-label">Unity</label>
-              <div class="col-lg-10">
-                <select class="form-control">
-                  <option>Select</option>
-                  <option>R$</option>
-                  <option>%</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="" class="col-lg-2 control-label">Query</label>
-              <div class="col-lg-10">
-                <textarea class="form-control" name="query"></textarea>
-                <input type="hidden" name="type" value="SingleResultQuery">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <div class="col-lg-offset-2 col-lg-10">
-                <button class="btn btn-success">SAVE</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <!-- <div class="col-md-12 col-lg-6">
-        <ul>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-        </ul>
-      </div> -->
-    </div>
-
-
   </div>
 
+  <div class="col-md-12 col-lg-6">
+    <div class="list-group striped" data-behaivor="history-list">
+      <div ng-repeat="indicator in indicatorList" href="javascript:;" class="list-group-item" ng-click="loadIndicator(indicator)">
+        <p class="list-group-item-text">
+          <span class="close-history-item" ng-click="deleteIndicator(indicator.id)">
+            <span class="fa fa-close"></span>
+          </span>
+          <strong>{{ indicator.name }}</strong>
+        </p>
 
-  <!-- scripts externos -->
-  <script src="/assets/plugins/jquery/jquery.min.js"></script>
-  <script src="/assets/plugins/bootstrap/bootstrap.min.js"></script>
-  <script src="/assets/plugins/moment/moment-with-locales.js"></script>
-  <script src="/assets/plugins/highstock/highstock.js"></script>
-  <script src="/assets/plugins/daterangepicker/daterangepicker.js"></script>
-  <script src="/assets/plugins/lodash/lodash.min.js"></script>
-  <script src="/assets/scripts/helpers/number_helpers.js"></script>
+        <p class="list-group-item-text">{{ indicator.description }}</p>
+        <p class="list-group-item-text"><small>
+          <a href="">{{ indicator.url }}</a>
+        </small></p>
 
-  <script>
-    $(function(){
-      $('#formCadastro').on('submit', function(){
-        var url = $(this).attr('action');
-
-        $.ajax({
-          "url": url,
-          "contentType": "application/json",
-          "type": 'POST',
-          "headers": {
-            "Authorization" : "Token token=4361a34b6472e4634cd27f8d3f37108e",
-          },
-          data: JSON.stringify({
-            "dashboard" : {
-              'name' : $("#formCadastro [name=name]").val(),
-              'description' : $("#formCadastro [name=description]").val()
-            }
-          }),
-        })
-        .done(function(data) {
-          alert('Deu certo');
-          console.log("success");
-        })
-        .fail(function() {
-          alert('!Deu certo');
-          console.log("error");
-        });
-
-        return false;
-      });
-
-    });
-</script>
-
-</body>
-</html>
+      </div>
+    </div>
+  </div>
+</div>
