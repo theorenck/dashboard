@@ -35,6 +35,21 @@
         <input ng-model="indicator.type" type="hidden" name="type" value="SingleResultQuery">
 
         <label class="control-label">Params</label>
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Parâmetro</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="(key, param) in indicator.query.parameters">
+              <td><input class="form-control" type="text" ng-model="param.name"></td>
+              <td><input class="form-control" type="text" ng-model="param.default_value"></td>
+            </tr>
+          </tbody>
+        </table>
+        <button class="btn btn-block btn-info" ng-click="addParam()">Adicionar Parâmetro</button>
 
         <br>
         <button ng-click="salvar()" class="btn btn-success" type="button">Salvar</button>

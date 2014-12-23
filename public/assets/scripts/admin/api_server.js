@@ -269,7 +269,11 @@ Atlas.controller('indicatorController', [
   'Indicators',
 
   function($scope, Indicators){
-    $scope.indicator     = {};
+    $scope.indicator     = {
+      "query" : {
+        "parameters" : [],
+      }
+    };
     $scope.indicatorList = [];
 
     $scope.renderList = function(){
@@ -280,6 +284,18 @@ Atlas.controller('indicatorController', [
 
     $scope.loadIndicator = function(item){
       $scope.indicator = item;
+    }
+
+    $scope.addParam = function(){
+      $scope.indicator.query.parameters.push(['','']);
+    }
+
+    $scope.cancelar = function(){
+      $scope.indicator = {
+        "query" : {
+          "parameters" : [],
+        }
+      };
     }
 
     $scope.renderList();
@@ -346,14 +362,40 @@ Atlas.controller('permissionsController', [
   '$scope',
   'Permissions',
   'Users',
+  'ApiServers',
+  'Dashboards',
 
-  function($scope, Permissions, Users){
+  function($scope, Permissions, Users, ApiServers, Dashboards){
     $scope.permission     = {};
     $scope.permissionList = [];
 
     Users.get(function(data){
       $scope.availableUsers = data.users;
-    })
+    });
+
+    ApiServers.get(function(data){
+      $scope.availableApiServers = data.api_servers;
+    });
+
+    Dashboards.get(function(data){
+      $scope.availableDashboards = data.dashboards;
+    });
+
+    $scope.salvar = function(){
+      var data =  { "permission" : $scope.permission };
+
+      if ($scope.permission.id) {
+        Permissions.update(data, function(){
+          $scope.renderList();
+          $scope.permission = {};
+        });
+      }else{
+        Permissions.save(data, function(){
+          $scope.renderList();
+          $scope.permission = {};
+        });
+      }
+    };
 
     $scope.renderList = function(){
       Permissions.get(function(data){
@@ -361,8 +403,24 @@ Atlas.controller('permissionsController', [
       });
     }
 
-    $scope.loadpermission = function(item){
-      $scope.permission = item;
+    $scope.delete = function (id) {
+      var data = { "id" : id };
+      Permissions.remove(data, function(data){
+        $scope.renderList();
+      });
+    };
+
+    $scope.cancelar = function(){
+      $scope.permission = {};
+    };
+
+    $scope.loadPermission = function(item){
+      $scope.permission = {
+        "id" : item.id,
+        "user_id" : item.user ? item.user.id : 0,
+        "dashboard_id" : item.dashboard ? item.dashboard.id : 0,
+        "api_server_id" : (item.api_server ? item.api_server.id : 0),
+      };
     }
 
     $scope.renderList();
