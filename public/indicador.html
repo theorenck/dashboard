@@ -230,13 +230,15 @@
 
           value = value.split(' ');
 
+
+
           var template  = _.template(widgetTpl, {
             color    : widget.color,
             dataType : widget.indicator.name,
             grandeza : value[1],
             unity    : widget.indicator.unity,
             size     : widget.size,
-            title    : widget.indicator.name,
+            title    : widget.customized ? widget.name : widget.indicator.name,
             value    : value[0],
           });
 
@@ -253,6 +255,7 @@
           var dataset    = [];
           var percentual = 0;
           var total      = 0;
+          var title      = widget.customized ? widget.name : widget.indicator.name;
 
           if(data.statement.rows.length > 0){
             var volumeTotal = 0;
@@ -276,7 +279,7 @@
             dataset.push([ "OUTROS", 100 - total ]);
           }
 
-          Dashboard.renderPie('[data-behaivor=widget][data-id=' + widget.id + '] .content', dataset, colors, '<h3>'+ widget.indicator.name + '</h3>');
+          Dashboard.renderPie('[data-behaivor=widget][data-id=' + widget.id + '] .content', dataset, colors, '<h3>'+ title + '</h3>');
           Dashboard.loader('[data-behaivor=widget][data-id=' + widget.id + ']', 'hide');
         break;
       }
@@ -301,6 +304,8 @@
 
     renderGraph : function(el, data){
       var valores = Dashboard.prepareDataset(data.statement.rows);
+      var title   = el.customized ? el.name : el.indicator.name;
+
 
       $.each(valores.values, function(index, val) {
         valores.values[index][0] = parseInt(val[0]);
@@ -310,7 +315,7 @@
         chart = $('[data-behaivor="widget"][data-id=' + el.id + '] .content').highcharts('StockChart', {
             colors : [ Configuration.colors[el.color] ],
             title : {
-              text : "<h3>" + el.indicator.name + "</h3>",
+              text : "<h3>" + title + "</h3>",
               useHtml : true,
               style : {
                 fontFamily : "Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif",

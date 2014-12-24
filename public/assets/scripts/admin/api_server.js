@@ -116,7 +116,7 @@ Atlas.factory(
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/v1/users/:id', { id: '@widget.id' }, {
+      return $resource('http://127.0.0.1:9000/api/v1/users/:id', { id: '@user.id' }, {
          'update': { method:'PUT' }
       });
     }
@@ -136,6 +136,18 @@ Atlas.factory(
   ]
 );
 
+/* RESOURCE WIDGET TYPES */
+Atlas.factory(
+  'WidgetTypes',
+  ['$resource',
+    function($resource){
+      return $resource('http://127.0.0.1:9000/api/v1/widget_types/:id', { id: '@widget_types.id' }, {
+         'update': { method:'PUT' }
+      });
+    }
+  ]
+);
+
 
 /**
  * APP CONTROLLER
@@ -143,7 +155,9 @@ Atlas.factory(
 Atlas.controller('appController', [
   '$scope',
   function($scope){
-
+    $scope.range = function(num){
+      return new Array(num);
+    }
   }
 ]);
 
@@ -202,21 +216,15 @@ Atlas.controller('ApiServerController', [
 
 /**
  * DASHBOARD CONTROLLER
- * @todo  Salvar api_server no dashboard
  */
 Atlas.controller('dashboardController', [
   '$scope',
   'Dashboards',
-  'ApiServers',
 
-  function($scope, Dashboards, ApiServers){
+  function($scope, Dashboards){
     $scope.dashboard     = {};
     $scope.dashboardList = [];
     $scope.availableApiServers = [];
-
-    ApiServers.get(function(data){
-      $scope.availableApiServers = data.api_servers;
-    });
 
     $scope.renderList = function(){
       Dashboards.get(function(data){
@@ -278,12 +286,12 @@ Atlas.controller('indicatorController', [
     };
 
     $scope.salvar = function(){
-      var data =  { "indicator" : $scope.indicator };
-
       $scope.indicator.query.parameters.forEach(function(el, i){
         if ((el.name === '' || el.name === null) && (el.default_value === '' || el.default_value === null))
           delete $scope.indicator.query.parameters[i];
       });
+
+      var data =  { "indicator" : $scope.indicator };
 
       if ($scope.indicator.id) {
         Indicators.update(data, function(){
@@ -297,7 +305,6 @@ Atlas.controller('indicatorController', [
         });
       }
     };
-
 
     $scope.renderList = function(){
       Indicators.get(function(data){
@@ -339,10 +346,50 @@ Atlas.controller('indicatorController', [
 Atlas.controller('widgetsController', [
   '$scope',
   'Widgets',
+  'Indicators',
+  'Dashboards',
+  'WidgetTypes',
 
-  function($scope, Widgets){
+  function($scope, Widgets, Indicators, Dashboards, WidgetTypes){
     $scope.widget     = {};
     $scope.widgetList = [];
+
+    Indicators.get(function(data){
+      $scope.availableIndicators = data.indicators;
+    });
+
+    Dashboards.get(function(data){
+      $scope.availableDashboards = data.dashboards;
+    });
+
+    WidgetTypes.get(function(data){
+      $scope.availableWidgetTypes = data.widget_types;
+    });
+
+    $scope.salvar = function(){
+      var data =  { "widget" : $scope.widget };
+      data.widget.indicator_id   = $scope.widget.indicator.id;
+      data.widget.widget_type_id = $scope.widget.widget_type.id;
+
+      if ($scope.widget.id) {
+        Widgets.update(data, function(){
+          $scope.renderList();
+          $scope.cancelar();
+        });
+      }else{
+        Widgets.save(data, function(){
+          $scope.renderList();
+          $scope.cancelar();
+        });
+      }
+    };
+
+    $scope.delete = function(id){
+      Widgets.remove({ "id" : id },function(){
+        $scope.renderList();
+        $scope.cancelar();
+      });
+    }
 
     $scope.renderList = function(){
       Widgets.get(function(data){
@@ -353,6 +400,11 @@ Atlas.controller('widgetsController', [
     $scope.loadwidget = function(item){
       $scope.widget = item;
     }
+
+    $scope.cancelar = function(){
+      $scope.widget = {};
+    };
+
 
     $scope.renderList();
   }

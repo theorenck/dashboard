@@ -16,65 +16,70 @@
 
 <div class="row">
   <div class="col-md-12 col-lg-6">
-    <div class="well">
-      <form id="formCadastro" class="form-horizontal">
+    <form id="formCadastro" class="form-horizontal">
+      <div class="well">
+        <label class="control-label">Dashboard</label>
+        <select ng-model="widget.dashboard_id" class="form-control">
+          <option value="">Select</option>
+          <option ng-repeat="dashboard in availableDashboards" value="{{ dashboard.id }}">{{ dashboard.name }}</option>
+        </select>
+
+        <label class="control-label">Indicador</label>
+        <select ng-model="widget.indicator.id" class="form-control">
+          <option value="">Select</option>
+          <option ng-repeat="indicator in availableIndicators" value="{{indicator.id}}">{{ indicator.name }}</option>
+        </select>
+
+        <br>
+        <label class="label-control">Descrição Propria?</label>
+        <input type="checkbox" name="" value="true" ng-model="widget.customized">
+        <br>
+
+
+        <label class="control-label">Name</label>
+        <input type="text" ng-model="widget.name" class="form-control" ng-disabled="widget.customized!==true">
+
+        <label class="control-label">Description</label>
+        <input type="text" ng-model="widget.description" class="form-control" ng-disabled="widget.customized!==true">
+
+
         <label class="control-label">Color</label>
         <select class="form-control" ng-model="widget.color">
-          <option>Select</option>
+          <option value="">Select</option>
           <option value="orange">Orange</option>
-          <option value="green">green</option>
+          <option value="green">Green</option>
           <option value="blue">Blue</option>
           <option value="yellow">Yellow</option>
           <option value="red">Red</option>
         </select>
 
         <label class="control-label">Type</label>
-        <select class="form-control" ng-model="widget.widget_type.type">
-          <option>Select</option>
-          <option>Pie</option>
-          <option>Status</option>
-          <option>Line</option>
+        <select class="form-control" ng-model="widget.widget_type.id">
+          <option value="">Select</option>
+          <option ng-repeat="widget in availableWidgetTypes" value="{{ widget.id }}">{{ widget.name }}</option>
         </select>
 
         <label class="control-label">Size</label>
         <select class="form-control" ng-model="widget.size">
-          <option>Select</option>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-          <option value="7">7</option>
-          <option value="8">8</option>
-          <option value="9">9</option>
-          <option value="10">10</option>
-          <option value="11">11</option>
-          <option value="12">12</option>
+          <option value="">Select</option>
+          <option ng-repeat="a in range(12) track by $index" ng-value="{{ $index+1 }}">{{ $index+1 }}</option>
         </select>
 
         <label class="control-label">Position</label>
         <input ng-model="widget.position" class="form-control" type="text" name="position">
 
-        <label class="control-label">Indicator</label>
-        <select ng-model="widget.indicator.id" class="form-control" id="selectIndicator"></select>
-
-        <label class="control-label">Dashboard</label>
-        <select ng-model="widget.size" class="form-control" id="selectDashboard"></select>
-
         <br>
         <button ng-click="salvar()" class="btn btn-success" type="button">Salvar</button>
         <button ng-click="cancelar()" class="btn btn-link" type="button">Cancelar</button>
-
-      </form>
-    </div>
+      </div>
+    </form>
   </div>
 
   <div class="col-md-12 col-lg-6">
     <div class="list-group striped" data-behaivor="history-list">
-      <div ng-repeat="widget in widgetList | orderBy:widget.position:true" href="javascript:;" class="list-group-item" ng-click="loadwidget(widget)">
+      <div ng-repeat="widget in widgetList" href="javascript:;" class="list-group-item" ng-click="loadwidget(widget)">
         <p class="list-group-item-text">
-          <span class="close-history-item" ng-click="deletewidget(widget.id)">
+          <span class="close-history-item" ng-click="delete(widget.id)">
             <span class="fa fa-close"></span>
           </span>
           <strong>{{ widget.indicator.name }}</strong>

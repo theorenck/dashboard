@@ -45,22 +45,26 @@
         <table class="table table-bordered table-striped table-editable">
           <thead>
             <tr>
-              <th>Nome</th>
-              <th>Tipo</th>
-              <th>Valor</th>
+              <th class="col-md-4">Nome</th>
+              <th class="col-md-4">Tipo</th>
+              <th class="col-md-4">Valor</th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="(key, param) in indicator.query.parameters">
-              <td><input class="form-control" type="text" ng-model="param.name"></td>
+              <td>
+                <input class="form-control" type="text" ng-model="param.name">
+              </td>
               <td>
                 <select ng-model="param.data_type" class="form-control" ng-options="data for data in data_types"></select>
               </td>
-              <td><input class="form-control" type="text" ng-model="param.default_value"></td>
+              <td>
+                <input class="form-control" type="text" ng-model="param.default_value">
+              </td>
             </tr>
           </tbody>
         </table>
-        <button class="btn btn-block btn-info" ng-click="addParam()">Adicionar Parâmetro</button>
+        <button class="btn btn-block btn-info" ng-click="addParam()">Add Param</button>
 
         <br>
         <button ng-click="salvar()" class="btn btn-success" type="button">Salvar</button>
