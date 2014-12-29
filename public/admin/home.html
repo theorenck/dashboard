@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="col-md-6">
+    <h4 class="modal-title">Login</h4>
+
+    <form id="formLogin" class="form-horizontal" ng-submit="login(credentials)" ng-if="!isLoggedIn()">
+      <label class="control-label">User</label>
+      <input ng-model="credentials.username" class="form-control" type="text" name="name">
+
+      <label class="control-label">Password</label>
+      <input ng-model="credentials.password" class="form-control" type="text" name="description">
+
+      <br>
+      <button class="btn btn-success">Login</button>
+    </form>
+
+    <h3 ng-if="isLoggedIn()">LOGADO</h3>
+
+  </div>
+
+</div>

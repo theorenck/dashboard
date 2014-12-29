@@ -6,11 +6,24 @@ var Atlas = angular.module('Atlas',['ngResource', 'ngRoute']);
 Atlas.config([
   '$httpProvider',
 
-  function($httpProvider) {
+  function ($httpProvider){
     $httpProvider.defaults.useXDomain = true;
-    $httpProvider.defaults.headers.common.Authorization = 'Token token=4361a34b6472e4634cd27f8d3f37108e';
+    $httpProvider.interceptors.push('httpRequestInterceptor')
   }
 ]);
+
+
+Atlas.factory('httpRequestInterceptor', function () {
+  var authorization = null;
+  return {
+    request: function (config) {
+      var token = localStorage.getItem('token') || sessionStorage.getItem('token');
+      if(token)
+        config.headers.Authorization = 'Token token=' +token;
+      return config;
+    }
+  };
+});
 
 /**
  * Configuração de todas
@@ -19,7 +32,7 @@ Atlas.config(function($routeProvider){
   $routeProvider
 
   .when('/', {
-    url : '/',
+    templateUrl: 'home.html'
   })
 
   .when('/api-server', {
@@ -70,6 +83,20 @@ Atlas.factory(
     }
   ]
 );
+
+/* RESOURCE APISERVERS */
+Atlas.factory(
+  'AuthService',
+  ['$resource',
+
+    function($resource){
+      return $resource('http://127.0.0.1:9000/api/v1/authentications/:id', { id: '@authentication.id' }, {
+         'update': { method:'PUT' }
+      });
+    }
+  ]
+);
+
 
 /* RESOURCE DASHBOARDS */
 Atlas.factory(
@@ -153,11 +180,38 @@ Atlas.factory(
  * APP CONTROLLER
  */
 Atlas.controller('appController', [
-  '$scope',
-  function($scope){
+  "$scope",
+  "AuthService",
+  function($scope, AuthService){
+    $scope.credentials = {};
+
+    $scope.login = function(credentials){
+      var authentication = {"authentication"  : credentials };
+
+      AuthService.save(authentication, function(res){
+        if (res.authentication && res.authentication.token) {
+          var token = res.authentication.token;
+          sessionStorage.setItem('token', token);
+          sessionStorage.setItem('logged-in', true);
+        }else{
+          sessionStorage.setItem('logged-in', false);
+        }
+      });
+    };
+
+    $scope.logout = function(){
+      sessionStorage.removeItem('token');
+      sessionStorage.removeItem('logged-in');
+    };
+
+    $scope.isLoggedIn = function(){
+      return !!sessionStorage.getItem('logged-in') && !!sessionStorage.getItem('token') || false;
+    }
+
     $scope.range = function(num){
       return new Array(num);
-    }
+    };
+
   }
 ]);
 

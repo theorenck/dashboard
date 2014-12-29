@@ -637,6 +637,9 @@ var Dashboard = {
       var valorTotal         = v1[0].statement.rows[0][0];
       var inadimplencia      = v2[0].statement.rows[0][0];
       var valorInadimplencia = (inadimplencia / valorTotal) * 100;
+
+      console.log(valorTotal, inadimplencia, valorInadimplencia);
+
       valorInadimplencia     = isNaN(valorInadimplencia) ? 0 : valorInadimplencia;
 
       Dashboard.renderIndicador('[data-type=percentual-inadimplentes]', valorInadimplencia);

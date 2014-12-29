@@ -324,6 +324,22 @@ section{
   background-position:  0 -168px;
 }
 
+.checkbox-control {
+  margin-bottom: 10px;
+}
+
+.checkbox-control .atlCheckbox,
+.checkbox-control .atlCheckbox+label{
+  float: left;
+}
+
+.checkbox-control .atlCheckbox+label{
+  height: 24px;
+  line-height: 24px;
+  display: block;
+  margin-left: 5px;
+}
+
 .atlCheckbox input{
   display: block;
   margin: 0 !important;
