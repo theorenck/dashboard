@@ -1,0 +1,136 @@
+<div class="row">
+  <div class="col-md-12">
+    <div id="query-area">
+      <h2 data-type="console">Console</h2>
+      <h2 data-type="results" class="hidden">Resultados</h2>
+
+      <div class="well">
+        <form>
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <label class="control-label">SQL</label>
+                <textarea autofocus="true" id="statement" data-behaivor="code" class="form-control" rows="4">SELECT p.codproduto, p.codbarras, p.descricao1 FROM zw14ppro p WHERE p.situacao = 'N'</textarea>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <p style="margin-bottom: 20px;">
+                <a data-behaivor="toggle-options" id="advanced-options" href="javascript:;">
+                  Avançado <span class="caret"></span>
+                </a>
+              </p>
+            </div>
+
+            <div class="col-md-12" style="display: none;" data-container="options">
+              <div class="form-group">
+                <label class="control-label">Paramêtros</label>
+                <table tab-index="1" data-behaivor="table-editable" id="table" class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th class="col-xs-4">Nome</th>
+                      <th class="col-xs-4">Tipo</th>
+                      <th class="col-xs-4">Valor</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>&nbsp;</td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="form-group">
+                <label class="control-label">Limite</label>
+
+                <div class="input-group">
+                  <div class="input-group-addon">
+                    <div data-type="checkbox" data-behaivor="disable-limit" class="atlCheckbox atlCheckbox_checked"><input type="checkbox" checked="checked"></div>
+                  </div>
+                  <input data-behaivor="limit-input" type="text" id="limit" class="form-control" value="100"/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <div>
+                <button class="btn btn-success btn-block" data-behavior="execute-sql" data-type="console" type="submit" data-loading-text="Carregando...">Executar SQL</button>
+              </div>
+              <div>
+                <button class="btn btn-default btn-block hidden" data-type="results" type="button" data-behavior="edit-sql" >Editar SQL</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="row" data-type="history">
+      <div class="col-md-12 historico">
+          <div class="list-group striped" data-behaivor="history-list"></div>
+      </div>
+    </div>
+
+    <div id="results-area" class="hidden">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="panel panel-default">
+            <div class="table-responsive">
+              <div id="results">
+                <table class="table table-bordered table-striped"></table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <button type="button" class="btn btn-primary btn-block" data-behavior="see-more" data-loading-text="Carregando">Ver mais</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+  <script id="tableResultsHeader" type="text/template">
+      <tr>
+        <% _.forEach(columns, function(column) { %>
+        <th nowrap><%= column.name %></th>
+        <% }); %>
+      </tr>
+  </script>
+
+  <script id="tableResultsRows" type="text/template">
+    <% _.forEach(rows, function(row) { %>
+    <tr>
+      <% _.forEach(row, function(column) { %>
+      <td nowrap><%= column %></td>
+    <% }); %>
+    </tr>
+    <% }); %>
+  </script>
+
+
+  <script id="historyItems" type="text/template">
+    <% _.forEach(rows, function(row){ %>
+    <a href="#" class="list-group-item" data-id="<%= row.id %>">
+      <p class="list-group-item-text">
+        <span class="close-history-item">
+          <span class="fa fa-close"></span>
+        </span>
+        <span class="label label-<%= Historico.getStyleType(row.type) %>"><%= row.type %></span>
+        <%= row.statement %>
+      </p>
+      <h6 class="list-group-item-heading" style="font-weight:bold; color:#2c3e50; padding-top:10px;">
+        <%= moment(row.created_at).fromNow() %>
+      </h6>
+    </a>
+    <% }); %>
+  </script>

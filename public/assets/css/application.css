@@ -12,6 +12,10 @@
     border-left: 4px solid transparent;
 }
 
+.navbar .navbar-brand img{
+  max-height: 21px;
+}
+
 pre {
   border: none;
   padding: 0;
@@ -329,15 +333,15 @@ section{
 }
 
 .checkbox-control .atlCheckbox,
-.checkbox-control .atlCheckbox+label{
+.checkbox-control label .atlCheckbox{
   float: left;
 }
 
-.checkbox-control .atlCheckbox+label{
+.checkbox-control label .atlCheckbox{
   height: 24px;
   line-height: 24px;
   display: block;
-  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .atlCheckbox input{

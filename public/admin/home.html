@@ -1,20 +1,45 @@
-<div class="row">
-  <div class="col-md-6">
-    <h4 class="modal-title">Login</h4>
-
+<div class="row col-sm-offset-4 col-sm-4">
+  <div class="header-area">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1>
+          Entrar
+          <small></small>
+        </h1>
+      </div>
+    </div>
+  </div>
+  <div class="well">
     <form id="formLogin" class="form-horizontal" ng-submit="login(credentials)" ng-if="!isLoggedIn()">
-      <label class="control-label">User</label>
-      <input ng-model="credentials.username" class="form-control" type="text" name="name">
+      <div class="form-group">
+        <div class="col-md-12">
+          <label class="control-label">Nome de usuário</label>
+          <input ng-model="credentials.username" class="form-control" type="text">
+        </div>
+      </div>
 
-      <label class="control-label">Password</label>
-      <input ng-model="credentials.password" class="form-control" type="text" name="description">
+      <div class="form-group">
+        <div class="col-md-12">
+          <label class="control-label">Senha</label>
+          <input ng-model="credentials.password" class="form-control" type="password">
+        </div>
+      </div>
 
-      <br>
-      <button class="btn btn-success">Login</button>
+      <div class="form-group">
+        <div class="col-md-12">
+          <div class="checkbox-control">
+            <label>
+              <z-checkbox ng-model="credentials.rememberMe"></z-checkbox>
+              Mantenha-me conectado
+            </label>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-success btn-block">Login</button>
     </form>
 
-    <h3 ng-if="isLoggedIn()">LOGADO</h3>
-
+    <h3 ng-if="isLoggedIn()">
+      Você entrou com sucesso. Parabéns!
+    </h3>
   </div>
-
 </div>
