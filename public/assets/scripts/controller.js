@@ -301,7 +301,6 @@ Atlas.controller('usersController', [
 
     $scope.renderList = function(){
       Users.get(function(data){
-        console.log(data.users);
         $scope.userList = data.users;
       });
     }
@@ -393,23 +392,113 @@ Atlas.controller('permissionsController', [
  */
 Atlas.controller('consoleController', [
   '$scope',
+  'Statements',
 
-  function($scope){
+  function($scope, Statements){
+    $scope.options     = false;
+    $scope.showResults = false;
+    $scope.isExecuting = false;
+    $scope.hasLimit    = true;
+    $scope.results     = {};
+    $scope.currentPage = 1;
 
-    $(Tables.init);
-    $(Index.init);
-    $(Historico.init);
+    /* Estado inicial do statement */
+    $scope.resetStatement = function(){
+      $scope.statement = {
+        params : [],
+        sql : 'SELECT p.codproduto, p.codbarras, p.descricao1 FROM zw14ppro p WHERE p.situacao = \'N\'',
+        limit : 100,
+        offset : 0,
+      };
+    };
 
+    $scope.addParam = function(){
+      $scope.statement.params.push({});
+    };
+
+    $scope.prepareStatement = function(){
+
+    };
+
+    /* @todo : Executar query de fato */
+    $scope.executeQuery = function(currentPage){
+      $scope.isExecuting = true;
+      if (currentPage) {
+        $scope.currentPage += currentPage;
+        $scope.statement.offset = $scope.statement.limit * $scope.currentPage;
+      };
+      var data  = { "statement" : $scope.statement };
+
+
+
+      Statements.execute(data, function(data){
+        $scope.isExecuting = false;
+        $scope.showResults = true;
+        $scope.results     = data.statement;
+
+        console.log($scope.results);
+      });
+    };
+
+    // $(Tables.init);
+    // $(Index.init);
+    // $(Historico.init);
+
+
+    $scope.resetStatement();
   }
 ]);
 
 /**
- * CONSOLE CONTROLLER
+ * DASHBOARDS CONTROLLER
  */
 Atlas.controller('dashboardsController', [
   '$scope',
+  'Dashboards',
+  function($scope, Dashboards){
+    $scope.dashboards = [];
 
-  function($scope){
+    Dashboards.get(function(data){
+      $scope.dashboards = data.dashboards;
+    });
+  }
+]);
 
+/**
+ * DASHBOARDS DETAIL CONTROLLER
+ */
+Atlas.controller('dashboardDetailController', [
+  '$scope',
+  'Dashboards',
+  '$routeParams',
+  function($scope, Dashboards, $routeParams){
+
+    $scope.dashboard = {
+      id : $routeParams.id
+    };
+
+    Dashboards.get({ dashboard : { id : $routeParams.id } }, function(data){
+      console.log(data);
+    });
+
+    $scope.indicadores = {
+      periodo : {
+        inicio    : (moment().subtract(29,'days').format("YYYY-MM-DD 00:00:00")),
+        fim       : (moment().format("YYYY-MM-DD 00:00:00")),
+        duracao   : function(grandeza) {
+          var grandeza  = grandeza || 'days';
+          var fim       = moment(Indicadores.periodo.fim);
+          var inicio    = moment(Indicadores.periodo.inicio);
+          var diferenca = fim.diff(inicio,grandeza);
+          return diferenca + 1;
+        },
+      },
+    }
+
+
+
+    Dashboards.get(function(data){
+      $scope.dashboards = data.dashboards;
+    });
   }
 ]);

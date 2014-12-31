@@ -1,3 +1,14 @@
+Atlas.directive('integer', function(){
+  return {
+    require: 'ngModel',
+    link: function(scope, ele, attr, ctrl){
+      ctrl.$parsers.unshift(function(viewValue){
+        return parseInt(viewValue, 10);
+      });
+    }
+  };
+});
+
 Atlas.directive('zCheckbox', function() {
   return {
     restrict: 'E',
@@ -5,7 +16,7 @@ Atlas.directive('zCheckbox', function() {
     scope: {
       "checkbox" : '=ngModel'
     },
-    template: '<div class="atlCheckbox">' +
+    template: '<div class="atlCheckbox" ng-class="checkbox ? \'atlCheckbox_checked\' : \'\'">' +
     '<input type="checkbox" checked="checked" ng-model="checkbox">' +
     '</div>',
 
@@ -31,4 +42,15 @@ Atlas.directive('zCheckbox', function() {
       });
     }
   };
+});
+
+Atlas.directive('zDateRangePicker', function(){
+  return {
+    restrict : 'E',
+    require : 'ngModel',
+    scope : {
+      periodo : '=ngModel'
+    },
+
+  }
 });

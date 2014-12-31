@@ -1,55 +1,66 @@
 <div class="row">
   <div class="col-md-12">
     <div id="query-area">
-      <h2 data-type="console">Console</h2>
-      <h2 data-type="results" class="hidden">Resultados</h2>
+
+      <h2 ng-hide="showResults">Console</h2>
+
+      <h2 ng-show="showResults">Resultados <small>{{ results.records }} registros</small></h2>
+
+      <pre>{{ statement | json }}</pre>
 
       <div class="well">
-        <form>
+        <form ng-submit="executeQuery()">
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
                 <label class="control-label">SQL</label>
-                <textarea autofocus="true" id="statement" data-behaivor="code" class="form-control" rows="4">SELECT p.codproduto, p.codbarras, p.descricao1 FROM zw14ppro p WHERE p.situacao = 'N'</textarea>
+                <textarea autofocus="true"class="form-control" rows="4">{{ statement.sql }}</textarea>
               </div>
             </div>
 
             <div class="col-md-12">
               <p style="margin-bottom: 20px;">
-                <a data-behaivor="toggle-options" id="advanced-options" href="javascript:;">
-                  Avançado <span class="caret"></span>
+                <a href="javascript:;" ng-click="options=!options;">
+                  Avançado <span class="caret" ng-class="options ? 'caret-reversed' : ''"></span>
                 </a>
               </p>
             </div>
 
-            <div class="col-md-12" style="display: none;" data-container="options">
+            <div class="col-md-12" ng-show="options">
               <div class="form-group">
                 <label class="control-label">Paramêtros</label>
-                <table tab-index="1" data-behaivor="table-editable" id="table" class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped table-editable">
                   <thead>
                     <tr>
-                      <th class="col-xs-4">Nome</th>
-                      <th class="col-xs-4">Tipo</th>
-                      <th class="col-xs-4">Valor</th>
+                      <th class="col-md-4">Nome</th>
+                      <th class="col-md-4">Tipo</th>
+                      <th class="col-md-4">Valor</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>&nbsp;</td>
-                      <td></td>
-                      <td></td>
+                    <tr ng-repeat="(key, param) in statement.params">
+                      <td>
+                        <input class="form-control" type="text" ng-model="param.name">
+                      </td>
+                      <td>
+                        <select ng-model="param.data_type" class="form-control" ng-options="data for data in data_types"></select>
+                      </td>
+                      <td>
+                        <input class="form-control" type="text" ng-model="param.default_value">
+                      </td>
                     </tr>
                   </tbody>
                 </table>
+                <button class="btn btn-block btn-info" type="button" ng-click="addParam()">Add Param</button>
               </div>
               <div class="form-group">
                 <label class="control-label">Limite</label>
 
                 <div class="input-group">
                   <div class="input-group-addon">
-                    <div data-type="checkbox" data-behaivor="disable-limit" class="atlCheckbox atlCheckbox_checked"><input type="checkbox" checked="checked"></div>
+                    <z-checkbox ng-model="hasLimit"></z-checkbox>
                   </div>
-                  <input data-behaivor="limit-input" type="text" id="limit" class="form-control" value="100"/>
+                  <input type="text" class="form-control" ng-model="statement.limit" ng-disabled="!hasLimit" integer />
                 </div>
               </div>
             </div>
@@ -58,10 +69,8 @@
           <div class="row">
             <div class="col-md-12">
               <div>
-                <button class="btn btn-success btn-block" data-behavior="execute-sql" data-type="console" type="submit" data-loading-text="Carregando...">Executar SQL</button>
-              </div>
-              <div>
-                <button class="btn btn-default btn-block hidden" data-type="results" type="button" data-behavior="edit-sql" >Editar SQL</button>
+                <button class="btn btn-success btn-block" type="submit" ng-disabled="isExecuting" ng-show="!showResults">Executar SQL</button>
+                <button class="btn btn-default btn-block" type="button" ng-show="showResults">Editar SQL</button>
               </div>
             </div>
           </div>
@@ -69,68 +78,59 @@
       </div>
     </div>
 
-    <div class="row" data-type="history">
-      <div class="col-md-12 historico">
-          <div class="list-group striped" data-behaivor="history-list"></div>
-      </div>
-    </div>
-
-    <div id="results-area" class="hidden">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="panel panel-default">
-            <div class="table-responsive">
-              <div id="results">
-                <table class="table table-bordered table-striped"></table>
-              </div>
+    <!-- RESULTADOS -->
+    <div class="row" ng-show="showResults">
+      <div class="col-md-12">
+        <div class="panel panel-default">
+          <div class="table-responsive">
+            <div id="results">
+              <table class="table table-bordered table-striped">
+                <thead>
+                  <tr>
+                    <th nowrap ng-repeat="column in results.columns">{{ column.name }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="row in results.rows">
+                    <td nowrap ng-repeat="column in row">{{ column }}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
+
       <div class="row">
         <div class="col-md-12">
-          <button type="button" class="btn btn-primary btn-block" data-behavior="see-more" data-loading-text="Carregando">Ver mais</button>
+          <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)">Ver mais</button>
         </div>
+      </div>
+    </div>
+
+    <!-- HISTÓRICO -->
+    <div class="row" data-type="history">
+      <div class="col-md-12 historico">
+        <div class="list-group striped" data-behaivor="history-list"></div>
       </div>
     </div>
 
   </div>
 </div>
 
-
-
-  <script id="tableResultsHeader" type="text/template">
-      <tr>
-        <% _.forEach(columns, function(column) { %>
-        <th nowrap><%= column.name %></th>
-        <% }); %>
-      </tr>
-  </script>
-
-  <script id="tableResultsRows" type="text/template">
-    <% _.forEach(rows, function(row) { %>
-    <tr>
-      <% _.forEach(row, function(column) { %>
-      <td nowrap><%= column %></td>
-    <% }); %>
-    </tr>
-    <% }); %>
-  </script>
-
-
-  <script id="historyItems" type="text/template">
-    <% _.forEach(rows, function(row){ %>
-    <a href="#" class="list-group-item" data-id="<%= row.id %>">
-      <p class="list-group-item-text">
-        <span class="close-history-item">
-          <span class="fa fa-close"></span>
-        </span>
-        <span class="label label-<%= Historico.getStyleType(row.type) %>"><%= row.type %></span>
-        <%= row.statement %>
-      </p>
-      <h6 class="list-group-item-heading" style="font-weight:bold; color:#2c3e50; padding-top:10px;">
-        <%= moment(row.created_at).fromNow() %>
-      </h6>
-    </a>
-    <% }); %>
-  </script>
+<script id="historyItems" type="text/template">
+  <% _.forEach(rows, function(row){ %>
+  <a href="#" class="list-group-item" data-id="<%= row.id %>">
+    <p class="list-group-item-text">
+      <span class="close-history-item">
+        <span class="fa fa-close"></span>
+      </span>
+      <span class="label label-<%= Historico.getStyleType(row.type) %>"><%= row.type %></span>
+      <%= row.statement %>
+    </p>
+    <h6 class="list-group-item-heading" style="font-weight:bold; color:#2c3e50; padding-top:10px;">
+      <%= moment(row.created_at).fromNow() %>
+    </h6>
+  </a>
+  <% }); %>
+</script>

@@ -102,3 +102,17 @@ Atlas.factory(
   ]
 );
 
+
+/* RESOURCE STATEMENTS */
+Atlas.factory(
+  'Statements',
+  ['$resource',
+    function($resource){
+      return $resource('http://localhost:3000/api/statements', {}, {
+         'update' : { method:'PUT' },
+         'execute': { method:'POST' }
+      });
+    }
+  ]
+);
+

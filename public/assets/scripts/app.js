@@ -56,9 +56,19 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/api_server.html'
   })
 
+  .when('/dashboards', {
+    controller: 'dashboardsController',
+    templateUrl: '/admin/dashboardsList.html'
+  })
+
   .when('/dashboards/new', {
     controller: 'dashboardController',
     templateUrl: '/admin/dashboard.html'
+  })
+
+  .when('/dashboards/:id', {
+    controller: 'dashboardDetailController',
+    templateUrl: '/admin/dashboardDetail.html'
   })
 
   .when('/indicator', {
@@ -86,12 +96,7 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/console.html'
   })
 
-  .when('/dashboards', {
-    controller: 'dashboardsController',
-    templateUrl: '/admin/dashboardsList.html'
-  })
-
-  // .otherwise({
-  //   redirectTo : '/'
-  // });
+  .otherwise({
+    redirectTo : '/'
+  });
 });

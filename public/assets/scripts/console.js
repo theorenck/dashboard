@@ -1,4 +1,15 @@
 moment.locale('pt-br');
+
+Highcharts.setOptions({
+  lang: {
+    months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',  'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+    shortMonths : ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',  'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    thousandsSep : '.',
+    decimalPoint : ',',
+    weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+  }
+});
+
 var API = Configuration.api;
 var editor;
 

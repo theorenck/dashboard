@@ -9,8 +9,16 @@
   </div>
 </div>
 
-<ul class="breadcrumb">
-  <li><a href="#">Atlas</a></li>
-  <li><a href="#">Dashboard</a></li>
-  <li class="active">new</li>
-</ul>
+<div class="row">
+  <div class="col-md-3" ng-repeat="dash in dashboards">
+
+    <div class="widget alert alert-info">
+      <h4 class="title">
+        <a href="dashboards/{{ dash.id }}">{{ dash.name }}</a>
+      </h4>
+      <!-- <div class="info">
+        <span class="valor">{{ dash }}</span>
+      </div> -->
+    </div>
+  </div>
+</div>
