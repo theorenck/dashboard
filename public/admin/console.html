@@ -35,18 +35,20 @@
                       <th class="col-md-4">Nome</th>
                       <th class="col-md-4">Tipo</th>
                       <th class="col-md-4">Valor</th>
+                      <!-- <th class="col-md-4">Evalueted</th> -->
                     </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat="(key, param) in statement.params">
+                    <tr ng-repeat="(key, param) in statement.parameters">
                       <td>
                         <input class="form-control" type="text" ng-model="param.name">
                       </td>
                       <td>
-                        <select ng-model="param.data_type" class="form-control" ng-options="data for data in data_types"></select>
+                        <input class="form-control" type="text" ng-model="param.type">
+                        <!-- <select ng-model="param.data_type" class="form-control" ng-options="data for data in data_types"></select> -->
                       </td>
                       <td>
-                        <input class="form-control" type="text" ng-model="param.default_value">
+                        <input class="form-control" type="text" ng-model="param.value">
                       </td>
                     </tr>
                   </tbody>

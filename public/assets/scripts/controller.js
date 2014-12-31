@@ -405,7 +405,7 @@ Atlas.controller('consoleController', [
     /* Estado inicial do statement */
     $scope.resetStatement = function(){
       $scope.statement = {
-        params : [],
+        parameters : [],
         sql : 'SELECT p.codproduto, p.codbarras, p.descricao1 FROM zw14ppro p WHERE p.situacao = \'N\'',
         limit : 100,
         offset : 0,
@@ -413,7 +413,12 @@ Atlas.controller('consoleController', [
     };
 
     $scope.addParam = function(){
-      $scope.statement.params.push({});
+      $scope.statement.parameters.push({
+        name : '',
+        value : '',
+        type : '',
+        evaluted: false,
+      });
     };
 
     $scope.prepareStatement = function(){
