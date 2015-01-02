@@ -339,6 +339,7 @@ td .z-checkbox{
   height: 43px;
   padding-top: 8px;
   display: block;
+  cursor: default;
 }
 
 .checkbox-control .atlCheckbox,

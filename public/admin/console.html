@@ -6,6 +6,20 @@
 
       <h2 ng-show="showResults">Resultados <small>{{ results.records }} registros</small></h2>
 
+      <pre>{{ statement | json }}</pre>
+
+      <!-- Errors -->
+      <div class="alert alert-dismissable alert-danger" ng-show="errors.length">
+        <button type="button" class="close" data-dismiss="alert" ng-click="errors=[]">×</button>
+        <strong>Oh snap! </strong>
+        <p ng-repeat="err in errors">
+          <!-- <p ng-repeat="message in base"> -->
+            {{ err }}
+          <!-- </p> -->
+        </p>
+      </div>
+      <!-- / Errors -->
+
       <div class="well">
         <form ng-submit="executeQuery()">
           <div class="row">
@@ -40,10 +54,12 @@
                   <tbody>
                     <tr ng-repeat="(key, param) in statement.parameters track by $index">
                       <td>
-                        <z-checkbox ng-model="param.evaluated" class="z-checkbox"></z-checkbox>
+                        <div class="z-checkbox">
+                          <z-checkbox ng-model="param.evaluated"></z-checkbox>
+                        </div>
                       </td>
                       <td>
-                        <input class="form-control" type="text" ng-model="param.name" ng-required="true">
+                        <input class="form-control" type="text" ng-model="param.name">
                       </td>
                       <td>
                         <!-- <input class="form-control" type="text" ng-model="param.type"> -->

@@ -1,4 +1,3 @@
-
 /**
  * APP CONTROLLER
  */
@@ -404,6 +403,15 @@ Atlas.controller('consoleController', [
     $scope.hasLimit    = true;
     $scope.results     = [];
     $scope.currentPage = 1;
+    $scope.errors      = [];
+
+    $scope.validateParams = function(){
+      for(var i = 0; i < $scope.statement.parameters.length; i++){
+        var param = $scope.statement.parameters[i];
+        if( param.name.trim() === '' || param.value.trim() === '')
+          $scope.statement.parameters.splice(i,1);
+      }
+    }
 
     $scope.resetStatement = function(){
       $scope.statement = {
@@ -424,21 +432,23 @@ Atlas.controller('consoleController', [
     };
 
     $scope.executeQuery = function(currentPage){
+      $scope.validateParams();
+
+      $scope.isExecuting   = true;
+
       codeMirror.save();
       $scope.statement.sql = codeMirror.getValue();
 
-      $scope.isExecuting   = true;
 
       if (currentPage) {
         $scope.currentPage += currentPage;
         $scope.statement.offset = $scope.statement.limit * $scope.currentPage;
       };
 
-      if ($scope.statement.parameters.length === 0) {
-        delete $scope.statement.parameters;
+      if (!$scope.hasLimit) {
+        delete $scope.statement.limit;
+        delete $scope.offset;
       };
-
-      /*  */
 
       var data  = { "statement" : $scope.statement };
 
@@ -449,8 +459,15 @@ Atlas.controller('consoleController', [
         if($scope.currentPage > 1)
           $scope.results.rows = $scope.results.rows.concat(data.statement.rows);
         else
-          $scope.results     = data.statement;
+          $scope.results = data.statement;
 
+      }, function(err){
+        console.log(err);
+        $scope.isExecuting = false;
+        if (err.status === 500)
+          $scope.errors = [err.statusText];
+        else
+          $scope.errors = err.data.errors.base;
       });
     };
 
@@ -471,7 +488,7 @@ Atlas.controller('consoleController', [
           globalVars: true
         },
         tabSize : 2,
-        tabMode : "default",
+        tabMode : "spaces",
         styleActiveLine: false,
         matchBrackets: true,
         mode : 'text/x-sql',
