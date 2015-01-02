@@ -16,11 +16,12 @@ Atlas.directive('zCheckbox', function() {
     scope: {
       "checkbox" : '=ngModel'
     },
-    template: '<div class="atlCheckbox" ng-class="checkbox ? \'atlCheckbox_checked\' : \'\'">' +
-    '<input type="checkbox" checked="checked" ng-model="checkbox">' +
-    '</div>',
+    template: '<div class="atlCheckbox" ng-class="{ngModel : \'atlCheckbox_checked\' }">' +
+      '<input type="checkbox" ng-model="checkbox">' +
+      '</div>',
 
     link: function(scope, element, attr, ngController) {
+
       element.on('mouseenter', function(event){
         element.children(1).addClass('atlCheckbox_hover');
       });

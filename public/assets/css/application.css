@@ -332,6 +332,15 @@ section{
   margin-bottom: 10px;
 }
 
+td .z-checkbox{
+  padding: 10px 15px;
+  width: 100%;
+  font-size: 15px;
+  height: 43px;
+  padding-top: 8px;
+  display: block;
+}
+
 .checkbox-control .atlCheckbox,
 .checkbox-control label .atlCheckbox{
   float: left;

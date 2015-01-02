@@ -395,14 +395,16 @@ Atlas.controller('consoleController', [
   'Statements',
 
   function($scope, Statements){
-    $scope.options     = false;
+    var codeMirror;
+
+    $scope.data_types  = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
+    $scope.options     = true;
     $scope.showResults = false;
     $scope.isExecuting = false;
     $scope.hasLimit    = true;
-    $scope.results     = {};
+    $scope.results     = [];
     $scope.currentPage = 1;
 
-    /* Estado inicial do statement */
     $scope.resetStatement = function(){
       $scope.statement = {
         parameters : [],
@@ -416,41 +418,82 @@ Atlas.controller('consoleController', [
       $scope.statement.parameters.push({
         name : '',
         value : '',
-        type : '',
-        evaluted: false,
+        type : "",
+        evaluated: false,
       });
     };
 
-    $scope.prepareStatement = function(){
-
-    };
-
-    /* @todo : Executar query de fato */
     $scope.executeQuery = function(currentPage){
-      $scope.isExecuting = true;
+      codeMirror.save();
+      $scope.statement.sql = codeMirror.getValue();
+
+      $scope.isExecuting   = true;
+
       if (currentPage) {
         $scope.currentPage += currentPage;
         $scope.statement.offset = $scope.statement.limit * $scope.currentPage;
       };
+
+      if ($scope.statement.parameters.length === 0) {
+        delete $scope.statement.parameters;
+      };
+
+      /*  */
+
       var data  = { "statement" : $scope.statement };
-
-
 
       Statements.execute(data, function(data){
         $scope.isExecuting = false;
         $scope.showResults = true;
-        $scope.results     = data.statement;
 
-        console.log($scope.results);
+        if($scope.currentPage > 1)
+          $scope.results.rows = $scope.results.rows.concat(data.statement.rows);
+        else
+          $scope.results     = data.statement;
+
       });
     };
 
-    // $(Tables.init);
-    // $(Index.init);
-    // $(Historico.init);
+    $scope.initializeCodeMirror = function(){
+      var code = CodeMirror.fromTextArea(document.getElementById("statement"), {
+        lineNumbers: true,
+        extraKeys: {
+          "Ctrl-Space": "autocomplete",
+          "F8" : function(){
+            console.log('F8');
+          },
+          "Ctrl-Enter" : function(e){
+            console.log('Ctrl + Enter');
+          }
+        },
+        mode: {
+          name: "sql",
+          globalVars: true
+        },
+        tabSize : 2,
+        tabMode : "default",
+        styleActiveLine: false,
+        matchBrackets: true,
+        mode : 'text/x-sql',
+        // onKeyUp : function(event, value, closeFunction){
+        //   console.log(event, value);
+        //   console.log('oi');
+        //   // $scope.statement.sql = '';
+        // },
+        viewportMargin: Infinity
+        // readOnly : true
+      });
 
+      code.setOption("hintOptions",{
+          tables: JSON.parse(localStorage.getItem("tables"))
+      });
 
+      return code;
+    }
     $scope.resetStatement();
+    codeMirror = $scope.initializeCodeMirror();
+    codeMirror.setValue($scope.statement.sql);
+
   }
 ]);
 

@@ -6,15 +6,13 @@
 
       <h2 ng-show="showResults">Resultados <small>{{ results.records }} registros</small></h2>
 
-      <pre>{{ statement | json }}</pre>
-
       <div class="well">
         <form ng-submit="executeQuery()">
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
                 <label class="control-label">SQL</label>
-                <textarea autofocus="true"class="form-control" rows="4">{{ statement.sql }}</textarea>
+                <textarea autofocus="true"class="form-control" rows="4" id="statement">{{ statement.sql }}</textarea>
               </div>
             </div>
 
@@ -32,6 +30,7 @@
                 <table class="table table-bordered table-striped table-editable">
                   <thead>
                     <tr>
+                      <th></th>
                       <th class="col-md-4">Nome</th>
                       <th class="col-md-4">Tipo</th>
                       <th class="col-md-4">Valor</th>
@@ -39,13 +38,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat="(key, param) in statement.parameters">
+                    <tr ng-repeat="(key, param) in statement.parameters track by $index">
                       <td>
-                        <input class="form-control" type="text" ng-model="param.name">
+                        <z-checkbox ng-model="param.evaluated" class="z-checkbox"></z-checkbox>
                       </td>
                       <td>
-                        <input class="form-control" type="text" ng-model="param.type">
-                        <!-- <select ng-model="param.data_type" class="form-control" ng-options="data for data in data_types"></select> -->
+                        <input class="form-control" type="text" ng-model="param.name" ng-required="true">
+                      </td>
+                      <td>
+                        <!-- <input class="form-control" type="text" ng-model="param.type"> -->
+                        <select ng-model="param.type" class="form-control" ng-options="data for data in data_types track by data"></select>
                       </td>
                       <td>
                         <input class="form-control" type="text" ng-model="param.value">
@@ -53,7 +55,7 @@
                     </tr>
                   </tbody>
                 </table>
-                <button class="btn btn-block btn-info" type="button" ng-click="addParam()">Add Param</button>
+                <button class="btn btn-info " type="button" ng-click="addParam()">Adicionar parâmetro</button>
               </div>
               <div class="form-group">
                 <label class="control-label">Limite</label>
@@ -72,7 +74,7 @@
             <div class="col-md-12">
               <div>
                 <button class="btn btn-success btn-block" type="submit" ng-disabled="isExecuting" ng-show="!showResults">Executar SQL</button>
-                <button class="btn btn-default btn-block" type="button" ng-show="showResults">Editar SQL</button>
+                <button class="btn btn-default btn-block" type="button" ng-click="showResults=!showResults" ng-show="showResults">Editar SQL</button>
               </div>
             </div>
           </div>
@@ -94,7 +96,7 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="row in results.rows">
-                    <td nowrap ng-repeat="column in row">{{ column }}</td>
+                    <td nowrap ng-repeat="column in row track by $index">{{ column }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -105,7 +107,7 @@
 
       <div class="row">
         <div class="col-md-12">
-          <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)">Ver mais</button>
+          <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>
         </div>
       </div>
     </div>

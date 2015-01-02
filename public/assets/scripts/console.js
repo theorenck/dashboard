@@ -382,10 +382,10 @@ var Index = {
 
   init : function(){
     Index.editor = prepareSyntaxHighlight();
-    $('[data-behaivor=table-editable]').editableTableWidget({
-      editor: $('<input id="table-editable-input">'),
+    // $('[data-behaivor=table-editable]').editableTableWidget({
+    //   editor: $('<input id="table-editable-input">'),
 
-    });
+    // });
 
     var isLastTr;
     var isLastTd;
