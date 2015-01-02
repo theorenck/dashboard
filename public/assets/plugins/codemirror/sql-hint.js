@@ -139,7 +139,7 @@
     var current = convertCurToNumber(editor.getCursor());
     for (var i=0; i< separator.length; i++) {
       var _v = convertCurToNumber(separator[i]);
-      if (current > prevItem && current <= _v) {
+      if (current >= prevItem && current <= _v) {
         validRange = { start: convertNumberToCur(prevItem), end: convertNumberToCur(_v) };
         break;
       }
@@ -147,11 +147,12 @@
     }
 
     var query = doc.getRange(validRange.start, validRange.end, false);
-
     for (var i = 0; i < query.length; i++) {
       var lineText = query[i];
       eachWord(lineText, function(word) {
+        word = word.trim();
         var wordUpperCase = word.toUpperCase();
+
         if (wordUpperCase === aliasUpperCase && tables.hasOwnProperty(previousWord)) {
             table = previousWord;
         }
