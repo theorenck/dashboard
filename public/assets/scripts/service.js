@@ -108,7 +108,7 @@ Atlas.factory(
   'Statements',
   ['$resource',
     function($resource){
-      return $resource('http://PROD-01:3000/api/statements', {}, {
+      return $resource('http://localhost:3000/api/statements', {}, {
          'update' : { method:'PUT' },
          'execute': { method:'POST' }
       });
