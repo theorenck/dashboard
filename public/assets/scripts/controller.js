@@ -392,18 +392,19 @@ Atlas.controller('permissionsController', [
 Atlas.controller('consoleController', [
   '$scope',
   'Statements',
+  'Tables',
 
-  function($scope, Statements){
+  function($scope, Statements, Tables){
     var codeMirror;
 
-    $scope.data_types  = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
-    $scope.options     = true;
-    $scope.showResults = false;
-    $scope.isExecuting = false;
-    $scope.hasLimit    = true;
-    $scope.results     = [];
-    $scope.currentPage = 1;
-    $scope.errors      = [];
+    $scope.showAdvancedOptions = true;
+    $scope.showResults         = false;
+    $scope.data_types          = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
+    $scope.isExecuting         = false;
+    $scope.hasLimit            = true;
+    $scope.results             = [];
+    $scope.currentPage         = 1;
+    $scope.errors              = [];
 
     $scope.validateParams = function(){
       for(var i = 0; i < $scope.statement.parameters.length; i++){
@@ -424,9 +425,9 @@ Atlas.controller('consoleController', [
 
     $scope.addParam = function(){
       $scope.statement.parameters.push({
-        name : '',
-        value : '',
-        type : "",
+        name : "",
+        value : "",
+        type : "varchar",
         evaluated: false,
       });
     };
@@ -445,14 +446,16 @@ Atlas.controller('consoleController', [
         $scope.statement.offset = $scope.statement.limit * $scope.currentPage;
       };
 
-      if (!$scope.hasLimit) {
-        delete $scope.statement.limit;
-        delete $scope.offset;
-      };
 
       var data  = { "statement" : $scope.statement };
 
+      if (!$scope.hasLimit) {
+        delete data.statement.limit;
+        delete data.statement.offset;
+      };
+
       Statements.execute(data, function(data){
+        $scope.errors = [];
         $scope.isExecuting = false;
         $scope.showResults = true;
 
@@ -462,7 +465,6 @@ Atlas.controller('consoleController', [
           $scope.results = data.statement;
 
       }, function(err){
-        console.log(err);
         $scope.isExecuting = false;
         if (err.status === 500)
           $scope.errors = [err.statusText];
@@ -507,9 +509,45 @@ Atlas.controller('consoleController', [
 
       return code;
     }
+
     $scope.resetStatement();
     codeMirror = $scope.initializeCodeMirror();
     codeMirror.setValue($scope.statement.sql);
+
+    $scope.fetchTables = function(){
+      $scope.isFetching = true;
+
+      Tables.get(function(data){
+        var i               = 0;
+        var table           = {};
+        var tables          = data.tables;
+        var tablesFetched   = {};
+        var tablesLenght    = tables.length;
+        var tablesCompleted = 0;
+
+        while(i < tables.length){
+          Tables.get({table : tables[i]}, function(data){
+            tablesCompleted++;
+
+            var columns = data.columns.map(function(el){
+              return el.name;
+            });
+
+            console.log(columns);
+
+            tablesFetched[data.name] = columns;
+
+            if (tablesCompleted === tablesLenght)
+              localStorage.setItem("tables", JSON.stringify(tablesFetched));
+
+          });
+          i++;
+        }
+
+
+      });
+
+    }
 
   }
 ]);

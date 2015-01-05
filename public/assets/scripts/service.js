@@ -103,6 +103,17 @@ Atlas.factory(
 );
 
 
+/* RESOURCE TABLES */
+Atlas.factory(
+  'Tables',
+  ['$resource',
+    function($resource){
+      return $resource('http://localhost:3000/api/tables/:table', { table: '@table' });
+    }
+  ]
+);
+
+
 /* RESOURCE STATEMENTS */
 Atlas.factory(
   'Statements',

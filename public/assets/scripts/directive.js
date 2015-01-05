@@ -22,24 +22,22 @@ Atlas.directive('zCheckbox', function() {
 
     link: function(scope, element, attr, ngController) {
 
-      element.on('mouseenter', function(event){
-        element.children(1).addClass('atlCheckbox_hover');
-      });
-
-      element.on('focus', function(event){
-        element.children(1).addClass('atlCheckbox_active');
-      });
-
-      element.on('click', function(event){
-        element.children(1).toggleClass('atlCheckbox_checked');
-      });
-
-      element.on('blur', function(event){
-        element.children(1).removeClass('atlCheckbox_active');
-      });
-
-      element.on('mouseleave', function(event){
-        element.children(1).removeClass('atlCheckbox_hover').removeClass('.atlCheckbox_active');
+      element.on({
+        "mouseenter": function(event){
+          element.children(1).addClass('atlCheckbox_hover');
+        },
+        "focusin": function(event){
+          element.children(1).addClass('atlCheckbox_hover');
+        },
+        "click": function(event){
+          element.children(1).toggleClass('atlCheckbox_checked');
+        },
+        "mouseleave": function(event){
+          element.children(1).removeClass('atlCheckbox_hover').removeClass('.atlCheckbox_active');
+        },
+        "focusout": function(event){
+          element.children(1).removeClass('atlCheckbox_hover');
+        }
       });
     }
   };
