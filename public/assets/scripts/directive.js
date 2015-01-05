@@ -16,7 +16,7 @@ Atlas.directive('zCheckbox', function() {
     scope: {
       "checkbox" : '=ngModel'
     },
-    template: '<div class="atlCheckbox" ng-class="{ngModel : \'atlCheckbox_checked\' }">' +
+    template: '<div class="atlCheckbox" ng-class="{\'atlCheckbox_checked\' : checkbox }">' +
       '<input type="checkbox" ng-model="checkbox">' +
       '</div>',
 
@@ -29,9 +29,9 @@ Atlas.directive('zCheckbox', function() {
         "focusin": function(event){
           element.children(1).addClass('atlCheckbox_hover');
         },
-        "click": function(event){
-          element.children(1).toggleClass('atlCheckbox_checked');
-        },
+        // "click": function(event){
+        //   element.children(1).toggleClass('atlCheckbox_checked');
+        // },
         "mouseleave": function(event){
           element.children(1).removeClass('atlCheckbox_hover').removeClass('.atlCheckbox_active');
         },

@@ -40,6 +40,12 @@ Atlas.factory('httpRequestInterceptor', function () {
   };
 });
 
+Atlas.filter('fromNow', function() {
+  return function(date) {
+    return moment(date).fromNow();
+  }
+});
+
 
 /**
  * Configuração de todas

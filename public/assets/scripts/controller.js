@@ -413,8 +413,9 @@ Atlas.controller('consoleController', [
   '$scope',
   'Statements',
   'Tables',
+  'History',
 
-  function($scope, Statements, Tables){
+  function($scope, Statements, Tables, History){
     var code;
 
     $scope.showAdvancedOptions = true;
@@ -425,6 +426,7 @@ Atlas.controller('consoleController', [
     $scope.results             = [];
     $scope.currentPage         = 1;
     $scope.errors              = [];
+    $scope.historyItems        = [];
 
     $scope.validateParams = function(){
       for(var i = 0; i < $scope.statement.parameters.length; i++){
@@ -457,8 +459,8 @@ Atlas.controller('consoleController', [
 
       $scope.isExecuting   = true;
 
-      codeMirror.save();
-      $scope.statement.sql = codeMirror.getValue();
+      code.save();
+      $scope.statement.sql = code.getValue();
 
 
       if (currentPage) {
@@ -475,6 +477,9 @@ Atlas.controller('consoleController', [
       };
 
       Statements.execute(data, function(data){
+        History.post($scope.statement);
+        $scope.renderHistory();
+
         $scope.errors = [];
         $scope.isExecuting = false;
         $scope.showResults = true;
@@ -528,8 +533,8 @@ Atlas.controller('consoleController', [
     }
 
     $scope.resetStatement();
-    codeMirror = $scope.initializeCodeMirror();
-    codeMirror.setValue($scope.statement.sql);
+    $scope.initializeCodeMirror();
+    code.setValue($scope.statement.sql);
 
     $scope.fetchTables = function(){
       $scope.isFetching = true;
@@ -544,6 +549,31 @@ Atlas.controller('consoleController', [
       });
     }
 
+    $scope.loadHistoryItem = function(row){
+      $scope.statement = row.statement;
+      code.setValue(row.statement.sql);
+    }
+
+    $scope.renderHistory = function(){
+      History.get(function(data){
+        $scope.historyItems = data;
+      });
+    }
+
+    $scope.delete = function(id){
+      History.delete(id, function(data){
+        $scope.historyItems = data;
+      });
+    }
+
+    $scope.getStyleType = function(type){
+      switch(type){
+        case "SELECT":
+          return 'label-info';
+      }
+    },
+
+    $scope.renderHistory();
   }
 ]);
 
