@@ -518,35 +518,8 @@ Atlas.controller('consoleController', [
       $scope.isFetching = true;
 
       Tables.get(function(data){
-        var i               = 0;
-        var table           = {};
-        var tables          = data.tables;
-        var tablesFetched   = {};
-        var tablesLenght    = tables.length;
-        var tablesCompleted = 0;
-
-        while(i < tables.length){
-          Tables.get({table : tables[i]}, function(data){
-            tablesCompleted++;
-
-            var columns = data.columns.map(function(el){
-              return el.name;
-            });
-
-            console.log(columns);
-
-            tablesFetched[data.name] = columns;
-
-            if (tablesCompleted === tablesLenght)
-              localStorage.setItem("tables", JSON.stringify(tablesFetched));
-
-          });
-          i++;
-        }
-
-
+        localStorage.setItem("tables", JSON.stringify(data.schema.tables));
       });
-
     }
 
   }
