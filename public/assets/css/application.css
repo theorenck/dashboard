@@ -266,6 +266,10 @@ section{
   cursor: default !important;
 }
 
+.table-editable thead th{
+  padding: 17px;
+}
+
 
 .table-editable tbody tr td{
   cursor: pointer;

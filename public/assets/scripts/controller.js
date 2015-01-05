@@ -304,6 +304,26 @@ Atlas.controller('usersController', [
       });
     }
 
+    $scope.cancelar = function(){
+      $scope.user = {};
+    };
+
+    $scope.salvar = function(){
+      var data =  { "user" : $scope.user };
+
+      if ($scope.user.id) {
+        Users.update(data, function(){
+          $scope.renderList();
+          $scope.cancelar();
+        });
+      }else{
+        Users.save(data, function(){
+          $scope.renderList();
+          $scope.cancelar();
+        });
+      }
+    };
+
     $scope.loadUser = function(item){
       $scope.user = item;
     }
@@ -395,7 +415,7 @@ Atlas.controller('consoleController', [
   'Tables',
 
   function($scope, Statements, Tables){
-    var codeMirror;
+    var code;
 
     $scope.showAdvancedOptions = true;
     $scope.showResults         = false;
@@ -468,13 +488,15 @@ Atlas.controller('consoleController', [
         $scope.isExecuting = false;
         if (err.status === 500)
           $scope.errors = [err.statusText];
+        else if(err.status === 0)
+          $scope.errors = ["Servidor indisponível"];
         else
           $scope.errors = err.data.errors.base;
       });
     };
 
     $scope.initializeCodeMirror = function(){
-      var code = CodeMirror.fromTextArea(document.getElementById("statement"), {
+      code = CodeMirror.fromTextArea(document.getElementById("statement"), {
         lineNumbers: true,
         extraKeys: {
           "Ctrl-Space": "autocomplete",
@@ -494,11 +516,6 @@ Atlas.controller('consoleController', [
         styleActiveLine: false,
         matchBrackets: true,
         mode : 'text/x-sql',
-        // onKeyUp : function(event, value, closeFunction){
-        //   console.log(event, value);
-        //   console.log('oi');
-        //   // $scope.statement.sql = '';
-        // },
         viewportMargin: Infinity
         // readOnly : true
       });
@@ -519,6 +536,11 @@ Atlas.controller('consoleController', [
 
       Tables.get(function(data){
         localStorage.setItem("tables", JSON.stringify(data.schema.tables));
+
+        code.setOption("hintOptions",{
+          tables: data.schema.tables
+        });
+
       });
     }
 
