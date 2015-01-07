@@ -40,6 +40,7 @@ Atlas.factory('httpRequestInterceptor', function () {
   };
 });
 
+
 Atlas.filter('fromNow', function() {
   return function(date) {
     return moment(date).fromNow();
@@ -79,7 +80,17 @@ Atlas.config(function($routeProvider){
 
   .when('/indicator', {
     controller: 'indicatorController',
-    templateUrl: '/admin/indicator.html'
+    templateUrl: '/admin/indicatorList.html'
+  })
+
+  .when('/query', {
+    controller: 'queryListController',
+    templateUrl: '/admin/queryList.html'
+  })
+
+  .when('/query/create', {
+    controller: 'queryController',
+    templateUrl: '/admin/query.html'
   })
 
   .when('/permissions', {

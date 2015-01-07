@@ -261,15 +261,29 @@ section{
   height: 38px;
 }
 
+.table-editable .col-md-05{
+  width: 5%;
+}
+
+.table-editable .btn-remove {
+  display: inline-block;
+  height: 100%;
+  line-height: 42px;
+  width: 100%;
+}
+
+.table-editable td button{
+  margin-top: 5px;
+}
+
 .table-editable thead td,
 .table-editable{
   cursor: default !important;
 }
 
-.table-editable thead th{
-  padding: 17px;
+.table-editable thead tr th{
+  padding: 8px 17px;
 }
-
 
 .table-editable tbody tr td{
   cursor: pointer;
@@ -658,21 +672,6 @@ padding: 0px;
     display: block;
   }
 }
-/*.prev.available,
-.next.available{
-  background-color: #95a5a6;
-  color: #FFF;
-  font-size: 15px;
-}
-
-
-.daterangepicker th.prev.available:hover,
-.daterangepicker th.next.available:hover{
-  background-color: #74898A;
-  opacity: 1;
-}*/
-
-
 
 
 /* ETAPAS */

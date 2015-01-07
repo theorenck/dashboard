@@ -1,0 +1,108 @@
+<div class="header-area">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>
+        Queries <small></small>
+      </h1>
+    </div>
+  </div>
+</div>
+
+<ul class="breadcrumb">
+  <li><a href="#">Atlas</a></li>
+  <li><a href="query">Queries</a></li>
+  <li class="active">Novo</li>
+</ul>
+
+<div class="row">
+
+  <div class="col-md-12">
+    <div class="well">
+
+      <div class="row">
+        <form action="">
+
+          <div class="col-md-12">
+
+            <div class="form-group">
+              <label class="control-label">Código</label>
+              <input type="text" class="form-control" ng-model="statement.code">
+            </div>
+
+            <div class="form-group">
+              <label class="control-label">SQL</label>
+              <textarea autofocus="true"class="form-control" rows="4" id="statement" ng-model="statement.sql">{{ statement.sql }}</textarea>
+            </div>
+
+            <p style="margin-bottom: 20px;">
+              <a href="javascript:;" ng-click="showAdvancedOptions=!showAdvancedOptions;">
+                Avançado <span class="caret" ng-class="showAdvancedOptions ? 'caret-reversed' : ''"></span>
+              </a>
+            </p>
+
+          </div>
+
+          <div class="col-md-12" ng-show="showAdvancedOptions">
+            <div class="form-group">
+              <label class="control-label">Parâmetros</label>
+              <table class="table table-bordered table-striped table-editable">
+                <thead>
+                  <tr>
+                    <th class="col-md-3">Nome</th>
+                    <th class="col-md-2">Tipo</th>
+                    <th class="col-md-05 text-center">&fnof;<sub>(x)</sub></th>
+                    <th class="col-md-5">Valor</th>
+                    <th class="col-md-05"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="(key, param) in statement.parameters track by $index">
+                    <td>
+                      <input class="form-control" type="text" ng-model="param.name">
+                    </td>
+                    <td>
+                      <select ng-model="param.type" class="form-control" ng-options="data for data in data_types track by data"></select>
+                    </td>
+                    <td class="text-center">
+                      <div class="z-checkbox">
+                        <z-checkbox ng-model="param.evaluated"></z-checkbox>
+                      </div>
+                    </td>
+                    <td>
+                      <input class="form-control" type="text" ng-model="param.value">
+                    </td>
+                    <td class="text-center">
+                      <a href="#" ng-click="deleteParam(key)" class="btn-remove"><i class="fa fa-close"></i></a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <button class="btn btn-info " type="button" ng-click="addParam()">Adicionar parâmetro</button>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label">Limite</label>
+
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <z-checkbox ng-model="hasLimit"></z-checkbox>
+                </div>
+                <input type="text" class="form-control" ng-model="statement.limit" ng-disabled="hasLimit" integer />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button class="btn btn-success">Salvar</button>
+              <button class="btn btn-link">cancelar</button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+
+
+</div>

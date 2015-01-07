@@ -29,9 +29,6 @@ Atlas.directive('zCheckbox', function() {
         "focusin": function(event){
           element.children(1).addClass('atlCheckbox_hover');
         },
-        // "click": function(event){
-        //   element.children(1).toggleClass('atlCheckbox_checked');
-        // },
         "mouseleave": function(event){
           element.children(1).removeClass('atlCheckbox_hover').removeClass('.atlCheckbox_active');
         },
@@ -43,13 +40,16 @@ Atlas.directive('zCheckbox', function() {
   };
 });
 
-Atlas.directive('zDateRangePicker', function(){
+Atlas.directive('zErrorbox', [function(){
   return {
-    restrict : 'E',
-    require : 'ngModel',
-    scope : {
-      periodo : '=ngModel'
+    scope: {
+      'errors' : '=ngModel'
     },
+    require: 'ngModel',
+    restrict: 'EA',
+    template: '<div class="alert alert-dismissable alert-danger" ng-show="errors.length"><strong>Oh snap! </strong><p ng-repeat="err in errors">{{ err }}</p></div>',
+    link: function($scope, iElm, iAttrs, controller) {
 
-  }
-});
+    }
+  };
+}]);

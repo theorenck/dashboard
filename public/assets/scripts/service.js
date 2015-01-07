@@ -4,7 +4,7 @@ Atlas.factory(
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/v1/api_servers/:id', { id: '@api_server.id' }, {
+      return $resource('http://127.0.0.1:9000/api/api_servers/:id', { id: '@api_server.id' }, {
          'update': { method:'PUT' }
       });
     }
@@ -17,7 +17,7 @@ Atlas.factory(
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/v1/authentications/:id', { id: '@authentication.id' }, {
+      return $resource('http://127.0.0.1:9000/api/authentications/:id', { id: '@authentication.id' }, {
          'update': { method:'PUT' }
       });
     }
@@ -31,7 +31,7 @@ Atlas.factory(
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/v1/dashboards/:id', { id: '@dashboard.id' }, {
+      return $resource('http://127.0.0.1:9000/api/dashboards/:id', { id: '@dashboard.id' }, {
          'update': { method:'PUT' }
       });
     }
@@ -44,7 +44,7 @@ Atlas.factory(
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/v1/indicators/:id', { id: '@indicator.id' }, {
+      return $resource('http://127.0.0.1:9000/api/indicators/:id', { id: '@indicator.id' }, {
          'update': { method:'PUT' }
       });
     }
@@ -57,7 +57,7 @@ Atlas.factory(
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/v1/widgets/:id', { id: '@widget.id' }, {
+      return $resource('http://127.0.0.1:9000/api/widgets/:id', { id: '@widget.id' }, {
          'update': { method:'PUT' }
       });
     }
@@ -70,7 +70,7 @@ Atlas.factory(
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/v1/users/:id', { id: '@user.id' }, {
+      return $resource('http://127.0.0.1:9000/api/users/:id', { id: '@user.id' }, {
          'update': { method:'PUT' }
       });
     }
@@ -83,7 +83,7 @@ Atlas.factory(
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/v1/permissions/:id', { id: '@permission.id' }, {
+      return $resource('http://127.0.0.1:9000/api/permissions/:id', { id: '@permission.id' }, {
          'update': { method:'PUT' }
       });
     }
@@ -95,7 +95,7 @@ Atlas.factory(
   'WidgetTypes',
   ['$resource',
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/v1/widget_types/:id', { id: '@widget_types.id' }, {
+      return $resource('http://127.0.0.1:9000/api/widget_types/:id', { id: '@widget_types.id' }, {
          'update': { method:'PUT' }
       });
     }
@@ -195,6 +195,64 @@ Atlas.factory(
 
     return History;
 
+
+  }]
+);
+
+
+Atlas.factory(
+  'zCodeMirror',
+  [function(){
+
+    var zCodeMirror = {
+      "instance" : CodeMirror
+    };
+
+    zCodeMirror.initialize = function(el){
+      zCodeMirror.instance = zCodeMirror.instance.fromTextArea(el, {
+        lineNumbers: true,
+        extraKeys: {
+          "Ctrl-Space": "autocomplete",
+          // "F8" : function(){
+          //   console.log('F8');
+          // },
+          // "Ctrl-Enter" : function(e){
+          //   console.log('Ctrl + Enter');
+          // }
+        },
+        mode: {
+          name: "sql",
+          globalVars: true
+        },
+        tabSize : 2,
+        tabMode : "spaces",
+        styleActiveLine: false,
+        matchBrackets: true,
+        mode : 'text/x-sql',
+        viewportMargin: Infinity
+      });
+    }
+
+    zCodeMirror.setHints = function(){
+      return zCodeMirror.instance.setOption("hintOptions",{
+          tables: JSON.parse(localStorage.getItem("tables"))
+      });
+    }
+
+    zCodeMirror.setValue = function(value){
+      return zCodeMirror.instance.setValue(value);
+    };
+
+    zCodeMirror.save = function(){
+      return zCodeMirror.instance.save();
+    };
+
+    zCodeMirror.getValue = function(){
+      return zCodeMirror.instance.getValue();
+    };
+
+
+    return zCodeMirror;
 
   }]
 );

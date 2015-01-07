@@ -15,7 +15,24 @@
 </ul>
 
 <div class="row">
-  <div class="col-md-12 col-lg-6">
+  <div class="col-md-12 col-lg-3">
+    <input type="search" class="form-control" ng-model="search" placeholder="Search">
+    <div class="list-group striped" data-behaivor="history-list">
+      <div ng-repeat="indicator in indicatorList | filter:search" href="javascript:;" class="list-group-item" ng-click="loadIndicator(indicator)">
+        <p class="list-group-item-text">
+          <span class="close-history-item" ng-click="delete(indicator.id)">
+            <span class="fa fa-close"></span>
+          </span>
+          <strong>{{ indicator.name }}</strong>
+        </p>
+
+        <p class="list-group-item-text">{{ indicator.description }}</p>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12 col-lg-9">
     <form id="formCadastro" class="form-horizontal">
       <div class="well">
         <label class="control-label">Name</label>
@@ -24,6 +41,15 @@
         <label class="control-label">Description</label>
         <input ng-model="indicator.description" class="form-control" type="text" name="description">
 
+        <label class="control-label">Query Type @todo : Buscar do servidor e atualizar a listagem</label>
+        <select class="form-control">
+          <option value="">Selecione</option>
+          <option value="">Query 1</option>
+          <option value="">Query 2</option>
+          <option value="">Query 3</option>
+        </select>
+
+
         <label class="control-label">Unity</label>
         <select ng-model="indicator.unity" class="form-control">
           <option value=""></option>
@@ -31,13 +57,15 @@
           <option value="%">%</option>
         </select>
 
-        <label class="control-label">Query Type</label>
+        <!-- <label class="control-label">Query Type</label>
         <select ng-model="indicator.query.type" class="form-control">
           <option value="SingleValueQuery">Single Value Query</option>
           <option value="ResultQuery">Result Query</option>
-        </select>
+        </select> -->
 
-        <label class="control-label">Query</label>
+
+
+       <!--  <label class="control-label">Query</label>
         <textarea ng-model="indicator.query.statement" class="form-control" name="query"></textarea>
         <input ng-model="indicator.type" type="hidden" name="type" value="SingleResultQuery">
 
@@ -64,7 +92,7 @@
             </tr>
           </tbody>
         </table>
-        <button class="btn btn-block btn-info" ng-click="addParam()">Add Param</button>
+        <button class="btn btn-block btn-info" ng-click="addParam()">Add Param</button> -->
 
         <br>
         <button ng-click="salvar()" class="btn btn-success" type="button">Salvar</button>
@@ -74,22 +102,5 @@
     </form>
   </div>
 
-  <div class="col-md-12 col-lg-6">
-    <div class="list-group striped" data-behaivor="history-list">
-      <div ng-repeat="indicator in indicatorList" href="javascript:;" class="list-group-item" ng-click="loadIndicator(indicator)">
-        <p class="list-group-item-text">
-          <span class="close-history-item" ng-click="delete(indicator.id)">
-            <span class="fa fa-close"></span>
-          </span>
-          <strong>{{ indicator.name }}</strong>
-        </p>
 
-        <p class="list-group-item-text">{{ indicator.description }}</p>
-        <p class="list-group-item-text"><small>
-          <a href="">{{ indicator.url }}</a>
-        </small></p>
-
-      </div>
-    </div>
-  </div>
 </div>

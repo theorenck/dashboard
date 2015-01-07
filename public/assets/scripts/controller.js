@@ -414,8 +414,9 @@ Atlas.controller('consoleController', [
   'Statements',
   'Tables',
   'History',
+  'zCodeMirror',
 
-  function($scope, Statements, Tables, History){
+  function($scope, Statements, Tables, History, zCodeMirror){
     var code;
 
     $scope.showAdvancedOptions = true;
@@ -443,6 +444,7 @@ Atlas.controller('consoleController', [
         limit : 100,
         offset : 0,
       };
+      $scope.addParam();
     };
 
     $scope.addParam = function(){
@@ -454,13 +456,17 @@ Atlas.controller('consoleController', [
       });
     };
 
+    $scope.deleteParam = function(key){
+      $scope.statement.parameters.splice(key,1);
+    }
+
     $scope.executeQuery = function(currentPage){
       $scope.validateParams();
 
       $scope.isExecuting   = true;
 
-      code.save();
-      $scope.statement.sql = code.getValue();
+      zCodeMirror.save();
+      $scope.statement.sql = zCodeMirror.getValue();
 
 
       if (currentPage) {
@@ -496,45 +502,10 @@ Atlas.controller('consoleController', [
         else if(err.status === 0)
           $scope.errors = ["Servidor indisponível"];
         else
-          $scope.errors = err.data.errors.base;
+          $scope.errors = err.data.errors.base || err.data.errors.sql;
       });
     };
 
-    $scope.initializeCodeMirror = function(){
-      code = CodeMirror.fromTextArea(document.getElementById("statement"), {
-        lineNumbers: true,
-        extraKeys: {
-          "Ctrl-Space": "autocomplete",
-          "F8" : function(){
-            console.log('F8');
-          },
-          "Ctrl-Enter" : function(e){
-            console.log('Ctrl + Enter');
-          }
-        },
-        mode: {
-          name: "sql",
-          globalVars: true
-        },
-        tabSize : 2,
-        tabMode : "spaces",
-        styleActiveLine: false,
-        matchBrackets: true,
-        mode : 'text/x-sql',
-        viewportMargin: Infinity
-        // readOnly : true
-      });
-
-      code.setOption("hintOptions",{
-          tables: JSON.parse(localStorage.getItem("tables"))
-      });
-
-      return code;
-    }
-
-    $scope.resetStatement();
-    $scope.initializeCodeMirror();
-    code.setValue($scope.statement.sql);
 
     $scope.fetchTables = function(){
       $scope.isFetching = true;
@@ -551,7 +522,7 @@ Atlas.controller('consoleController', [
 
     $scope.loadHistoryItem = function(row){
       $scope.statement = row.statement;
-      code.setValue(row.statement.sql);
+      zCodeMirror.setValue(row.statement.sql);
     }
 
     $scope.renderHistory = function(){
@@ -573,6 +544,10 @@ Atlas.controller('consoleController', [
       }
     },
 
+    $scope.resetStatement();
+    zCodeMirror.initialize(document.getElementById("statement"));
+    zCodeMirror.setHints();
+    zCodeMirror.setValue($scope.statement.sql);
     $scope.renderHistory();
   }
 ]);
@@ -589,6 +564,95 @@ Atlas.controller('dashboardsController', [
     Dashboards.get(function(data){
       $scope.dashboards = data.dashboards;
     });
+  }
+]);
+
+
+/**
+ * QUERIES CONTROLLER
+ */
+Atlas.controller('queryListController', [
+  '$scope',
+  'Dashboards',
+  function($scope, Dashboards){
+    $scope.queriesList = [
+    {
+      'id' : 1289
+    },
+    {
+      'id' : 1281
+    },
+    {
+      'id' : 1282
+    },
+    {
+      'id' : 1283
+    },
+    {
+      'id' : 1284
+    }
+
+    ];
+
+
+
+  }
+]);
+
+
+/**
+ * QUERIES CONTROLLER
+ */
+Atlas.controller('queryController', [
+  '$scope',
+  'Dashboards',
+
+  function($scope, Dashboards){
+
+    $scope.showAdvancedOptions = true;
+    $scope.showResults         = false;
+    $scope.data_types          = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
+    $scope.isExecuting         = false;
+    $scope.hasLimit            = true;
+    $scope.results             = [];
+    $scope.currentPage         = 1;
+    $scope.errors              = [];
+    $scope.historyItems        = [];
+
+    $scope.validateParams = function(){
+      for(var i = 0; i < $scope.statement.parameters.length; i++){
+        var param = $scope.statement.parameters[i];
+        if( param.name.trim() === '' || param.value.trim() === '')
+          $scope.statement.parameters.splice(i,1);
+      }
+    }
+
+    $scope.resetStatement = function(){
+      $scope.statement = {
+        parameters : [],
+        sql : 'SELECT p.codproduto, p.codbarras, p.descricao1 FROM zw14ppro p WHERE p.situacao = \'N\'',
+        limit : 100,
+        offset : 0,
+      };
+      $scope.addParam();
+    };
+
+
+    $scope.addParam = function(){
+      $scope.statement.parameters.push({
+        name : "",
+        value : "",
+        type : "varchar",
+        evaluated: false,
+      });
+    };
+
+    $scope.deleteParam = function(key){
+      $scope.statement.parameters.splice(key, 1);
+    }
+
+    $scope.resetStatement();
+
   }
 ]);
 
@@ -621,9 +685,7 @@ Atlas.controller('dashboardDetailController', [
           return diferenca + 1;
         },
       },
-    }
-
-
+    };
 
     Dashboards.get(function(data){
       $scope.dashboards = data.dashboards;
