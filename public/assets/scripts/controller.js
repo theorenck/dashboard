@@ -37,20 +37,16 @@ Atlas.controller('appController', [
   }
 ]);
 
+
 /**
- * API SERVER CONTROLLER
+ * DATA SOURCE INDEX CONTROLLER
  */
 Atlas.controller('DataSourceIndexController', [
   'DataSourceService',
   '$scope',
 
   function(DataSourceService, $scope){
-    $scope.data_source_server = {};
-    $scope.serverList = [];
-
-    $scope.cancelarApiServer = function(){
-      $scope.data_source_server = {};
-    }
+    $scope.serverList         = [];
 
     $scope.renderList = function(){
       DataSourceService.get(function(data){
@@ -58,37 +54,49 @@ Atlas.controller('DataSourceIndexController', [
       });
     }
 
+    $scope.renderList();
+  }
+]);
+
+
+Atlas.controller('DataSourceCreateController', [
+  'DataSourceService',
+  '$scope',
+  '$routeParams',
+
+  function(DataSourceService, $scope, $routeParams){
+    $scope.data_source_server = {};
+
+    $scope.cancelarApiServer = function(){
+      $scope.data_source_server = {};
+    }
+
     $scope.saveApiServer = function(){
-      var data =  { "data_source_server" : $scope.data_source_server };
+      var data =  {
+        "data_source_server" : $scope.data_source_server
+      };
 
       if ($scope.data_source_server.id) {
         DataSourceService.update(data, function(){
-          $scope.renderList();
           $scope.data_source_server = {};
         });
       }else{
         DataSourceService.save(data, function(){
-          $scope.renderList();
           $scope.data_source_server = {};
         });
       }
     };
 
-    $scope.deleteApiServer = function(id){
-      var data = { "id" : id };
-      DataSourceService.remove(data, function(data){
-        $scope.renderList();
+    if ($routeParams.id) {
+      DataSourceService.get({ id : $routeParams.id }, function(data){
+        $scope.data_source_server = data.data_source_server;
       });
-    }
-
-    $scope.loadApiServer = function(server){
-      $scope.data_source_server = server;
-    }
-
-    $scope.renderList();
+    };
   }
-
 ]);
+
+
+
 
 /**
  * DASHBOARD CONTROLLER

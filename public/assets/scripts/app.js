@@ -63,7 +63,7 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/data-source-server/index.html'
   })
 
-  .when('/data-source-server/create', {
+  .when('/data-source-server/:action?/:id', {
     controller: 'DataSourceCreateController',
     templateUrl: '/admin/data-source-server/create.html'
   })
