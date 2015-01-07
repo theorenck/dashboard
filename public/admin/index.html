@@ -19,9 +19,14 @@
 
     <div class="navbar-header">
       <a class="navbar-brand" href="/"><img src="/assets/images/brand.svg" alt=""></a>
+      <button type="button" class="navbar-toggle" ng-click="showResponsiveMenu=!showResponsiveMenu">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
     </div>
 
-    <div class="navbar-collapse collapse" id="navbar-main">
+    <div class="navbar-collapse navbar-responsive-collapse collapse" ng-class="{ collapse : showResponsiveMenu }">
       <ul class="nav navbar-nav">
         <li>
           <a href="dashboards">Dashboard</a>
@@ -36,6 +41,7 @@
           <ul class="dropdown-menu">
             <li><a ng-href="api-server">API Server</a></li>
             <li><a ng-href="dashboards/new">Dashboard</a></li>
+            <li><a ng-href="query">Query</a></li>
             <li><a ng-href="indicator">Indicador</a></li>
             <li><a ng-href="widgets">Widget</a></li>
             <li><a ng-href="users">Users</a></li>
