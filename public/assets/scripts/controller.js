@@ -54,6 +54,12 @@ Atlas.controller('DataSourceIndexController', [
       });
     }
 
+    $scope.deleteDataSource = function(id){
+      DataSourceService.remove({ "id" : id }, function(){
+        $scope.renderList();
+      });
+    }
+
     $scope.renderList();
   }
 ]);
