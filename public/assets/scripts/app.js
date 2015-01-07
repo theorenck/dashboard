@@ -95,13 +95,13 @@ Atlas.config(function($routeProvider){
   })
 
   .when('/query', {
-    controller: 'queryListController',
-    templateUrl: '/admin/queryList.html'
+    controller: 'QueryListController',
+    templateUrl: '/admin/query/index.html'
   })
 
-  .when('/query/create', {
-    controller: 'queryController',
-    templateUrl: '/admin/query.html'
+  .when('/query/:action?/:id', {
+    controller: 'QueryCreateController',
+    templateUrl: '/admin/query/create.html'
   })
 
   .when('/permissions', {
@@ -114,9 +114,14 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/users.html'
   })
 
-  .when('/widgets', {
-    controller: 'widgetsController',
-    templateUrl: '/admin/widgets.html'
+  .when('/widget', {
+    controller: 'WidgetIndexController',
+    templateUrl: '/admin/widget/index.html'
+  })
+
+  .when('/widget/:action?/:id', {
+    controller: 'WidgetCreateController',
+    templateUrl: '/admin/widget/create.html'
   })
 
   .when('/console', {

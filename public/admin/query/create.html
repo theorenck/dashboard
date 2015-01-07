@@ -20,18 +20,18 @@
     <div class="well">
 
       <div class="row">
-        <form action="">
+        <form ng-submit="save()">
 
           <div class="col-md-12">
 
             <div class="form-group">
-              <label class="control-label">Código</label>
-              <input type="text" class="form-control" ng-model="statement.code">
+              <label class="control-label">Nome</label>
+              <input type="text" class="form-control" ng-model="statement.name">
             </div>
 
             <div class="form-group">
               <label class="control-label">SQL</label>
-              <textarea autofocus="true"class="form-control" rows="4" id="statement" ng-model="statement.sql">{{ statement.sql }}</textarea>
+              <textarea autofocus="true"class="form-control" rows="4" id="statement" ng-model="statement.statement"></textarea>
             </div>
 
             <p style="margin-bottom: 20px;">
@@ -61,7 +61,7 @@
                       <input class="form-control" type="text" ng-model="param.name">
                     </td>
                     <td>
-                      <select ng-model="param.type" class="form-control" ng-options="data for data in data_types track by data"></select>
+                      <select ng-model="param.datatype" class="form-control" ng-options="data for data in data_types track by data"></select>
                     </td>
                     <td class="text-center">
                       <div class="z-checkbox">
@@ -92,8 +92,8 @@
             </div>
 
             <div class="form-group">
-              <button class="btn btn-success">Salvar</button>
-              <button class="btn btn-link">cancelar</button>
+              <button type="button" ng-click="save()" class="btn btn-success">Salvar</button>
+              <button ng-click="cancelar()"  class="btn btn-link">cancelar</button>
             </div>
 
           </div>

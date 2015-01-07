@@ -244,14 +244,43 @@ Atlas.controller('indicatorController', [
 /**
  * WIDGET CONTROLLER
  */
-Atlas.controller('widgetsController', [
+Atlas.controller('WidgetIndexController', [
+  '$scope',
+  'Widgets',
+
+  function($scope, Widgets){
+    $scope.widget     = {};
+    $scope.widgetList = [];
+
+    $scope.delete = function(id){
+      Widgets.remove({ "id" : id },function(){
+        $scope.renderList();
+      });
+    }
+
+    $scope.renderList = function(){
+      Widgets.get(function(data){
+        $scope.widgetList = data.widgets;
+      });
+    }
+
+    $scope.renderList();
+  }
+]);
+
+
+/**
+ * WIDGET CONTROLLER
+ */
+Atlas.controller('WidgetCreateController', [
   '$scope',
   'Widgets',
   'Indicators',
   'Dashboards',
   'WidgetTypes',
+  '$routeParams',
 
-  function($scope, Widgets, Indicators, Dashboards, WidgetTypes){
+  function($scope, Widgets, Indicators, Dashboards, WidgetTypes, $routeParams){
     $scope.widget     = {};
     $scope.widgetList = [];
 
@@ -267,6 +296,13 @@ Atlas.controller('widgetsController', [
       $scope.availableWidgetTypes = data.widget_types;
     });
 
+    if ($routeParams.id) {
+      Widgets.get({ id : $routeParams.id }, function(data){
+        $scope.widget = data.widget;
+      });
+    };
+
+
     $scope.salvar = function(){
       var data =  { "widget" : $scope.widget };
       data.widget.indicator_id   = $scope.widget.indicator.id;
@@ -274,12 +310,10 @@ Atlas.controller('widgetsController', [
 
       if ($scope.widget.id) {
         Widgets.update(data, function(){
-          $scope.renderList();
           $scope.cancelar();
         });
       }else{
         Widgets.save(data, function(){
-          $scope.renderList();
           $scope.cancelar();
         });
       }
@@ -292,22 +326,10 @@ Atlas.controller('widgetsController', [
       });
     }
 
-    $scope.renderList = function(){
-      Widgets.get(function(data){
-        $scope.widgetList = data.widgets;
-      });
-    }
-
-    $scope.loadwidget = function(item){
-      $scope.widget = item;
-    }
-
     $scope.cancelar = function(){
       $scope.widget = {};
     };
 
-
-    $scope.renderList();
   }
 ]);
 
@@ -596,43 +618,31 @@ Atlas.controller('dashboardsController', [
 /**
  * QUERIES CONTROLLER
  */
-Atlas.controller('queryListController', [
+Atlas.controller('QueryListController', [
   '$scope',
   'Dashboards',
-  function($scope, Dashboards){
-    $scope.queriesList = [
-    {
-      'id' : 1289
-    },
-    {
-      'id' : 1281
-    },
-    {
-      'id' : 1282
-    },
-    {
-      'id' : 1283
-    },
-    {
-      'id' : 1284
-    }
+  'SourceService',
 
-    ];
+  function($scope, Dashboards, SourceService){
+    $scope.queriesList = [];
 
-
+    SourceService.get(function(data){
+      $scope.queriesList = data.sources;
+    });
 
   }
 ]);
 
-
 /**
  * QUERIES CONTROLLER
  */
-Atlas.controller('queryController', [
+Atlas.controller('QueryCreateController', [
   '$scope',
   'Dashboards',
+  'SourceService',
+  '$routeParams',
 
-  function($scope, Dashboards){
+  function($scope, Dashboards, SourceService, $routeParams){
 
     $scope.showAdvancedOptions = true;
     $scope.showResults         = false;
@@ -644,13 +654,25 @@ Atlas.controller('queryController', [
     $scope.errors              = [];
     $scope.historyItems        = [];
 
+    $scope.save = function(){
+      $scope.validateParams();
+      $scope.statement.type = "Query";
+
+      var data = { source : $scope.statement };
+      console.log(data);
+      SourceService.update(data, function(data){
+        console.log(data);
+      });
+
+    };
+
     $scope.validateParams = function(){
       for(var i = 0; i < $scope.statement.parameters.length; i++){
         var param = $scope.statement.parameters[i];
         if( param.name.trim() === '' || param.value.trim() === '')
           $scope.statement.parameters.splice(i,1);
       }
-    }
+    };
 
     $scope.resetStatement = function(){
       $scope.statement = {
@@ -661,7 +683,6 @@ Atlas.controller('queryController', [
       };
       $scope.addParam();
     };
-
 
     $scope.addParam = function(){
       $scope.statement.parameters.push({
@@ -676,8 +697,12 @@ Atlas.controller('queryController', [
       $scope.statement.parameters.splice(key, 1);
     }
 
-    $scope.resetStatement();
-
+    if ($routeParams.id) {
+      SourceService.get({ id : $routeParams.id }, function(data){
+        $scope.statement = data.query;
+      });
+    }else
+      $scope.resetStatement();
   }
 ]);
 

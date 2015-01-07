@@ -11,6 +11,18 @@ Atlas.factory(
   ]
 );
 
+Atlas.factory(
+  'SourceService',
+  ['$resource',
+
+    function($resource){
+      return $resource('http://127.0.0.1:9000/api/sources/:id', { id: '@source.id' }, {
+         'update': { method:'PUT' }
+      });
+    }
+  ]
+);
+
 /* RESOURCE APISERVERS */
 Atlas.factory(
   'AuthService',
@@ -209,28 +221,33 @@ Atlas.factory(
     };
 
     zCodeMirror.initialize = function(el){
-      zCodeMirror.instance = zCodeMirror.instance.fromTextArea(el, {
-        lineNumbers: true,
-        extraKeys: {
-          "Ctrl-Space": "autocomplete",
-          // "F8" : function(){
-          //   console.log('F8');
-          // },
-          // "Ctrl-Enter" : function(e){
-          //   console.log('Ctrl + Enter');
-          // }
-        },
-        mode: {
-          name: "sql",
-          globalVars: true
-        },
-        tabSize : 2,
-        tabMode : "spaces",
-        styleActiveLine: false,
-        matchBrackets: true,
-        mode : 'text/x-sql',
-        viewportMargin: Infinity
-      });
+      try{
+        zCodeMirror.instance = zCodeMirror.instance.fromTextArea(el, {
+          lineNumbers: true,
+          extraKeys: {
+            "Ctrl-Space": "autocomplete",
+            // "F8" : function(){
+            //   console.log('F8');
+            // },
+            // "Ctrl-Enter" : function(e){
+            //   console.log('Ctrl + Enter');
+            // }
+          },
+          mode: {
+            name: "sql",
+            globalVars: true
+          },
+          tabSize : 2,
+          tabMode : "spaces",
+          styleActiveLine: false,
+          matchBrackets: true,
+          mode : 'text/x-sql',
+          viewportMargin: Infinity
+        });
+      }catch(err){
+        zCodeMirror.instance.setOption('lineNumbers', true);
+        zCodeMirror.instance.refresh();
+      }
     }
 
     zCodeMirror.setHints = function(){
