@@ -1,24 +1,3 @@
-<button ng-click="debug=true" class="btn btn-danger">DEBUG</button>
-<div class="debug" ng-show="debug" style="position: fixed; width: 100%; height: 100%; top: 0px; left: 0; z-index: 9999999999; background: #FFF; padding: 20px;">
-  <button ng-click="debug=false" class="btn btn-default pull-right"><span class="fa fa-close"></span></button>
-
-  <div style="width: 100%; height: 100%; overflow: auto;">
-    <pre>
-$scope.showAdvancedOptions = {{ showAdvancedOptions }}
-$scope.showResults         = {{ showResults }}
-$scope.isExecuting         = {{ isExecuting }}
-$scope.hasLimit            = {{ hasLimit }}
-$scope.currentPage         = {{ currentPage }}
-$scope.errors              = {{ errors }}
-$scope.results
-{{ results | json }}
-    </pre>
-    <pre>$scope.statement
-{{ statement | json }}
-</pre>
-  </div>
-</div>
-
 <div class="row">
   <div class="col-md-12">
     <div id="query-area">
@@ -26,22 +5,11 @@ $scope.results
       <h2 ng-hide="showResults">Console</h2>
       <h2 ng-show="showResults">Resultados <small>{{ results.records }} registros</small></h2>
 
-      <div class="pull-right">
+      <!-- <div class="pull-right">
         <a href="#" ng-click="fetchTables()">Fetch Tables</a>
-      </div>
+      </div> -->
 
-
-      <!-- Errors -->
-      <div class="alert alert-dismissable alert-danger" ng-show="errors.length">
-        <button type="button" class="close" data-dismiss="alert" ng-click="errors=[]">×</button>
-        <strong>Oh snap! </strong>
-        <p ng-repeat="err in errors">
-          <!-- <p ng-repeat="message in base"> -->
-            {{ err }}
-          <!-- </p> -->
-        </p>
-      </div>
-      <!-- / Errors -->
+      <z-errorbox ng-model="errors"></z-errorbox>
 
       <div class="well">
         <form ng-submit="executeQuery()">
@@ -63,14 +31,15 @@ $scope.results
 
             <div class="col-md-12" ng-show="showAdvancedOptions">
               <div class="form-group">
-                <label class="control-label">Paramêtros</label>
+                <label class="control-label">Parâmetros</label>
                 <table class="table table-bordered table-striped table-editable">
                   <thead>
                     <tr>
                       <th class="col-md-3">Nome</th>
                       <th class="col-md-2">Tipo</th>
-                      <th class="col-md-1 text-center">&fnof;<sub>(x)</sub></th>
-                      <th class="col-md-6">Valor</th>
+                      <th class="col-md-05 text-center">&fnof;<sub>(x)</sub></th>
+                      <th class="col-md-5">Valor</th>
+                      <th class="col-md-05"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -79,7 +48,6 @@ $scope.results
                         <input class="form-control" type="text" ng-model="param.name">
                       </td>
                       <td>
-                        <!-- <input class="form-control" type="text" ng-model="param.type"> -->
                         <select ng-model="param.type" class="form-control" ng-options="data for data in data_types track by data"></select>
                       </td>
                       <td class="text-center">
@@ -89,6 +57,9 @@ $scope.results
                       </td>
                       <td>
                         <input class="form-control" type="text" ng-model="param.value">
+                      </td>
+                      <td class="text-center">
+                        <a href="#" ng-click="deleteParam(key)" class="btn-remove"><i class="fa fa-close"></i></a>
                       </td>
                     </tr>
                   </tbody>
@@ -146,7 +117,7 @@ $scope.results
     </div>
 
     <!-- HISTÓRICO -->
-    <div class="row" data-type="history">
+    <div class="row" data-type="history" ng-hide="showResults">
       <div class="col-md-12 historico">
         <div class="list-group striped">
 
