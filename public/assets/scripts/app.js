@@ -58,9 +58,14 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/home.html'
   })
 
-  .when('/api-server', {
-    controller: 'ApiServerController',
-    templateUrl: '/admin/api_server.html'
+  .when('/data-source-server', {
+    controller: 'DataSourceIndexController',
+    templateUrl: '/admin/data-source-server/index.html'
+  })
+
+  .when('/data-source-server/create', {
+    controller: 'DataSourceCreateController',
+    templateUrl: '/admin/data-source-server/create.html'
   })
 
   .when('/dashboards', {

@@ -1,0 +1,56 @@
+<div class="header-area">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>
+        Data Source Server
+      </h1>
+    </div>
+  </div>
+</div>
+
+<ul class="breadcrumb">
+  <li><a href="#">Atlas</a></li>
+  <li><a href="#">Data Source Server</a></li>
+  <li class="active">List</li>
+</ul>
+
+<div class="row">
+  <div class="col-md-12 col-lg-6">
+    <div class="well">
+      <form id="formCadastro" class="form-horizontal" ng-submit="saveApiServer()">
+        <label class="control-label">Name</label>
+        <input ng-model="data_source_server.name" class="form-control" type="text" name="name">
+
+        <label class="control-label">Description</label>
+        <input ng-model="data_source_server.description" class="form-control" type="text" name="description">
+
+        <label class="control-label">URL</label>
+        <input ng-model="data_source_server.url" class="form-control" type="text" name="url" placeholder="http://127.0.0.1/api/v1/">
+
+        <br>
+        <button ng-click="saveApiServer()" class="btn btn-success" type="button">Salvar</button>
+        <button ng-click="cancelarApiServer()" class="btn btn-link" type="button">Cancelar</button>
+
+      </form>
+    </div>
+  </div>
+
+  <div class="col-md-12 col-lg-6">
+    <div class="list-group striped" data-behaivor="history-list">
+      <div ng-repeat="server in serverList" href="javascript:;" class="list-group-item" ng-click="loadApiServer(server)">
+        <p class="list-group-item-text">
+          <span class="close-history-item" ng-click="deleteApiServer(server.id)">
+            <span class="fa fa-close"></span>
+          </span>
+          <strong>{{ server.name }}</strong>
+        </p>
+
+        <p class="list-group-item-text">{{ server.description }}</p>
+        <p class="list-group-item-text"><small>
+          <a href="">{{ server.url }}</a>
+        </small></p>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,10 +1,10 @@
 /* RESOURCE APISERVERS */
 Atlas.factory(
-  'ApiServers',
+  'DataSourceService',
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/api_servers/:id', { id: '@api_server.id' }, {
+      return $resource('http://127.0.0.1:9000/api/data_source_servers/:id', { id: '@data_source_server.id' }, {
          'update': { method:'PUT' }
       });
     }

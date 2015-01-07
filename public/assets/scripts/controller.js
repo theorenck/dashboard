@@ -40,49 +40,49 @@ Atlas.controller('appController', [
 /**
  * API SERVER CONTROLLER
  */
-Atlas.controller('ApiServerController', [
-  'ApiServers',
+Atlas.controller('DataSourceIndexController', [
+  'DataSourceService',
   '$scope',
 
-  function(ApiServers, $scope){
-    $scope.api_server = {};
+  function(DataSourceService, $scope){
+    $scope.data_source_server = {};
     $scope.serverList = [];
 
     $scope.cancelarApiServer = function(){
-      $scope.api_server = {};
+      $scope.data_source_server = {};
     }
 
     $scope.renderList = function(){
-      ApiServers.get(function(data){
-        $scope.serverList = data.api_servers;
+      DataSourceService.get(function(data){
+        $scope.serverList = data.data_source_servers;
       });
     }
 
     $scope.saveApiServer = function(){
-      var data =  { "api_server" : $scope.api_server };
+      var data =  { "data_source_server" : $scope.data_source_server };
 
-      if ($scope.api_server.id) {
-        ApiServers.update(data, function(){
+      if ($scope.data_source_server.id) {
+        DataSourceService.update(data, function(){
           $scope.renderList();
-          $scope.api_server = {};
+          $scope.data_source_server = {};
         });
       }else{
-        ApiServers.save(data, function(){
+        DataSourceService.save(data, function(){
           $scope.renderList();
-          $scope.api_server = {};
+          $scope.data_source_server = {};
         });
       }
     };
 
     $scope.deleteApiServer = function(id){
       var data = { "id" : id };
-      ApiServers.remove(data, function(data){
+      DataSourceService.remove(data, function(data){
         $scope.renderList();
       });
     }
 
     $scope.loadApiServer = function(server){
-      $scope.api_server = server;
+      $scope.data_source_server = server;
     }
 
     $scope.renderList();
