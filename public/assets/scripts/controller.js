@@ -37,7 +37,6 @@ Atlas.controller('appController', [
   }
 ]);
 
-
 /**
  * DATA SOURCE INDEX CONTROLLER
  */
@@ -64,7 +63,9 @@ Atlas.controller('DataSourceIndexController', [
   }
 ]);
 
-
+/**
+ * DATA SOURCE CREATE / UPDATE CONTROLLER
+ */
 Atlas.controller('DataSourceCreateController', [
   'DataSourceService',
   '$scope',
@@ -102,45 +103,21 @@ Atlas.controller('DataSourceCreateController', [
 ]);
 
 
-
-
 /**
- * DASHBOARD CONTROLLER
+ * DASHBOARD CRUD INDEX CONTROLLER
  */
-Atlas.controller('dashboardController', [
+Atlas.controller('DashboardIndexController', [
   '$scope',
   'Dashboards',
 
   function($scope, Dashboards){
-    $scope.dashboard     = {};
     $scope.dashboardList = [];
-    $scope.availableApiServers = [];
 
     $scope.renderList = function(){
       Dashboards.get(function(data){
         $scope.dashboardList = data.dashboards;
       });
     }
-
-    $scope.loadDashboard = function(dash){
-      $scope.dashboard = dash;
-    }
-
-    $scope.salvar = function(){
-      var data =  { "dashboard" : $scope.dashboard };
-
-      if ($scope.dashboard.id) {
-        Dashboards.update(data, function(){
-          $scope.renderList();
-          $scope.dashboard = {};
-        });
-      }else{
-        Dashboards.save(data, function(data){
-          $scope.renderList();
-          $scope.dashboard = {};
-        });
-      }
-    };
 
     $scope.delete = function(id){
       var data = { "id" : id };
@@ -150,14 +127,48 @@ Atlas.controller('dashboardController', [
       });
     }
 
+    $scope.renderList();
+  }
+]);
+
+/**
+ * DASHBOARD Create/Update CONTROLLER
+ */
+Atlas.controller('DashboardCreateController', [
+  '$scope',
+  'Dashboards',
+  '$routeParams',
+
+  function($scope, Dashboards, $routeParams){
+    $scope.dashboard = {};
+
+    $scope.salvar = function(){
+      var data =  { "dashboard" : $scope.dashboard };
+
+      if ($scope.dashboard.id) {
+        Dashboards.update(data, function(){
+          $scope.dashboard = {};
+        });
+      }else{
+        Dashboards.save(data, function(data){
+          $scope.dashboard = {};
+        });
+      }
+    };
+
     $scope.cancelar = function(){
       $scope.dashboard = {};
     }
 
+    if ($routeParams.id) {
+      Dashboards.get({ id : $routeParams.id}, function(data){
+        $scope.dashboard = data.dashboard;
+      });
+    };
 
-    $scope.renderList();
   }
 ]);
+
 
 /**
  * INDICATOR CONTROLLER

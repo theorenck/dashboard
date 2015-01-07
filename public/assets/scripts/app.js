@@ -68,15 +68,21 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/data-source-server/create.html'
   })
 
+  .when('/dashboard', {
+    controller: 'DashboardIndexController',
+    templateUrl: '/admin/dashboard/index.html'
+  })
+
+  .when('/dashboard/:action?/:id', {
+    controller: 'DashboardCreateController',
+    templateUrl: '/admin/dashboard/create.html'
+  })
+
   .when('/dashboards', {
     controller: 'dashboardsController',
     templateUrl: '/admin/dashboardsList.html'
   })
 
-  .when('/dashboards/new', {
-    controller: 'dashboardController',
-    templateUrl: '/admin/dashboard.html'
-  })
 
   .when('/dashboards/:id', {
     controller: 'dashboardDetailController',
