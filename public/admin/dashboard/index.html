@@ -37,13 +37,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="dashboard in dashboardList | filter:search">
+        <tr ng-repeat="dashboard in dashboardList | filter:search" ng-click="load(dashboard.id)">
           <td>{{ dashboard.id }}</td>
           <td>{{ dashboard.name }}</td>
           <td>{{ dashboard.description }}</td>
-          <td class="text-right">
-            <button ng-click="delete(dashboard.id)" class="btn btn-warning btn-sm"><i class="fa fa-trash"></i></button>
-            <a href="dashboard/update/{{ dashboard.id }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>
+          <td class="text-center no-padding">
+            <a href="#" ng-click="delete(dashboard.id, $index, $event); $event.stopPropagation();" class="btn-remove"><i class="fa fa-close"></i></a>
           </td>
         </tr>
       </tbody>

@@ -115,8 +115,9 @@ Atlas.controller('DataSourceCreateController', [
 Atlas.controller('DashboardIndexController', [
   '$scope',
   'Dashboards',
+  '$location',
 
-  function($scope, Dashboards){
+  function($scope, Dashboards, $location){
     $scope.dashboardList = [];
 
     $scope.renderList = function(){
@@ -125,11 +126,16 @@ Atlas.controller('DashboardIndexController', [
       });
     }
 
-    $scope.delete = function(id){
+    $scope.load = function(id){
+      $location.path('/dashboard/create/' + id);
+    }
+
+    $scope.delete = function(id, $index, $event){
+      $event.preventDefault();
+
       var data = { "id" : id };
       Dashboards.remove(data, function(data){
         $scope.renderList();
-        $scope.dashboard = {};
       });
     }
 
