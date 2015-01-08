@@ -673,8 +673,9 @@ Atlas.controller('OrigemIndexController', [
       $scope.queriesList = data.sources;
     });
 
-    $scope.loadQuery = function(id){
-      $location.path("query/update/" + id);
+    $scope.loadSource = function(type, id){
+      var type = type.toLowerCase();
+      $location.path("origem/" + type + "/" + id);
     }
 
     $scope.deleteQuery = function(id, $index, $event){
@@ -775,31 +776,83 @@ Atlas.controller('AggregationCreateController', [
   'Dashboards',
   'SourceService',
   '$routeParams',
+  'FunctionsService',
 
-  function($scope, Dashboards, SourceService, $routeParams){
+  function($scope, Dashboards, SourceService, $routeParams, FunctionsService){
+    $scope.data_types     = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
+
+
+    SourceService.get(function(data){
+      $scope.sourceList = data.sources.filter(function(index, elem) {
+        if(index.type === 'Query') return index;
+      });
+    });
+
+    FunctionsService.get(function(data){
+      $scope.functionList = data.functions;
+    });
+
+    $scope.addParam = function(){
+      $scope.aggregation.parameters.push({
+        datatype : 'varchar'
+      });
+    }
+
+    $scope.addSource = function(){
+      $scope.aggregation.sources.push({});
+    }
+
+    $scope.deleteParam = function(key){
+      $scope.aggregation.parameters[key]._destroy = true;
+    }
+
+    $scope.deleteSource = function(key){
+      $scope.aggregation.sources.splice(key,1);
+    }
+
+    $scope.move = function(key, dir){
+      $scope.aggregation.executions.map(function(elem, index) {
+        elem.order = index;
+        return elem;
+      });
+
+      var aux;
+      for (var i = 0; i < $scope.aggregation.executions.length; i++) {
+
+        var index = dir === 'down' ? i+1 : i-1;
+
+        if ( key === i ) {
+          aux = $scope.aggregation.executions[i];
+          $scope.aggregation.executions[i]   = $scope.aggregation.executions[index];
+          $scope.aggregation.executions[index] = aux;
+        };
+      };
+    }
 
     $scope.save = function(){
-      $scope.validateParams();
-      $scope.statement.type = "Aggregation";
+      $scope.aggregation.type = "Aggregation";
 
-      var data = { source : $scope.statement };
+      var data = { source : $scope.aggregation };
 
-      if ($scope.statement.id) {
+      if ($scope.aggregation.id) {
         SourceService.update(data, function(data){
         });
       }else{
         SourceService.save(data, function(data){
         });
       }
-
     };
 
     if ( !isNaN($routeParams.id) ) {
-      // SourceService.get({ id : $routeParams.id }, function(data){
-      //   $scope.statement = data.query;
-      // });
+      SourceService.get({ id : $routeParams.id }, function(data){
+        $scope.aggregation = data.aggregation;
+        console.log(data.aggregation);
+      });
     }else{
-
+      $scope.aggregation = {
+        parameters : [],
+        sources : [],
+      }
     }
   }
 ]);

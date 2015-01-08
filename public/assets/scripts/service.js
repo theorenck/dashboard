@@ -126,7 +126,7 @@ Atlas.factory(
 );
 
 
-/* RESOURCE STATEMENTS */
+
 Atlas.factory(
   'Statements',
   ['$resource',
@@ -140,7 +140,17 @@ Atlas.factory(
 );
 
 
-/* RESOURCE STATEMENTS */
+Atlas.factory(
+  'FunctionsService',
+  ['$resource',
+    function($resource){
+      return $resource('http://localhost:9000/api/functions');
+    }
+  ]
+);
+
+
+
 Atlas.factory(
   'History',
   [function(){
