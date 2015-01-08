@@ -10,7 +10,7 @@
 
 <ul class="breadcrumb">
   <li><a href="#">Atlas</a></li>
-  <li><a href="#">User</a></li>
+  <li><a href="user">User</a></li>
   <li class="active">new</li>
 </ul>
 
@@ -33,24 +33,6 @@
         <button ng-click="cancelar()" class="btn btn-link" type="button">Cancelar</button>
       </form>
 
-    </div>
-  </div>
-
-  <div class="col-md-12 col-lg-6">
-    <div class="list-group striped" data-behaivor="history-list">
-      <div ng-repeat="user in userList" href="javascript:;" class="list-group-item" ng-click="loadUser(user)">
-        <p class="list-group-item-text">
-          <span class="close-history-item" ng-click="deleteuser(user.id)">
-            <span class="fa fa-close"></span>
-          </span>
-          <strong>{{ user.username }}</strong>
-        </p>
-
-        <p class="list-group-item-text">
-          <strong>Email: </strong>  {{ user.email }}
-        </p>
-
-      </div>
     </div>
   </div>
 </div>

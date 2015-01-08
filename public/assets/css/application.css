@@ -265,11 +265,15 @@ section{
   width: 5%;
 }
 
-.table-editable .btn-remove {
-  display: inline-block;
+.no-padding{
+  padding: 0px !important;
+}
+
+td .btn-remove {
+  display: block;
   height: 100%;
-  line-height: 42px;
   width: 100%;
+  line-height: 42px;
 }
 
 .table-editable td button{

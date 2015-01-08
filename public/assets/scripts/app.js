@@ -63,7 +63,7 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/data-source-server/index.html'
   })
 
-  .when('/data-source-server/:action?/:id', {
+  .when('/data-source-server/:action/:id?', {
     controller: 'DataSourceCreateController',
     templateUrl: '/admin/data-source-server/create.html'
   })
@@ -73,7 +73,7 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/dashboard/index.html'
   })
 
-  .when('/dashboard/:action?/:id', {
+  .when('/dashboard/:action/:id?', {
     controller: 'DashboardCreateController',
     templateUrl: '/admin/dashboard/create.html'
   })
@@ -94,24 +94,24 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/indicatorList.html'
   })
 
-  .when('/query', {
-    controller: 'QueryListController',
-    templateUrl: '/admin/query/index.html'
+  .when('/origem', {
+    controller : 'OrigemIndexController',
+    templateUrl: '/admin/origem/index.html'
   })
 
-  .when('/query/:action?/:id', {
+  .when('/origem/query/:id?', {
     controller: 'QueryCreateController',
-    templateUrl: '/admin/query/create.html'
+    templateUrl: '/admin/origem/createQuery.html'
   })
 
-  .when('/permissions', {
-    controller: 'permissionsController',
-    templateUrl: '/admin/permissions.html'
+  .when('/permission', {
+    controller: 'PermissionIndexController',
+    templateUrl: '/admin/permission/index.html'
   })
 
-  .when('/users', {
-    controller: 'usersController',
-    templateUrl: '/admin/users.html'
+  .when('/permission/:action/:id?', {
+    controller: 'PermissionCreateController',
+    templateUrl: '/admin/permission/create.html'
   })
 
   .when('/widget', {
@@ -119,9 +119,19 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/widget/index.html'
   })
 
-  .when('/widget/:action?/:id', {
+  .when('/widget/:action/:id?', {
     controller: 'WidgetCreateController',
     templateUrl: '/admin/widget/create.html'
+  })
+
+  .when('/user', {
+    controller: 'UserIndexController',
+    templateUrl: '/admin/user/index.html'
+  })
+
+  .when('/user/:action/:id?', {
+    controller: 'UserCreateController',
+    templateUrl: '/admin/user/create.html'
   })
 
   .when('/console', {

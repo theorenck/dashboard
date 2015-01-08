@@ -302,7 +302,6 @@ Atlas.controller('WidgetCreateController', [
       });
     };
 
-
     $scope.salvar = function(){
       var data =  { "widget" : $scope.widget };
       data.widget.indicator_id   = $scope.widget.indicator.id;
@@ -337,12 +336,11 @@ Atlas.controller('WidgetCreateController', [
 /**
  * USERS CONTROLLER
  */
-Atlas.controller('usersController', [
+Atlas.controller('UserIndexController', [
   '$scope',
   'Users',
 
   function($scope, Users){
-    $scope.user     = {};
     $scope.userList = [];
 
     $scope.renderList = function(){
@@ -350,6 +348,22 @@ Atlas.controller('usersController', [
         $scope.userList = data.users;
       });
     }
+
+    $scope.renderList();
+  }
+]);
+
+
+/**
+ * USERS CONTROLLER
+ */
+Atlas.controller('UserCreateController', [
+  '$scope',
+  'Users',
+  '$routeParams',
+
+  function($scope, Users, $routeParams){
+    $scope.user     = {};
 
     $scope.cancelar = function(){
       $scope.user = {};
@@ -360,22 +374,20 @@ Atlas.controller('usersController', [
 
       if ($scope.user.id) {
         Users.update(data, function(){
-          $scope.renderList();
           $scope.cancelar();
         });
       }else{
         Users.save(data, function(){
-          $scope.renderList();
           $scope.cancelar();
         });
       }
     };
 
-    $scope.loadUser = function(item){
-      $scope.user = item;
+    if ($routeParams.id) {
+      Users.get({id : $routeParams.id}, function(data){
+        $scope.user = data.user;
+      });
     }
-
-    $scope.renderList();
   }
 ]);
 
@@ -383,44 +395,12 @@ Atlas.controller('usersController', [
 /**
  * PERMISSIONS CONTROLLER
  */
-Atlas.controller('permissionsController', [
+Atlas.controller('PermissionIndexController', [
   '$scope',
   'Permissions',
-  'Users',
-  'ApiServers',
-  'Dashboards',
 
-  function($scope, Permissions, Users, ApiServers, Dashboards){
-    $scope.permission     = {};
+  function($scope, Permissions){
     $scope.permissionList = [];
-
-    Users.get(function(data){
-      $scope.availableUsers = data.users;
-    });
-
-    ApiServers.get(function(data){
-      $scope.availableApiServers = data.api_servers;
-    });
-
-    Dashboards.get(function(data){
-      $scope.availableDashboards = data.dashboards;
-    });
-
-    $scope.salvar = function(){
-      var data =  { "permission" : $scope.permission };
-
-      if ($scope.permission.id) {
-        Permissions.update(data, function(){
-          $scope.renderList();
-          $scope.permission = {};
-        });
-      }else{
-        Permissions.save(data, function(){
-          $scope.renderList();
-          $scope.permission = {};
-        });
-      }
-    };
 
     $scope.renderList = function(){
       Permissions.get(function(data){
@@ -433,22 +413,66 @@ Atlas.controller('permissionsController', [
       Permissions.remove(data, function(data){
         $scope.renderList();
       });
+    }
+
+    $scope.renderList();
+  }
+]);
+
+
+/**
+ * PERMISSIONS CONTROLLER
+ */
+Atlas.controller('PermissionCreateController', [
+  '$scope',
+  'Permissions',
+  'Users',
+  'DataSourceService',
+  'Dashboards',
+  '$routeParams',
+
+  function($scope, Permissions, Users, DataSourceService, Dashboards, $routeParams){
+    $scope.permission     = {};
+    $scope.availableUsers = [];
+    $scope.availableDataSourceService = [];
+    $scope.availableDashboards = [];
+
+    Users.get(function(data){
+      $scope.availableUsers = data.users;
+    });
+
+    DataSourceService.get(function(data){
+      $scope.availableDataSourceService = data.api_servers;
+    });
+
+    Dashboards.get(function(data){
+      $scope.availableDashboards = data.dashboards;
+    });
+
+    $scope.salvar = function(){
+      var data =  { "permission" : $scope.permission };
+
+      if ($scope.permission.id) {
+        Permissions.update(data, function(){
+          $scope.permission = {};
+        });
+      }else{
+        Permissions.save(data, function(){
+          $scope.permission = {};
+        });
+      }
     };
 
     $scope.cancelar = function(){
       $scope.permission = {};
     };
 
-    $scope.loadPermission = function(item){
-      $scope.permission = {
-        "id" : item.id,
-        "user_id" : item.user ? item.user.id : 0,
-        "dashboard_id" : item.dashboard ? item.dashboard.id : 0,
-        "api_server_id" : (item.api_server ? item.api_server.id : 0),
-      };
+    if($routeParams.id){
+      Permissions.get({ id : $routeParams.id }, function (data) {
+        $scope.permission = data.permission;
+      });
     }
 
-    $scope.renderList();
   }
 ]);
 
@@ -618,17 +642,28 @@ Atlas.controller('dashboardsController', [
 /**
  * QUERIES CONTROLLER
  */
-Atlas.controller('QueryListController', [
+Atlas.controller('OrigemIndexController', [
   '$scope',
   'Dashboards',
   'SourceService',
+  '$location',
 
-  function($scope, Dashboards, SourceService){
+  function($scope, Dashboards, SourceService, $location){
     $scope.queriesList = [];
 
     SourceService.get(function(data){
       $scope.queriesList = data.sources;
     });
+
+    $scope.loadQuery = function(id){
+      $location.path("query/update/" + id);
+    }
+
+    $scope.deleteQuery = function(id, $index, $event){
+      $event.preventDefault();
+      console.log(id);
+
+    }
 
   }
 ]);
@@ -659,10 +694,16 @@ Atlas.controller('QueryCreateController', [
       $scope.statement.type = "Query";
 
       var data = { source : $scope.statement };
-      console.log(data);
-      SourceService.update(data, function(data){
-        console.log(data);
-      });
+
+      if ($scope.statement.id) {
+        SourceService.update(data, function(data){
+          console.log(data);
+        });
+      }else{
+        SourceService.save(data, function(data){
+          console.log(data);
+        });
+      }
 
     };
 
@@ -694,15 +735,16 @@ Atlas.controller('QueryCreateController', [
     };
 
     $scope.deleteParam = function(key){
-      $scope.statement.parameters.splice(key, 1);
+      $scope.statement.parameters[key]._destroy = true;
     }
 
-    if ($routeParams.id) {
+    if ( !isNaN($routeParams.id) ) {
       SourceService.get({ id : $routeParams.id }, function(data){
         $scope.statement = data.query;
       });
-    }else
+    }else{
       $scope.resetStatement();
+    }
   }
 ]);
 
