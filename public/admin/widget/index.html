@@ -15,7 +15,7 @@
 </ul>
 
 <div class="row">
-  <div class="col-md-6"><a href="query/create" class="btn btn-success">Novo</a></div>
+  <div class="col-md-6"><a href="widget/create" class="btn btn-success">Novo</a></div>
   <div class="col-md-6"><input type="text" class="form-control" placeholder="Procurar" ng-model="search"></div>
 </div>
 
@@ -41,16 +41,15 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="widget in widgetList | filter:search">
+        <tr ng-repeat="widget in widgetList | filter:search" ng-click="load(widget.id)">
           <td>{{ widget.id }}</td>
           <td>{{ widget.name }}</td>
           <td>{{ widget.color }}</td>
           <td>{{ widget.description }}</td>
           <td>{{ widget.position }}</td>
           <td>{{ widget.size }}</td>
-          <td class="text-right">
-            <button ng-click="delete(widget.id)" class="btn btn-warning btn-sm"><i class="fa fa-trash"></i></button>
-            <a href="widget/update/{{ widget.id }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>
+          <td class="text-center no-padding">
+            <a href="#" ng-click="delete(widget.id, $index, $event); $event.stopPropagation();" class="btn-remove"><i class="fa fa-close"></i></a>
           </td>
         </tr>
       </tbody>

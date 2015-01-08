@@ -259,15 +259,21 @@ Atlas.controller('indicatorController', [
 Atlas.controller('WidgetIndexController', [
   '$scope',
   'Widgets',
+  '$location',
 
-  function($scope, Widgets){
+  function($scope, Widgets, $location){
     $scope.widget     = {};
     $scope.widgetList = [];
 
-    $scope.delete = function(id){
+    $scope.delete = function(id, $index, $event){
+      $event.preventDefault();
       Widgets.remove({ "id" : id },function(){
         $scope.renderList();
       });
+    }
+
+    $scope.load = function(id){
+      $location.path('/widget/create/' + id);
     }
 
     $scope.renderList = function(){
