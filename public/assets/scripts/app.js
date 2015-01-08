@@ -104,6 +104,11 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/origem/createQuery.html'
   })
 
+  .when('/origem/aggregation/:id?', {
+    controller: 'AggregationCreateController',
+    templateUrl: '/admin/origem/createAggregation.html'
+  })
+
   .when('/permission', {
     controller: 'PermissionIndexController',
     templateUrl: '/admin/permission/index.html'

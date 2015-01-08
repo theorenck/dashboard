@@ -37,14 +37,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="server in serverList | filter:search">
+        <tr ng-repeat="server in serverList | filter:search" ng-click="loadServer(server.id)">
           <td>{{ server.id }}</td>
           <td>{{ server.name }}</td>
           <td>{{ server.description }}</td>
           <td>{{ server.url }}</td>
-          <td class="text-right">
-            <button ng-click="deleteDataSource(server.id)" class="btn btn-warning btn-sm"><i class="fa fa-trash"></i></button>
-            <a href="data-source-server/update/{{ server.id }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>
+          <td class="text-center no-padding">
+            <a href="#" ng-click="deleteServer(server.id, $index, $event); $event.stopPropagation();" class="btn-remove"><i class="fa fa-close"></i></a>
           </td>
         </tr>
       </tbody>

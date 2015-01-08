@@ -43,8 +43,9 @@ Atlas.controller('appController', [
 Atlas.controller('DataSourceIndexController', [
   'DataSourceService',
   '$scope',
+  '$location',
 
-  function(DataSourceService, $scope){
+  function(DataSourceService, $scope, $location){
     $scope.serverList         = [];
 
     $scope.renderList = function(){
@@ -53,7 +54,12 @@ Atlas.controller('DataSourceIndexController', [
       });
     }
 
-    $scope.deleteDataSource = function(id){
+    $scope.loadServer = function(id){
+      $location.path('/data-source-server/create/' + id);
+    }
+
+    $scope.deleteServer = function(id, $index, $event){
+      $event.preventDefault();
       DataSourceService.remove({ "id" : id }, function(){
         $scope.renderList();
       });
@@ -661,8 +667,10 @@ Atlas.controller('OrigemIndexController', [
 
     $scope.deleteQuery = function(id, $index, $event){
       $event.preventDefault();
-      console.log(id);
-
+      if (window.confirm('Deseja deletar esse registro?')) {
+        /* @todo: Deletar registro */
+        console.log('deletou');
+      };
     }
 
   }
@@ -697,11 +705,9 @@ Atlas.controller('QueryCreateController', [
 
       if ($scope.statement.id) {
         SourceService.update(data, function(data){
-          console.log(data);
         });
       }else{
         SourceService.save(data, function(data){
-          console.log(data);
         });
       }
 
@@ -748,6 +754,44 @@ Atlas.controller('QueryCreateController', [
   }
 ]);
 
+
+/**
+ * AGREGAÇÃO CONTROLLER
+ */
+Atlas.controller('AggregationCreateController', [
+  '$scope',
+  'Dashboards',
+  'SourceService',
+  '$routeParams',
+
+  function($scope, Dashboards, SourceService, $routeParams){
+
+    $scope.save = function(){
+      $scope.validateParams();
+      $scope.statement.type = "Aggregation";
+
+      var data = { source : $scope.statement };
+
+      if ($scope.statement.id) {
+        SourceService.update(data, function(data){
+        });
+      }else{
+        SourceService.save(data, function(data){
+        });
+      }
+
+    };
+
+    if ( !isNaN($routeParams.id) ) {
+      // SourceService.get({ id : $routeParams.id }, function(data){
+      //   $scope.statement = data.query;
+      // });
+    }else{
+
+    }
+  }
+]);
+
 /**
  * DASHBOARDS DETAIL CONTROLLER
  */
@@ -762,7 +806,6 @@ Atlas.controller('dashboardDetailController', [
     };
 
     Dashboards.get({ dashboard : { id : $routeParams.id } }, function(data){
-      console.log(data);
     });
 
     $scope.indicadores = {
