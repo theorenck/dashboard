@@ -14,12 +14,12 @@
   <li class="active">Novo</li>
 </ul>
 
-<form id="formCadastro" class="form-horizontal" ng-submit="saveApiServer()">
+<form class="form-horizontal" ng-submit="saveApiServer()">
 
   <div class="row">
     <div class="col-md-12">
       <div class="well">
-        
+
           <label class="control-label">Nome</label>
           <input ng-model="data_source_server.name" class="form-control" type="text" name="name">
 
@@ -29,11 +29,6 @@
           <label class="control-label">URL</label>
           <input ng-model="data_source_server.url" class="form-control" type="text" name="url" placeholder="http://127.0.0.1/api/">
 
-          <!-- <br> -->
-          
-          <!-- <button ng-click="cancelarApiServer()" class="btn btn-link" type="button">Cancelar</button> -->
-          <!-- <button ng-click="saveApiServer()" class="btn btn-success" type="button">Salvar</button> -->
-        
       </div>
     </div>
   </div>
@@ -43,7 +38,7 @@
     <div class="col-md-12">
       <div class="pull-right">
         <a href="data-source-server" class="btn btn-link">Voltar</a>
-        <button ng-click="saveApiServer()" type="submit" class="btn btn-success">Salvar indicador</button>
+        <button ng-click="saveApiServer()" type="submit" class="btn btn-success">Salvar servidor</button>
       </div>
     </div>
   </div>
