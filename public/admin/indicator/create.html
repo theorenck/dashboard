@@ -14,7 +14,7 @@
   <li class="active">Novo indicador</li>
 </ul>
 
-<form class="form-horizontal">
+<form class="form-horizontal" ng-submit="salvar()">
 
   <div class="row">
     <div class="col-md-12">
@@ -31,23 +31,24 @@
         <input ng-model="indicator.description" class="form-control" type="text" name="description">
 
         <label class="control-label">Fonte de dados</label>
-        <select class="form-control" ng-model="indicator.source.id" ng-options="source.id as source.name for source in sourceList"></select>
+        <select class="form-control" ng-model="indicator.source_id" ng-options="source.id as source.name for source in sourceList"></select>
 
         <label class="control-label">Unidade</label>
         <select class="form-control"
-          ng-model="indicator.unity.id"
-          ng-options="unity.id as ( unity.name + ' (' + unity.symbol + ')' ) for unity in unityList"></select>
+          ng-model="indicator.unity_id"
+          ng-options="unity.id as ('(' + unity.symbol + ') ' + unity.name) for unity in unityList">
+          <option value="">Sem unidade</option>
+        </select>
       </div>
     </div>
   </div>
-
 
   <!-- AÇÕES FORMULÁRIO -->
   <div class="row">
     <div class="col-md-12">
       <div class="pull-right">
         <a href="indicator" class="btn btn-link">Voltar</a>
-        <button type="button" ng-click="save()" class="btn btn-success">Salvar indicador</button>
+        <button type="submit" class="btn btn-success">Salvar indicador</button>
       </div>
     </div>
   </div>

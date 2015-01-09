@@ -233,55 +233,20 @@ Atlas.controller('IndicatorCreateController', [
       $scope.unityList = data.unities;
     });
 
-    $scope.indicator = {
-      "query" : {
-        "parameters" : [],
-      }
-    };
-
     $scope.salvar = function(){
-      $scope.indicator.query.parameters.forEach(function(el, i){
-        if ((el.name === '' || el.name === null) && (el.default_value === '' || el.default_value === null))
-          delete $scope.indicator.query.parameters[i];
-      });
-
       var data =  { "indicator" : $scope.indicator };
+
 
       if ($scope.indicator.id) {
         IndicatorsService.update(data, function(){
-          $scope.renderList();
-          $scope.indicator = {};
+          // $scope.indicator = {};
         });
       }else{
         IndicatorsService.save(data, function(data){
-          $scope.renderList();
-          $scope.indicator = {};
+          // $scope.indicator = {};
         });
       }
     };
-
-
-    $scope.addParam = function(){
-      $scope.indicator.query.parameters.push({});
-    }
-
-
-    $scope.delete = function (id) {
-      var data = { "id" : id };
-      IndicatorsService.remove(data, function(data){
-        $scope.renderList();
-        $scope.cancelar();
-      });
-    }
-
-
-    $scope.cancelar = function(){
-      $scope.indicator = {
-        "query" : {
-          "parameters" : [],
-        }
-      };
-    }
 
     if ($routeParams.id) {
       IndicatorsService.get({ id : $routeParams.id}, function(data){
@@ -332,16 +297,16 @@ Atlas.controller('WidgetIndexController', [
 Atlas.controller('WidgetCreateController', [
   '$scope',
   'Widgets',
-  'Indicators',
+  'IndicatorsService',
   'Dashboards',
   'WidgetTypes',
   '$routeParams',
 
-  function($scope, Widgets, Indicators, Dashboards, WidgetTypes, $routeParams){
+  function($scope, Widgets, IndicatorsService, Dashboards, WidgetTypes, $routeParams){
     $scope.widget     = {};
     $scope.widgetList = [];
 
-    Indicators.get(function(data){
+    IndicatorsService.get(function(data){
       $scope.availableIndicators = data.indicators;
     });
 
@@ -499,7 +464,7 @@ Atlas.controller('PermissionCreateController', [
     });
 
     DataSourceService.get(function(data){
-      $scope.availableDataSourceService = data.api_servers;
+      $scope.availableDataSourceService = data.data_source_servers;
     });
 
     Dashboards.get(function(data){
@@ -511,17 +476,13 @@ Atlas.controller('PermissionCreateController', [
 
       if ($scope.permission.id) {
         Permissions.update(data, function(){
-          $scope.permission = {};
+
         });
       }else{
         Permissions.save(data, function(){
-          $scope.permission = {};
+
         });
       }
-    };
-
-    $scope.cancelar = function(){
-      $scope.permission = {};
     };
 
     if($routeParams.id){
@@ -539,7 +500,7 @@ Atlas.controller('PermissionCreateController', [
  */
 Atlas.controller('consoleController', [
   '$scope',
-  '´',
+  'Statements',
   'Tables',
   'History',
   'zCodeMirror',
@@ -721,7 +682,6 @@ Atlas.controller('OrigemIndexController', [
       $event.preventDefault();
       if (window.confirm('Deseja deletar esse registro?')) {
         /* @todo: Deletar registro */
-        console.log('deletou');
       };
     }
 
@@ -838,7 +798,6 @@ Atlas.controller('AggregationCreateController', [
     }
 
     $scope.addExecution = function(){
-      console.log($scope.functionList[0].parameters);
       data = {
         'function_id': $scope.functionList[0].id,
         'name': $scope.functionList[0].name,
@@ -882,7 +841,6 @@ Atlas.controller('AggregationCreateController', [
     if ( !isNaN($routeParams.id) ) {
       SourceService.get({ id : $routeParams.id }, function(data){
         $scope.aggregation = data.aggregation;
-        console.log(data.aggregation);
       });
     }else{
       $scope.aggregation = {
