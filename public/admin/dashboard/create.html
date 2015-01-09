@@ -15,21 +15,29 @@
   <li class="active">Novo</li>
 </ul>
 
-<div class="row">
-  <div class="col-md-12 col-lg-6">
-    <div class="well">
+<form id="formCadastro" class="form-horizontal">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="well">
 
-      <form id="formCadastro" class="form-horizontal">
-        <label  class="control-label">Name</label>
-        <input ng-model="dashboard.name" class="form-control" type="text" name="name">
+          <label  class="control-label">Nome</label>
+          <input ng-model="dashboard.name" class="form-control" type="text" name="name">
 
-        <label  class="control-label">Description</label>
-        <input ng-model="dashboard.description" class="form-control" type="text" name="description">
+          <label  class="control-label">Descrição</label>
+          <input ng-model="dashboard.description" class="form-control" type="text" name="description">
 
-        <br>
-        <button ng-click="salvar()" class="btn btn-success" type="button">Salvar</button>
-        <button ng-click="cancelar()" class="btn btn-link" type="button">Cancelar</button>
-      </form>
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- AÇÕES FORMULÁRIO --> 
+  <div class="row">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <a href="dashboard" class="btn btn-link">Voltar</a>
+        <button ng-click="salvar()" type="submit" class="btn btn-success">Salvar dashboard</button>
+      </div>
+    </div>
+  </div>
+  <!-- / AÇÕES FORMULÁRIO -->
+</form>
