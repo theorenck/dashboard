@@ -6,6 +6,7 @@ Atlas.controller('appController', [
   "AuthService",
   function($scope, AuthService){
     $scope.credentials = {};
+    $scope.open = false;
 
     $scope.login = function(credentials){
       var authentication = {"authentication"  : credentials };
@@ -13,21 +14,21 @@ Atlas.controller('appController', [
       AuthService.save(authentication, function(res){
         if (res.authentication && res.authentication.token) {
           var token = res.authentication.token;
-          sessionStorage.setItem('token', token);
-          sessionStorage.setItem('logged-in', true);
+          localStorage.setItem('token', token);
+          localStorage.setItem('logged-in', true);
         }else{
-          sessionStorage.setItem('logged-in', false);
+          localStorage.setItem('logged-in', false);
         }
       });
     };
 
     $scope.logout = function(){
-      sessionStorage.removeItem('token');
-      sessionStorage.removeItem('logged-in');
+      localStorage.removeItem('token');
+      localStorage.removeItem('logged-in');
     };
 
     $scope.isLoggedIn = function(){
-      return !!sessionStorage.getItem('logged-in') && !!sessionStorage.getItem('token') || false;
+      return !!localStorage.getItem('logged-in') && !!localStorage.getItem('token') || false;
     }
 
     $scope.range = function(num){

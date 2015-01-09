@@ -27,7 +27,7 @@
     </div>
 
     <div class="navbar-collapse navbar-responsive-collapse collapse" ng-class="{ collapse : showResponsiveMenu }">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav" ng-if="isLoggedIn()===true">
         <li>
           <a href="dashboards">Dashboard</a>
         </li>
@@ -36,8 +36,8 @@
           <a href="console">Console</a>
         </li>
 
-        <li class="dropdown" ng-click="open = !open" ng-class="open ? 'open' : ''">
-          <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">Entities <b class="caret"></b></a>
+        <li class="dropdown" ng-class="{ 'open' : open }">
+          <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Entities <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a ng-href="data-source-server">Servidor de fonte de dados</a></li>
             <li><a ng-href="dashboard">Dashboard</a></li>
