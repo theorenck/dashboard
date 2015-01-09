@@ -1,0 +1,57 @@
+<div class="panel panel-info">
+    <div class="panel-heading">
+      <strong>#{{ key }}</strong>
+    </div>
+
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+
+            <select
+              class="form-control"
+              ng-model="execution.function_id"
+              ng-options="fn.id as fn.name for (key, fn) in functionList"
+              ng-change="loadParametersFromFunction(execution)"></select>
+
+          </div>
+
+          <table class="table table-bordered table-striped table-editable">
+            <thead>
+              <tr>
+                <th class="col-md-6">Nome</th>
+                <th class="col-md-6">Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="(key, param) in execution.parameters track by $index">
+                <td>
+                  <span class="form-control">{{param.name}}</span>
+                </td>
+                <td>
+                  <input class="form-control" type="text" ng-model="param.value">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-footer">
+      <div class="btn-group btn-group-justified">
+        <a href="#" class="btn btn-info" ng-click="move(key, 'up')" ng-disabled="key===0">
+          <span class="fa fa-arrow-up"></span>
+        </a>
+
+        <a href="#" class="btn btn-info" ng-click="deleteExecution(key)">
+          <span class="fa fa-close"></span>
+        </a>
+
+        <a href="#" class="btn btn-info" ng-click="move(key, 'down')"  ng-disabled="key===(aggregation.executions).length-1">
+          <span class="fa fa-arrow-down"></span>
+        </a>
+      </div>
+    </div>
+
+</div>

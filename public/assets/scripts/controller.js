@@ -798,6 +798,20 @@ Atlas.controller('AggregationCreateController', [
       });
     }
 
+    $scope.addExecution = function(){
+      console.log($scope.functionList[0].parameters);
+      data = {
+        'function_id': $scope.functionList[0].id,
+        'name': $scope.functionList[0].name,
+        'parameters': {
+          "name" : $scope.functionList[0].parameters.name,
+          "type" : $scope.functionList[0].parameters.type
+        }
+      };
+
+      $scope.aggregation.executions.push(data);
+    }
+
     $scope.addSource = function(){
       $scope.aggregation.sources.push({});
     }
@@ -810,24 +824,7 @@ Atlas.controller('AggregationCreateController', [
       $scope.aggregation.sources.splice(key,1);
     }
 
-    $scope.move = function(key, dir){
-      $scope.aggregation.executions.map(function(elem, index) {
-        elem.order = index;
-        return elem;
-      });
 
-      var aux;
-      for (var i = 0; i < $scope.aggregation.executions.length; i++) {
-
-        var index = dir === 'down' ? i+1 : i-1;
-
-        if ( key === i ) {
-          aux = $scope.aggregation.executions[i];
-          $scope.aggregation.executions[i]   = $scope.aggregation.executions[index];
-          $scope.aggregation.executions[index] = aux;
-        };
-      };
-    }
 
     $scope.save = function(){
       $scope.aggregation.type = "Aggregation";
@@ -852,6 +849,7 @@ Atlas.controller('AggregationCreateController', [
       $scope.aggregation = {
         parameters : [],
         sources : [],
+        executions : []
       }
     }
   }

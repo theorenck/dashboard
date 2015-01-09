@@ -16,7 +16,6 @@
 
 <div class="row">
 
-
   <div class="col-md-12">
 
      <form ng-submit="save()">
@@ -39,8 +38,6 @@
                     </div>
                   </div>
                 </div>
-
-
 
                 <div class="form-group">
                   <label class="control-label">Descrição</label>
@@ -107,54 +104,16 @@
                   <button class="btn btn-info " type="button" ng-click="addSource()">Adicionar fonte de dados</button>
                 </div>
 
+                <div ng-repeat="(key, execution) in aggregation.executions track by $index"  ng-show="!execution._destroy">
+                  <z-executions></z-executions>
+                </div>
+
                 <div class="form-group">
                   <label class="control-label">Operações</label>
-                    <div class="panel panel-info" ng-repeat="(key, execution) in aggregation.executions track by $index">
-                        <div class="panel-heading">
-                          <strong>#{{ key }}</strong>
-                        </div>
 
-                        <div class="panel-body">
-                          <div class="row">
-                            <div class="col-md-12">
-                              <div class="form-group">
-                                <select class="form-control" ng-model="execution.function_id" ng-options="function.id as function.name for function in functionList"></select>
-                              </div>
-
-                              <table class="table table-bordered table-striped table-editable">
-                                <thead>
-                                  <tr>
-                                    <th class="col-md-6">Nome</th>
-                                    <th class="col-md-6">Valor</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr ng-repeat="(key, param) in execution.parameters track by $index" ng-show="!param._destroy">
-                                    <td>
-                                      <span class="form-control">{{param.name}}</span>
-                                    </td>
-                                    <td>
-                                      <input class="form-control" type="text" ng-model="param.value">
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="panel-footer">
-                          <div class="btn-group btn-group-justified">
-                            <a href="#" class="btn btn-info" ng-disabled="key===0" type="button" ng-click="move(key, 'up')" ><span class="fa fa-arrow-up"></span></a>
-                            <a href="#" class="btn btn-info"><span class="fa fa-close"></span></a>
-                            <a href="#" class="btn btn-info" ng-disabled="key===(aggregation.executions).length-1" type="button" ng-click="move(key, 'down')" ><span class="fa fa-arrow-down"></span></a>
-                          </div>
-                        </div>
-
-                    </div>
 
                   <div class="clearfix"></div>
-                  <button class="btn btn-info " type="button" ng-click="addSource()">Adicionar operação</button>
+                  <button class="btn btn-info " type="button" ng-click="addExecution()">Adicionar operação</button>
                 </div>
 
 

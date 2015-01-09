@@ -40,6 +40,63 @@ Atlas.directive('zCheckbox', function() {
   };
 });
 
+Atlas.directive('zExecutions', function() {
+  return {
+    restrict: 'E',
+    templateUrl: '/admin/origem/zExecutions.html',
+    link: function($scope, element, attr, ngController) {
+
+      /**
+       * Move o box para cima e para baixo
+       * @param  Integer key indice do array
+       * @param  String dir 'up', 'down'
+       */
+      $scope.move = function(key, dir){
+        $scope.aggregation.executions.map(function(elem, index) {
+          elem.order = index;
+          return elem;
+        });
+
+        var aux;
+        for (var i = 0; i < $scope.aggregation.executions.length; i++) {
+          var index = (dir === 'down') ? i+1 : i-1;
+
+          if ( key === i ) {
+            aux = $scope.aggregation.executions[i];
+            $scope.aggregation.executions[i]   = $scope.aggregation.executions[index];
+            $scope.aggregation.executions[index] = aux;
+          };
+        };
+      }
+
+      /* Se houver ID então pede para excluir, senão remove do array */
+      $scope.deleteExecution = function(key){
+        if (window.confirm("Você tem certeza que deseja deletar essa operação?")) {
+          if($scope.aggregation.executions[key].id)
+            $scope.aggregation.executions[key]._destroy = true;
+          else
+            $scope.aggregation.executions.splice(key, 1);
+        };
+      }
+
+      $scope.loadParametersFromFunction = function(execution){
+        var i  = 0;
+        var fn = false;
+
+        while(i < $scope.functionList.length || fn === false){
+          if($scope.functionList[i].id === execution.function_id){
+            fn = $scope.functionList[i];
+          }
+          i++;
+        }
+        console.log(fn.parameters);
+        execution.parameters = fn.parameters;
+      }
+
+    }
+  };
+});
+
 Atlas.directive('zErrorbox', [function(){
   return {
     scope: {
