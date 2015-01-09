@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="icon" href="/assets/images/online.png">
+  <title>Atlas Dashboard</title>
+  <link rel="stylesheet" href="/assets/css/bootstrap-flatly.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/plugins/daterangepicker/daterangepicker.css">
+  <link rel="stylesheet" href="/assets/css/application.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Inicio Navbar -->
+  <div class="navbar navbar-default">
+
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><img src="/assets/images/brand.svg" alt=""></a>
+      <!-- <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-main">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button> -->
+    </div>
+
+    <div class="navbar-collapse collapse" id="navbar-main">
+      <ul class="nav navbar-nav">
+        <li class="active">
+          <a href="/index.html">Dashboard</a>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+  <!-- Fim Navbar -->
+
+  <div class="container">
+
+    <div class="header-area">
+      <div class="row">
+        <div class="col-sm-12">
+          <h1>
+            Dashboard
+          </h1>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inicio Daterangepicker -->
+    <div class="row">
+      <div class="col-sm-12">
+
+       <!--  <div class="btn-group">
+          <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></a>
+          <a href="#" class="btn btn-primary">Primary</a>
+        </div> -->
+
+        <div class="toolbar">
+          <button id="reportrange" class="btn btn-primary btn-block">
+            <span class="fa fa-calendar"></span>
+            <span class="text" data-behaivor="show-actual-date"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Fim Daterangepicker -->
+
+
+    <!-- Inicio Indicadores -->
+    <section class="indicadores-container">
+      <div class="row">
+
+        <div class="col-sm-6 col-xs-12 col-md-3">
+          <div class="widget alert alert-warning" data-behaivor="indicador" data-type="contratos-ativos">
+            <div class="loader loader-inverse"><p class="text-center"><span class="fa fa-3x fa-spinner fa-spin"></span></p></div>
+            <h4 class="title">
+              Contratos Ativos
+              <small><button class="pull-right" id="popover"><i class="glyphicon glyphicon-question-sign"></i></button></small>
+            </h4>
+            <div class="info">
+              <span class="unidade"></span>
+              <span class="valor"></span>
+              <span class="grandeza">&nbsp;</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xs-12 col-md-3">
+          <div class="widget alert alert-info" data-behaivor="indicador" data-type="contratos-novos">
+            <div class="loader loader-inverse"><p class="text-center"><span class="fa fa-3x fa-spinner fa-spin"></span></p></div>
+            <h4 class="title">
+              Novos Contratos
+              <small><span class="pull-right glyphicon glyphicon-question-sign"></span></small>
+            </h4>
+            <div class="info">
+              <span class="valor"></span>
+              <span class="grandeza"></span>
+              <span class="unidade">&nbsp;</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xs-12 col-md-3">
+          <div class="widget alert alert-success" data-behaivor="indicador" data-type="volume-total-de-vendas">
+            <div class="loader loader-inverse"><p class="text-center"><span class="fa fa-3x fa-spinner fa-spin"></span></p></div>
+
+            <h4 class="title">
+              Faturamento
+              <small>
+                <span class="pull-right glyphicon glyphicon-question-sign"></span>
+              </small>
+            </h4>
+            <div class="info">
+              <span class="unidade">R$ </span>
+              <span class="valor"></span>
+              <span class="grandeza"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6 col-xs-12 col-md-3">
+          <div class="widget alert alert-danger" data-behaivor="indicador" data-type="percentual-inadimplentes">
+            <div class="loader loader-inverse"><p class="text-center"><span class="fa fa-3x fa-spinner fa-spin"></span></p></div>
+            <h4 class="title">
+              Inadimplência
+              <small><span class="pull-right glyphicon glyphicon-question-sign"></span></small>
+            </h4>
+            <div class="info">
+              <span class="valor"></span>
+              <span class="grandeza"></span>
+              <span class="unidade"> %</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- Fim Indicadores -->
+
+    <!-- Inicio Gráfico Volume de vendas -->
+    <section>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="grafico-content">
+            <div class="loader"><p class="text-center"><span class="fa fa-3x fa-spinner fa-spin"></span></p></div>
+            <div id="volume-vendas"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Fim Gráfico Volume de vendas -->
+
+
+    <section data-type="big-loader">
+      <div class="row">
+
+        <div class="col-xs-12 col-md-4" data-type="pedidos-por-situacao">
+          <div class="loader"><p class="text-center"><span class="fa fa-3x fa-spinner fa-spin"></span></p></div>
+          <div class="pie"></div>
+        </div>
+
+        <div class="col-xs-12 col-md-4" data-type="clientes-mais-compraram">
+          <div class="loader"><p class="text-center"><span class="fa fa-3x fa-spinner fa-spin"></span></p></div>
+          <div class="pie"></div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- scripts externos -->
+  <script src="/assets/plugins/jquery/jquery.min.js"></script>
+	<script src="/assets/plugins/bootstrap/bootstrap.min.js"></script>
+  <script src="/assets/plugins/moment/moment-with-locales.js"></script>
+  <script src="/assets/plugins/highstock/highstock.js"></script>
+  <script src="/assets/plugins/daterangepicker/daterangepicker.js"></script>
+  <script src="/assets/plugins/lodash/lodash.min.js"></script>
+  <script src="/assets/scripts/helpers/number_helpers.js"></script>
+
+  <script src="/configuration.js"></script>
+  <script src="/assets/scripts/dashboard.js"></script>
+
+</body>
+</html>

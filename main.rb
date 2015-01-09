@@ -5,7 +5,7 @@ class Main < Sinatra::Base
 
 	set :public_folder, File.dirname(__FILE__) + '/public'
 
-	get '/' do
+	get '/*' do
     send_file 'public/index.html'
   end
 
