@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-12">
       <h1>
-        User <small></small>
+        Usuário <small></small>
       </h1>
     </div>
   </div>
@@ -10,29 +10,36 @@
 
 <ul class="breadcrumb">
   <li><a href="#">Atlas</a></li>
-  <li><a href="user">User</a></li>
+  <li><a href="user">Usuário</a></li>
   <li class="active">new</li>
 </ul>
 
-<div class="row">
-  <div class="col-md-12 col-lg-6">
-    <div class="well">
+<form id="formCadastro" class="form-horizontal">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="well">
 
-      <form id="formCadastro" class="form-horizontal">
         <label class="control-label">Email</label>
         <input ng-model="user.email" class="form-control" type="text" name="email">
 
-        <label class="control-label">Username</label>
+        <label class="control-label">Nome de usuário</label>
         <input ng-model="user.username" class="form-control" type="text" name="username">
 
-        <label class="control-label">Password</label>
+        <label class="control-label">Senha</label>
         <input ng-model="user.password" class="form-control" type="password" name="password">
 
-        <br>
-        <button ng-click="salvar()" class="btn btn-success" type="button">Salvar</button>
-        <button ng-click="cancelar()" class="btn btn-link" type="button">Cancelar</button>
-      </form>
-
+      </div>
     </div>
   </div>
-</div>
+
+  <!-- AÇÕES FORMULÁRIO -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <a href="user" class="btn btn-link">Voltar</a>
+        <button ng-click="salvar()" type="submit" class="btn btn-success">Salvar usuário</button>
+      </div>
+    </div>
+  </div>
+  <!-- / AÇÕES FORMULÁRIO -->
+</form>
