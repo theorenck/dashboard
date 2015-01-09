@@ -39,14 +39,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="permission in permissionList | filter:search">
+        <tr ng-repeat="permission in permissionList | filter:search" ng-click="load(permission.id)">
           <td>{{ permission.id }}</td>
           <td>{{ permission.user.username }}</td>
           <td>{{ permission.dashboard.name }}</td>
           <td>{{ permission.data_source_server.name }}</td>
-          <td class="text-right">
-            <button ng-click="delete(permission.id)" class="btn btn-warning btn-sm"><i class="fa fa-trash"></i></button>
-            <a href="permission/update/{{ permission.id }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>
+          <td class="text-center no-padding">
+            <a href="#" ng-click="delete(permission.id, $index, $event); $event.stopPropagation();" class="btn-remove"><i class="fa fa-close"></i></a>
           </td>
         </tr>
       </tbody>

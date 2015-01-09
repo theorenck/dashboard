@@ -33,18 +33,17 @@
         <tr>
           <th class="col-md-1">#</th>
           <th class="col-md-2">Email</th>
-          <th class="col-md-2">Username</th>
+          <th class="col-md-2">Nome de usuário</th>
           <th class="col-md-1"></th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in userList | filter:search">
+        <tr ng-repeat="user in userList | filter:search" ng-click="load(user.id)">
           <td>{{ user.id }}</td>
           <td>{{ user.email }}</td>
           <td>{{ user.username }}</td>
-          <td class="text-right">
-            <button ng-click="delete(user.id)" class="btn btn-warning btn-sm"><i class="fa fa-trash"></i></button>
-            <a href="user/update/{{ user.id }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>
+          <td class="text-center no-padding">
+            <a href="#" ng-click="delete(user.id, $index, $event); $event.stopPropagation();" class="btn-remove"><i class="fa fa-close"></i></a>
           </td>
         </tr>
       </tbody>
