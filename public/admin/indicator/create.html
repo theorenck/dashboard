@@ -1,0 +1,56 @@
+<div class="header-area">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>
+        Indicador <small></small>
+      </h1>
+    </div>
+  </div>
+</div>
+
+<ul class="breadcrumb">
+  <li><a href="#">Atlas</a></li>
+  <li><a href="indicator">Indicadores</a></li>
+  <li class="active">Novo indicador</li>
+</ul>
+
+<form class="form-horizontal">
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="well">
+
+        <label class="control-label">Código</label>
+        <input ng-model="indicator.code" class="form-control">
+
+        <label class="control-label">Nome</label>
+        <input ng-model="indicator.name" class="form-control">
+
+
+        <label class="control-label">Descrição</label>
+        <input ng-model="indicator.description" class="form-control" type="text" name="description">
+
+        <label class="control-label">Fonte de dados</label>
+        <select class="form-control" ng-model="indicator.source.id" ng-options="source.id as source.name for source in sourceList"></select>
+
+        <label class="control-label">Unidade</label>
+        <select class="form-control"
+          ng-model="indicator.unity.id"
+          ng-options="unity.id as ( unity.name + ' (' + unity.symbol + ')' ) for unity in unityList"></select>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- AÇÕES FORMULÁRIO -->
+  <div class="row">
+    <div class="col-md-12">
+      <div class="pull-right">
+        <a href="indicator" class="btn btn-link">Voltar</a>
+        <button type="button" ng-click="save()" class="btn btn-success">Salvar indicador</button>
+      </div>
+    </div>
+  </div>
+  <!-- / AÇÕES FORMULÁRIO -->
+
+</form>

@@ -90,8 +90,13 @@ Atlas.config(function($routeProvider){
   })
 
   .when('/indicator', {
-    controller: 'indicatorController',
-    templateUrl: '/admin/indicatorList.html'
+    controller: 'IndicatorIndexController',
+    templateUrl: '/admin/indicator/index.html'
+  })
+
+  .when('/indicator/create/:id?', {
+    controller: 'IndicatorCreateController',
+    templateUrl: '/admin/indicator/create.html'
   })
 
   .when('/origem', {

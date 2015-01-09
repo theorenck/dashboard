@@ -182,17 +182,58 @@ Atlas.controller('DashboardCreateController', [
 ]);
 
 
-/**
- * INDICATOR CONTROLLER
- */
-Atlas.controller('indicatorController', [
-  '$scope',
-  'Indicators',
 
-  function($scope, Indicators){
-    $scope.data_types    = ['datetime', 'string', 'int'];
+Atlas.controller('IndicatorIndexController', [
+  '$scope',
+  'IndicatorsService',
+  '$location',
+
+  function($scope, IndicatorsService, $location){
     $scope.indicatorList = [];
-    $scope.indicator     = {
+
+    $scope.renderList = function(){
+      IndicatorsService.get(function(data){
+        $scope.indicatorList = data.indicators;
+      });
+    }
+
+    $scope.load = function(id){
+      $location.path('indicator/create/' + id);
+    };
+
+    $scope.delete = function (id, $index, $event) {
+      $event.preventDefault();
+      var data = { "id" : id };
+      IndicatorsService.remove(data, function(data){
+        $scope.renderList();
+      });
+    }
+
+    $scope.renderList();
+  }
+]);
+
+
+Atlas.controller('IndicatorCreateController', [
+  '$scope',
+  '$routeParams',
+  'IndicatorsService',
+  'SourceService',
+  'UnityService',
+
+  function($scope, $routeParams, IndicatorsService, SourceService, UnityService){
+    $scope.sourceList = [];
+    $scope.unityList  = [];
+
+    SourceService.get(function(data){
+      $scope.sourceList = data.sources;
+    });
+
+    UnityService.get(function(data){
+      $scope.unityList = data.unities;
+    });
+
+    $scope.indicator = {
       "query" : {
         "parameters" : [],
       }
@@ -207,39 +248,32 @@ Atlas.controller('indicatorController', [
       var data =  { "indicator" : $scope.indicator };
 
       if ($scope.indicator.id) {
-        Indicators.update(data, function(){
+        IndicatorsService.update(data, function(){
           $scope.renderList();
           $scope.indicator = {};
         });
       }else{
-        Indicators.save(data, function(data){
+        IndicatorsService.save(data, function(data){
           $scope.renderList();
           $scope.indicator = {};
         });
       }
     };
 
-    $scope.renderList = function(){
-      Indicators.get(function(data){
-        $scope.indicatorList = data.indicators;
-      });
-    }
-
-    $scope.loadIndicator = function(item){
-      $scope.indicator = item;
-    }
 
     $scope.addParam = function(){
       $scope.indicator.query.parameters.push({});
     }
 
+
     $scope.delete = function (id) {
       var data = { "id" : id };
-      Indicators.remove(data, function(data){
+      IndicatorsService.remove(data, function(data){
         $scope.renderList();
         $scope.cancelar();
       });
     }
+
 
     $scope.cancelar = function(){
       $scope.indicator = {
@@ -249,9 +283,14 @@ Atlas.controller('indicatorController', [
       };
     }
 
-    $scope.renderList();
+    if ($routeParams.id) {
+      IndicatorsService.get({ id : $routeParams.id}, function(data){
+        $scope.indicator = data.indicator;
+      });
+    };
   }
 ]);
+
 
 /**
  * WIDGET CONTROLLER
@@ -500,7 +539,7 @@ Atlas.controller('PermissionCreateController', [
  */
 Atlas.controller('consoleController', [
   '$scope',
-  'Statements',
+  '´',
   'Tables',
   'History',
   'zCodeMirror',

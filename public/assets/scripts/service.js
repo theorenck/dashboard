@@ -23,6 +23,18 @@ Atlas.factory(
   ]
 );
 
+Atlas.factory(
+  'UnityService',
+  ['$resource',
+
+    function($resource){
+      return $resource('http://127.0.0.1:9000/api/unities/:id', { id: '@unitiy.id' }, {
+         'update': { method:'PUT' }
+      });
+    }
+  ]
+);
+
 /* RESOURCE APISERVERS */
 Atlas.factory(
   'AuthService',
@@ -52,7 +64,7 @@ Atlas.factory(
 
 /* RESOURCE INDICATORS */
 Atlas.factory(
-  'Indicators',
+  'IndicatorsService',
   ['$resource',
 
     function($resource){
