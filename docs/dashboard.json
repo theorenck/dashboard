@@ -1,0 +1,261 @@
+{
+   "id":1,
+   "name":"Painel de Mecânica",
+   "description":"Painel de Mecânica",
+   "data_source_servers":[
+      {
+         "id":1,
+         "url":"http://localhost:3000/api",
+         "name":"localhost",
+         "description":"localhost",
+         "alive":true
+      }
+   ],
+   "widgets":[
+      {
+         "id":9,
+         "customized":false,
+         "name":"Faturamento",
+         "description":"Faturamento",
+         "color":"green",
+         "position":0,
+         "size":3,
+         "dashboard_id":1,
+         "indicator":{
+            "id":9,
+            "name":"Faturamento",
+            "description":"faturamento",
+            "code":"faturamento",
+            "unity_id":1,
+            "source_id":3,
+            "unity":{
+               "id":1,
+               "name":"Moeda",
+               "symbol":"R$"
+            }
+         },
+         "widget_type":{
+            "id":2,
+            "name":"status"
+         }
+      },
+      {
+         "id":6,
+         "customized":false,
+         "name":"Ticket Médio Peças",
+         "description":"Ticket Médio Peças",
+         "color":"orange",
+         "position":3,
+         "size":3,
+         "dashboard_id":1,
+         "indicator":{
+            "id":6,
+            "name":"Ticket Médio Peças",
+            "description":"ticket_medio_pecas",
+            "code":"ticket_medio_pecas",
+            "unity_id":1,
+            "source_id":3,
+            "unity":{
+               "id":1,
+               "name":"Moeda",
+               "symbol":"R$"
+            }
+         },
+         "widget_type":{
+            "id":2,
+            "name":"status"
+         }
+      },
+      {
+         "id":7,
+         "customized":false,
+         "name":"Ticket Médio MO",
+         "description":"Ticket Médio MO",
+         "color":"blue",
+         "position":3,
+         "size":3,
+         "dashboard_id":1,
+         "indicator":{
+            "id":7,
+            "name":"Ticket Médio PO",
+            "description":"ticket_medio_mao_de_obra",
+            "code":"ticket_medio_mao_de_obra",
+            "unity_id":1,
+            "source_id":3,
+            "unity":{
+               "id":1,
+               "name":"Moeda",
+               "symbol":"R$"
+            }
+         },
+         "widget_type":{
+            "id":2,
+            "name":"status"
+         }
+      },
+      {
+         "id":8,
+         "customized":false,
+         "name":"Inadimplência",
+         "description":"Inadimplência",
+         "color":"red",
+         "position":3,
+         "size":3,
+         "dashboard_id":1,
+         "indicator":{
+            "id":8,
+            "name":"Inadimplência",
+            "description":"inadimplencia",
+            "code":"inadimplencia",
+            "unity_id":1,
+            "source_id":3,
+            "unity":{
+               "id":1,
+               "name":"Moeda",
+               "symbol":"%"
+            }
+         },
+         "widget_type":{
+            "id":2,
+            "name":"status"
+         }
+      },
+
+       {
+         "id":1,
+         "customized":false,
+         "name":"Rentabilidade Peças",
+         "description":"Rentabilidade Peças",
+         "color":"purple",
+         "position":0,
+         "size":3,
+         "dashboard_id":1,
+         "indicator":{
+            "id":1,
+            "name":"Rentabilidade Peças",
+            "description":"rent_pecas",
+            "code":"rent_pecas",
+            "unity_id":1,
+            "source_id":3,
+            "unity":{
+               "id":1,
+               "name":"Moeda",
+               "symbol":"%"
+            }
+         },
+         "widget_type":{
+            "id":2,
+            "name":"status"
+         }
+      },
+      {
+         "id":2,
+         "customized":false,
+         "name":"Rentabilidade MO",
+         "description":"Rentabilidade MO",
+         "color":"purple",
+         "position":1,
+         "size":3,
+         "dashboard_id":1,
+         "indicator":{
+            "id":2,
+            "name":"Rentabilidade MO",
+            "description":"rent_mo",
+            "code":"rent_mo",
+            "unity_id":1,
+            "source_id":3,
+            "unity":{
+               "id":1,
+               "name":"Moeda",
+               "symbol":"%"
+            }
+         },
+         "widget_type":{
+            "id":2,
+            "name":"status"
+         }
+      },
+      {
+         "id":3,
+         "customized":false,
+         "name":"Rentabilidade Terceiros",
+         "description":"Rentabilidade Terceiros",
+         "color":"purple",
+         "position":2,
+         "size":3,
+         "dashboard_id":1,
+         "indicator":{
+            "id":3,
+            "name":"Rentabilidade Terceiros",
+            "description":"rent_terceiros",
+            "code":"rent_terceiros",
+            "unity_id":1,
+            "source_id":3,
+            "unity":{
+               "id":1,
+               "name":"Moeda",
+               "symbol":"%"
+            }
+         },
+         "widget_type":{
+            "id":2,
+            "name":"status"
+         }
+      },
+      {
+         "id":4,
+         "customized":false,
+         "name":"Rentabilidade MC",
+         "description":"Rentabilidade MC",
+         "color":"purple",
+         "position":3,
+         "size":3,
+         "dashboard_id":1,
+         "indicator":{
+            "id":4,
+            "name":"Rentabilidade MC",
+            "description":"rent_mc",
+            "code":"rent_mc",
+            "unity_id":1,
+            "source_id":3,
+            "unity":{
+               "id":1,
+               "name":"Moeda",
+               "symbol":"%"
+            }
+         },
+         "widget_type":{
+            "id":2,
+            "name":"status"
+         }
+      },
+
+      {
+         "id":5,
+         "customized":false,
+         "name":"Novas OS por dia",
+         "description":"Novas OS por dia",
+         "color":"blue",
+         "position":3,
+         "size":12,
+         "dashboard_id":1,
+         "indicator":{
+            "id":5,
+            "name":"Novas OS por dia",
+            "description":"novas_os_dia",
+            "code":"novas_os_dia",
+            "unity_id":1,
+            "source_id":3,
+            "unity":{
+               "id":1,
+               "name":"Moeda",
+               "symbol":"%"
+            }
+         },
+         "widget_type":{
+            "id":2,
+            "name":"line"
+         }
+      },
+   ]
+};

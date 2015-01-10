@@ -19,19 +19,19 @@
 
       <div class="info" ng-if="widget.indicator.unity.symbol=='R$'">
         <span class="unidade"> {{ widget.indicator.unity.symbol }} </span>
-        <span class="valor">{{ widget.result }}</span>
+        <span class="valor">{{ widget.result | limitTo:4 }}</span>
         <span class="grandeza">{{ widget.grandeza }}</span>
       </div>
 
       <div class="info" ng-if="widget.indicator.unity.symbol=='%'">
-        <span class="valor">{{ widget.result }}</span>
+        <span class="valor">{{ widget.result | limitTo:4 }}</span>
         <span class="grandeza">{{ widget.grandeza }}</span>
         <span class="unidade"> {{ widget.indicator.unity.symbol }} </span>
       </div>
 
       <div class="info" ng-if="widget.indicator.unity_id===null">
         <span class="unidade"></span>
-        <span class="valor">{{ widget.result }}</span>
+        <span class="valor">{{ widget.result | limitTo:4 }}</span>
         <span class="grandeza">{{ widget.grandeza }}</span>
       </div>
     </div>
