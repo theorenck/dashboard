@@ -746,4 +746,6 @@ padding: 0px;
   font-size: 20px;
 }
 
-
+.widget {
+  background-color: #FFF;
+}

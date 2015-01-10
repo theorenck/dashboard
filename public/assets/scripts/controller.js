@@ -1192,7 +1192,6 @@ Atlas.controller('dashboardDetailController', [
 
     };
 
-
     $scope.initDaterangepicker = function(){
       var i = document.createElement("input");
           i.setAttribute("type", "date");
@@ -1260,8 +1259,6 @@ Atlas.controller('dashboardDetailController', [
         $('[name=daterangepicker_end]').attr('type','date');
       }
     };
-
-
 
     $scope.indicadores = {
       periodo : {
