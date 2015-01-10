@@ -97,6 +97,26 @@ Atlas.directive('zExecutions', function() {
   };
 });
 
+Atlas.directive('zWidgetStatus', function() {
+  return {
+    restrict: 'E',
+    templateUrl: '/admin//widget/tplStatus.html',
+    link: function($scope, element, attr, ngController) {
+
+    }
+  };
+});
+
+Atlas.directive('zWidgetLine', function() {
+  return {
+    restrict: 'E',
+    templateUrl: '/admin//widget/tplLine.html',
+    link: function($scope, element, attr, ngController) {
+
+    }
+  };
+});
+
 Atlas.directive('zErrorbox', [function(){
   return {
     scope: {

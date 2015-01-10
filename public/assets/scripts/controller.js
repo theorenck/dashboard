@@ -858,16 +858,261 @@ Atlas.controller('AggregationCreateController', [
  */
 Atlas.controller('dashboardDetailController', [
   '$scope',
-  'Dashboards',
   '$routeParams',
-  function($scope, Dashboards, $routeParams){
+  '$http',
+  'Dashboards',
+  'SourceService',
 
-    $scope.dashboard = {
-      id : $routeParams.id
+  function($scope, $routeParams, $http, Dashboards, SourceService){
+    $scope.dashboard  = {};
+    $scope.sourceList = [];
+
+    Dashboards.get({ id : $routeParams.id }, function(data){
+      console.log('DASHBOARD');
+      console.log(data.dashboard);
+      console.log('/ DASHBOARD');
+      $scope.dashboard = data.dashboard;
+      $scope.loadWidgets();
+    });
+
+
+    $scope.getStatus = function(result, widget){
+      x  = NumberHelpers.number_to_human(result, {
+        labels : { thousand : 'mil', million : 'Mi', billion : 'Bi', trillion : 'Tri' },
+        precision: 3,
+        significant : true,
+        separator : ",",
+        delimiter : '.'
+      });
+
+      x = x.split(' ');
+      widget.result   = x[0];
+      widget.grandeza = x[1];
     };
 
-    Dashboards.get({ dashboard : { id : $routeParams.id } }, function(data){
-    });
+    $scope.prepareDataset = function(rows){
+      var dataSet   = [];
+      var dataAtual = moment($scope.indicadores.periodo.inicio).format("YYYY-MM-DD");
+      var dataFinal = moment($scope.indicadores.periodo.fim).format("YYYY-MM-DD");
+
+      var valores   = {
+        values             : [],
+        labels             : [],
+        plotBands          : []
+      };
+
+
+
+      /**
+       * Procura nas linhas se existe valor para todos os dias,
+       * se não existir insere a data e valor zero no array das linhas
+       */
+      while(dataAtual <= dataFinal){
+
+        var find = _.find(rows, function(el) {
+          return (el[0] === dataAtual);
+        });
+
+        find === undefined ? dataSet.push([dataAtual,0,0,0,0]) : dataSet.push(find);
+
+        dataAtual = moment(dataAtual).add(1, 'day').format("YYYY-MM-DD");
+      }
+
+
+      $.each(dataSet, function(el, val){
+        diaSemana = moment(val[0]).format('dd');
+        valores.values.push([moment(val[0]).format('x'), val[1]]);
+
+        if (diaSemana === 'sáb') {
+          valores.plotBands.push({
+            from: moment(val[0]).format('x'),
+            to: moment(val[0]).add(1,'day').format('x'),
+            color: 'rgba(192, 192, 192, .2)'
+          });
+        }
+
+      });
+
+      valores.values = (valores.values).sort(function(a, b) {
+        return a[0] - b[0];
+      });
+
+      return valores;
+    },
+
+    $scope.getGraph = function(widget, data){
+      var valores = $scope.prepareDataset(data.statement.rows);
+      console.log(widget);
+      var title   = widget.customized ? widget.name : widget.indicator.name;
+
+      $.each(valores.values, function(index, val) {
+        valores.values[index][0] = parseInt(val[0]);
+      });
+
+      function grafico(valores) {
+        chart = $('[data-behaivor="widget"][data-id=' + widget.id + '] .content').highcharts('StockChart', {
+            colors : [ Configuration.colors[widget.color] ],
+            title : {
+              text : "<h3>" + title + "</h3>",
+              useHtml : true,
+              style : {
+                fontFamily : "Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif",
+                fontSize : '19px'
+              }
+            },
+
+            chart : {
+              zoomType : 'x',
+              panning: true,
+              panKey: 'shift',
+              resetZoomButton: {
+                theme: {
+                  fill: '#2c3e50',
+                  stroke: '#2c3e50',
+                  style: {
+                    color: 'white',
+                  },
+                  r: 0,
+                  states: {
+                    hover: {
+                      fill: '#1a242f',
+                      stroke: '#2c3e50',
+                      style: {
+                        color: 'white',
+                        cursor: "pointer"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+
+            navigation: {
+              buttonOptions: {
+                width: 120
+              }
+            },
+
+            navigator :{
+              enabled : false
+            },
+
+            credits : {
+              enabled: false
+            },
+
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top',
+                x: 150,
+                y: 100,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+            },
+
+            rangeSelector : {
+                buttonTheme: {
+                  width: 90,
+                  r : 0,
+                },
+
+                inputEnabled : false,
+                selected : 1,
+                buttons: [
+                {
+                  type: 'month',
+                  count: 1,
+                  text: '1m'
+                },
+                {
+                  type: 'month',
+                  count: 3,
+                  text: '3m'
+                },
+                {
+                  type: 'month',
+                  count: 6,
+                  text: '6m'
+                },
+                {
+                  type: 'all',
+                  text: 'Tudo'
+                }]
+            },
+
+            plotOptions: {
+              areaspline: {
+                fillOpacity: 0.5
+              },
+              series: {
+                states: {
+                  hover: {
+                    lineWidthPlus: 10
+                  }
+                },
+              }
+            },
+
+            xAxis : {
+                type: 'datetime',
+                minRange: 14 * 24 * 3600000,
+                minTickInterval: 24 * 3600 * 1000,
+                plotBands: valores.plotBands,
+                labels : { maxStaggerLines : 1 }
+            },
+
+            series : [{
+                type : 'areaspline',
+                name : 'Contratos',
+                data : valores.values,
+                lineWidth: 2,
+                marker : {
+                  enabled : true,
+                  radius : 3
+                },
+                tooltip: {
+                  valueDecimals: 2
+                }
+            }],
+        });
+      }
+
+      grafico(valores);
+    };
+
+    $scope.loadWidgets = function(){
+
+      $scope.dashboard.widgets.forEach(function(widget, index){
+        widget.loading = true;
+        // console.log(widget);
+
+
+        SourceService.get({ id : widget.indicator.source_id }, function(data){
+          var query = data.query;
+          $scope.sourceList.push(data.query);
+
+          $http
+            .post("http://localhost:3000/api/queries", data )
+            .success(function(data, status, headers, config) {
+              var type = widget.widget_type.name;
+              if (type==="status") {
+                $scope.getStatus(data.statement.rows[0][0], widget);
+              }else if(type==='line'){
+                $scope.getGraph(widget, data);
+              }
+
+
+              widget.loading = false;
+          });
+        });
+      });
+
+    };
+
+
+
 
     $scope.indicadores = {
       periodo : {
@@ -883,8 +1128,5 @@ Atlas.controller('dashboardDetailController', [
       },
     };
 
-    Dashboards.get(function(data){
-      $scope.dashboards = data.dashboards;
-    });
   }
 ]);

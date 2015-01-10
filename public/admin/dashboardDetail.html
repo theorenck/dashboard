@@ -39,10 +39,17 @@
 
 
     <div class="row">
-      <div class="area indicadores-container" data-behaivor="widgets-container"></div>
+      <div class="area indicadores-container" data-behaivor="widgets-container">
+        <div ng-repeat="widget in dashboard.widgets">
+          <z-widget-status ng-if="widget.widget_type.name=='status'"></z-widget-status>
+          <z-widget-line ng-if="widget.widget_type.name=='line'"></z-widget-line>
+        </div>
+      </div>
     </div>
+
 
   </div>
 
 
-<pre><code>{{ indicadores | json }}</code></pre>
+<!-- <pre><code>{{ sourceList | json }}</code></pre> -->
+<!-- <pre><code>{{ dashboard.widgets | json }}</code></pre> -->
