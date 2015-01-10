@@ -1180,20 +1180,17 @@ Atlas.controller('dashboardDetailController', [
         widget.loading = true;
 
         SourceService.get({ id : widget.indicator.source_id }, function(data){
-          var query = data.query;
-          $scope.sourceList.push(data.query);
-
+          var Service = data.query.type === 'Query' ? QueryService : AggregationService;
+          parameters = data.query.type === 'Query' ? data.query.parameters : data.aggregation.parameters;
 
           // Verifica todos os parâmetros de inicio e fim que sejam nulos e seta os valores do dash
-          _.each(data.query.parameters,function(el, index) {
+          _.each(parameters,function(el, index) {
             if ( el.value === null && (el.name === 'inicio' || el.name === 'fim')){
-              data.query.parameters[index].value = (el.name === 'inicio') ? $scope.indicadores.periodo.inicio : $scope.indicadores.periodo.fim;
+              parameters[index].value = (el.name === 'inicio') ? $scope.indicadores.periodo.inicio : $scope.indicadores.periodo.fim;
             };
           });
 
-
-          var Service = query.type === 'Query' ? QueryService : AggregationService;
-          Service.save({ host : $scope.getHost() },data, function(data){
+          Service.save({ host : $scope.getHost() }, data, function(data){
             var type = widget.widget_type.name;
 
             switch(type){
