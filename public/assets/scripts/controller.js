@@ -201,7 +201,7 @@ Atlas.controller('IndicatorIndexController', [
     }
 
     $scope.load = function(id){
-      $location.path('indicator/update/' + id);
+      $location.path('/indicator/update/' + id);
     };
 
     $scope.delete = function (id, $index, $event) {

@@ -94,7 +94,7 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/indicator/index.html'
   })
 
-  .when('/indicator/create/:id?', {
+  .when('/indicator/:action/:id?', {
     controller: 'IndicatorCreateController',
     templateUrl: '/admin/indicator/create.html'
   })
