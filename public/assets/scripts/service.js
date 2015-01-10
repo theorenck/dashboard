@@ -1,11 +1,41 @@
-/* RESOURCE APISERVERS */
 Atlas.factory(
-  'DataSourceService',
-  ['$resource',
+  'QueryService',
+  [
+    '$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/data_source_servers/:id', { id: '@data_source_server.id' }, {
-         'update': { method:'PUT' }
+
+      return $resource('http://:host/api/queries', { host : '127.0.0.1:3000' }, {
+         'update': { method:'PUT' },
+      });
+    }
+  ]
+);
+
+Atlas.factory(
+  'AggregationService',
+  [
+    '$resource',
+
+    function($resource){
+
+      return $resource('http://:host/api/aggretations', { host : '127.0.0.1:3000' }, {
+         'update': { method:'PUT' },
+      });
+    }
+  ]
+);
+
+
+Atlas.factory(
+  'DataSourceService',
+  [
+    '$resource',
+
+    function($resource){
+
+      return $resource('http://:host/api/data_source_servers/:id', { host : '127.0.0.1:9000', id: '@data_source_server.id' }, {
+         'update': { method:'PUT' },
       });
     }
   ]
@@ -16,7 +46,7 @@ Atlas.factory(
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/sources/:id', { id: '@source.id' }, {
+      return $resource('http://:host/api/sources/:id', { host : '127.0.0.1:9000', id: '@source.id' }, {
          'update': { method:'PUT' }
       });
     }
@@ -28,122 +58,110 @@ Atlas.factory(
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/unities/:id', { id: '@unitiy.id' }, {
+      return $resource('http://:host/api/unities/:id', { host : '127.0.0.1:9000', id: '@unitiy.id' }, {
          'update': { method:'PUT' }
       });
     }
   ]
 );
 
-/* RESOURCE APISERVERS */
 Atlas.factory(
   'AuthService',
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/authentications/:id', { id: '@authentication.id' }, {
+      return $resource('http://:host/api/authentications/:id', { host : '127.0.0.1:9000', id: '@authentication.id' }, {
          'update': { method:'PUT' }
       });
     }
   ]
 );
 
-
-/* RESOURCE DASHBOARDS */
 Atlas.factory(
   'Dashboards',
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/dashboards/:id', { id: '@dashboard.id' }, {
+      return $resource('http://:host/api/dashboards/:id', { host : '127.0.0.1:9000', id: '@dashboard.id' }, {
          'update': { method:'PUT' }
       });
     }
   ]
 );
 
-/* RESOURCE INDICATORS */
 Atlas.factory(
   'IndicatorsService',
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/indicators/:id', { id: '@indicator.id' }, {
+      return $resource('http://:host/api/indicators/:id', { host : '127.0.0.1:9000', id: '@indicator.id' }, {
          'update': { method:'PUT' }
       });
     }
   ]
 );
 
-/* RESOURCE WIDGETS */
 Atlas.factory(
   'Widgets',
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/widgets/:id', { id: '@widget.id' }, {
+      return $resource('http://:host/api/widgets/:id', { host : '127.0.0.1:9000', id: '@widget.id' }, {
          'update': { method:'PUT' }
       });
     }
   ]
 );
 
-/* RESOURCE USERS */
 Atlas.factory(
   'Users',
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/users/:id', { id: '@user.id' }, {
+      return $resource('http://:host/api/users/:id', { host : '127.0.0.1:9000', id: '@user.id' }, {
          'update': { method:'PUT' }
       });
     }
   ]
 );
 
-/* RESOURCE PERMISSIONS */
 Atlas.factory(
   'Permissions',
   ['$resource',
 
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/permissions/:id', { id: '@permission.id' }, {
+      return $resource('http://:host/api/permissions/:id', { host : '127.0.0.1:9000', id: '@permission.id' }, {
          'update': { method:'PUT' }
       });
     }
   ]
 );
 
-/* RESOURCE WIDGET TYPES */
 Atlas.factory(
   'WidgetTypes',
   ['$resource',
     function($resource){
-      return $resource('http://127.0.0.1:9000/api/widget_types/:id', { id: '@widget_types.id' }, {
+      return $resource('http://:host/api/widget_types/:id', { host : '127.0.0.1:9000', id: '@widget_types.id' }, {
          'update': { method:'PUT' }
       });
     }
   ]
 );
 
-
-/* RESOURCE TABLES */
 Atlas.factory(
   'Tables',
   ['$resource',
     function($resource){
-      return $resource('http://localhost:3000/api/schema/');
+      return $resource('http://127.0.0.1:3000/api/schema/');
     }
   ]
 );
-
-
 
 Atlas.factory(
   'Statements',
   ['$resource',
     function($resource){
-      return $resource('http://localhost:3000/api/statements', {}, {
+      return $resource('http://127.0.0.1:3000/api/statements', {}, {
          'update' : { method:'PUT' },
          'execute': { method:'POST' }
       });
@@ -151,21 +169,18 @@ Atlas.factory(
   ]
 );
 
-
 Atlas.factory(
   'FunctionsService',
   ['$resource',
     function($resource){
-      return $resource('http://localhost:9000/api/functions');
+      return $resource('http://127.0.0.1:9000/api/functions');
     }
   ]
 );
 
-
-
 Atlas.factory(
   'History',
-  [function(){
+  function(){
 
     var History = {};
 
@@ -228,11 +243,8 @@ Atlas.factory(
     };
 
     return History;
-
-
-  }]
+  }
 );
-
 
 Atlas.factory(
   'zCodeMirror',

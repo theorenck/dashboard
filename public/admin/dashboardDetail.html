@@ -10,9 +10,11 @@
         <div class="col-sm-2">
         </div>
         <div class="col-sm-3">
-          <!-- <select name="slctdash" id="selectDash" class="form-control">
-            <option value="">Selecione o Dashboard</option>
-          </select> -->
+          <select class="form-control"
+            ng-model="activeDataSourceServer"
+            ng-options="source.id as source.name for source in dashboard.data_source_servers"
+            ng-change="setActiveDataSourceServer()">
+          </select>
         </div>
         <div class="col-sm-1">
           <button class="btn btn-primary" ng-click="loadWidgets()">

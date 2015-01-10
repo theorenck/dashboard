@@ -859,19 +859,21 @@ Atlas.controller('AggregationCreateController', [
 Atlas.controller('dashboardDetailController', [
   '$scope',
   '$routeParams',
-  '$http',
   'Dashboards',
   'SourceService',
+  'QueryService',
+  'AggregationService',
 
-  function($scope, $routeParams, $http, Dashboards, SourceService){
-    $scope.dashboard  = {};
-    $scope.sourceList = [];
+  function($scope, $routeParams, Dashboards, SourceService, QueryService, AggregationService){
+    $scope.dashboard        = {};
+    $scope.sourceList       = [];
+    $scope.dataSourceServer = {};
+    $scope.activeDataSourceServer;
 
     Dashboards.get({ id : $routeParams.id }, function(data){
-      console.log('DASHBOARD');
-      console.log(data.dashboard);
-      console.log('/ DASHBOARD');
-      $scope.dashboard = data.dashboard;
+      $scope.dashboard              = data.dashboard;
+      $scope.dataSourceServer       = data.dashboard.data_source_servers[0];
+      $scope.activeDataSourceServer = $scope.dataSourceServer.id;
       $scope.loadWidgets();
     });
 
@@ -1158,8 +1160,22 @@ Atlas.controller('dashboardDetailController', [
 
     };
 
-    $scope.loadWidgets = function(){
+    $scope.setActiveDataSourceServer = function(){
+      $scope.dataSourceServer = _.find($scope.dashboard.data_source_servers,function(el){
+        return $scope.activeDataSourceServer === el.id;
+      });
+    };
 
+    $scope.getHost = function(){
+      var re  = new RegExp('https?://(.*:[0-9]{4})', 'i');
+      var url = $scope.dataSourceServer.url;
+      var x   = url.match(re);
+      return x[1];
+    };
+
+
+
+    $scope.loadWidgets = function(){
       $scope.dashboard.widgets.forEach(function(widget, index){
         widget.loading = true;
 
@@ -1167,25 +1183,31 @@ Atlas.controller('dashboardDetailController', [
           var query = data.query;
           $scope.sourceList.push(data.query);
 
-          $http
-            .post("http://localhost:3000/api/queries", data )
-            .success(function(data, status, headers, config) {
-              var type = widget.widget_type.name;
 
-              switch(type){
-                case 'status':
-                  $scope.getStatus(data.statement.rows[0][0], widget);
-                break;
-                case 'line':
-                  $scope.getGraph(widget, data);
-                break;
-                case 'pie':
-                  $scope.getPie(widget, data);
-                break;
-              };
+          // Verifica todos os parâmetros de inicio e fim que sejam nulos e seta os valores do dash
+          _.each(data.query.parameters,function(el, index) {
+            if ( el.value === null && (el.name === 'inicio' || el.name === 'fim')){
+              data.query.parameters[index].value = (el.name === 'inicio') ? $scope.indicadores.periodo.inicio : $scope.indicadores.periodo.fim;
+            };
+          });
 
 
-              widget.loading = false;
+          var Service = query.type === 'Query' ? QueryService : AggregationService;
+          Service.save({ host : $scope.getHost() },data, function(data){
+            var type = widget.widget_type.name;
+
+            switch(type){
+              case 'status':
+                $scope.getStatus(data.statement.rows[0][0], widget);
+              break;
+              case 'line':
+                $scope.getGraph(widget, data);
+              break;
+              case 'pie':
+                $scope.getPie(widget, data);
+              break;
+            };
+            widget.loading = false;
           });
         });
       });
