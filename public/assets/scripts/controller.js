@@ -56,7 +56,7 @@ Atlas.controller('DataSourceIndexController', [
     }
 
     $scope.loadServer = function(id){
-      $location.path('/data-source-server/create/' + id);
+      $location.path('/data-source-server/update/' + id);
     }
 
     $scope.deleteServer = function(id, $index, $event){
@@ -77,8 +77,9 @@ Atlas.controller('DataSourceCreateController', [
   'DataSourceService',
   '$scope',
   '$routeParams',
+  '$location',
 
-  function(DataSourceService, $scope, $routeParams){
+  function(DataSourceService, $scope, $routeParams, $location){
     $scope.data_source_server = {};
 
     $scope.cancelarApiServer = function(){
@@ -92,11 +93,11 @@ Atlas.controller('DataSourceCreateController', [
 
       if ($scope.data_source_server.id) {
         DataSourceService.update(data, function(){
-          $scope.data_source_server = {};
+          $location.path('/data-source-server/');
         });
       }else{
         DataSourceService.save(data, function(){
-          $scope.data_source_server = {};
+          $location.path('/data-source-server/');
         });
       }
     };
@@ -128,7 +129,7 @@ Atlas.controller('DashboardIndexController', [
     }
 
     $scope.load = function(id){
-      $location.path('/dashboard/create/' + id);
+      $location.path('/dashboard/update/' + id);
     }
 
     $scope.delete = function(id, $index, $event){
@@ -151,8 +152,9 @@ Atlas.controller('DashboardCreateController', [
   '$scope',
   'Dashboards',
   '$routeParams',
+  '$location',
 
-  function($scope, Dashboards, $routeParams){
+  function($scope, Dashboards, $routeParams, $location){
     $scope.dashboard = {};
 
     $scope.salvar = function(){
@@ -160,11 +162,11 @@ Atlas.controller('DashboardCreateController', [
 
       if ($scope.dashboard.id) {
         Dashboards.update(data, function(){
-          $scope.dashboard = {};
+          $location.path('/dashboard/');
         });
       }else{
         Dashboards.save(data, function(data){
-          $scope.dashboard = {};
+          $location.path('/dashboard/');
         });
       }
     };
@@ -199,7 +201,7 @@ Atlas.controller('IndicatorIndexController', [
     }
 
     $scope.load = function(id){
-      $location.path('indicator/create/' + id);
+      $location.path('indicator/update/' + id);
     };
 
     $scope.delete = function (id, $index, $event) {
@@ -221,8 +223,9 @@ Atlas.controller('IndicatorCreateController', [
   'IndicatorsService',
   'SourceService',
   'UnityService',
+  '$location',
 
-  function($scope, $routeParams, IndicatorsService, SourceService, UnityService){
+  function($scope, $routeParams, IndicatorsService, SourceService, UnityService, $location){
     $scope.sourceList = [];
     $scope.unityList  = [];
 
@@ -240,11 +243,11 @@ Atlas.controller('IndicatorCreateController', [
 
       if ($scope.indicator.id) {
         IndicatorsService.update(data, function(){
-          // $scope.indicator = {};
+          $location.path('/indicator/')
         });
       }else{
         IndicatorsService.save(data, function(data){
-          // $scope.indicator = {};
+          $location.path('/indicator/')
         });
       }
     };
@@ -278,7 +281,7 @@ Atlas.controller('WidgetIndexController', [
     }
 
     $scope.load = function(id){
-      $location.path('/widget/create/' + id);
+      $location.path('/widget/update/' + id);
     }
 
     $scope.renderList = function(){
@@ -302,8 +305,9 @@ Atlas.controller('WidgetCreateController', [
   'Dashboards',
   'WidgetTypes',
   '$routeParams',
+  '$location',
 
-  function($scope, Widgets, IndicatorsService, Dashboards, WidgetTypes, $routeParams){
+  function($scope, Widgets, IndicatorsService, Dashboards, WidgetTypes, $routeParams, $location){
     $scope.widget     = {};
     $scope.widgetList = [];
 
@@ -332,24 +336,13 @@ Atlas.controller('WidgetCreateController', [
 
       if ($scope.widget.id) {
         Widgets.update(data, function(){
-          $scope.cancelar();
+          $location.path('/widget/');
         });
       }else{
         Widgets.save(data, function(){
-          $scope.cancelar();
+          $location.path('/widget/');
         });
       }
-    };
-
-    $scope.delete = function(id){
-      Widgets.remove({ "id" : id },function(){
-        $scope.renderList();
-        $scope.cancelar();
-      });
-    }
-
-    $scope.cancelar = function(){
-      $scope.widget = {};
     };
 
   }
@@ -362,8 +355,9 @@ Atlas.controller('WidgetCreateController', [
 Atlas.controller('UserIndexController', [
   '$scope',
   'Users',
+  '$location',
 
-  function($scope, Users){
+  function($scope, Users, $location){
     $scope.userList = [];
 
     $scope.renderList = function(){
@@ -371,6 +365,19 @@ Atlas.controller('UserIndexController', [
         $scope.userList = data.users;
       });
     }
+
+    $scope.load = function(id){
+      $location.path('user/update/' + id);
+    };
+
+    $scope.delete = function (id, $index, $event) {
+      $event.preventDefault();
+      var data = { "id" : id };
+      Users.remove(data, function(data){
+        $scope.renderList();
+      });
+    }
+
 
     $scope.renderList();
   }
@@ -384,8 +391,9 @@ Atlas.controller('UserCreateController', [
   '$scope',
   'Users',
   '$routeParams',
+  '$location',
 
-  function($scope, Users, $routeParams){
+  function($scope, Users, $routeParams, $location){
     $scope.user     = {};
 
     $scope.cancelar = function(){
@@ -397,11 +405,11 @@ Atlas.controller('UserCreateController', [
 
       if ($scope.user.id) {
         Users.update(data, function(){
-          $scope.cancelar();
+          $location.path('/user/');
         });
       }else{
         Users.save(data, function(){
-          $scope.cancelar();
+          $location.path('/user/');
         });
       }
     };
@@ -421,8 +429,9 @@ Atlas.controller('UserCreateController', [
 Atlas.controller('PermissionIndexController', [
   '$scope',
   'Permissions',
+  '$location',
 
-  function($scope, Permissions){
+  function($scope, Permissions, $location){
     $scope.permissionList = [];
 
     $scope.renderList = function(){
@@ -431,7 +440,12 @@ Atlas.controller('PermissionIndexController', [
       });
     }
 
-    $scope.delete = function (id) {
+    $scope.load = function(id){
+      $location.path('permission/update/' + id);
+    };
+
+    $scope.delete = function (id, $index, $event) {
+      $event.preventDefault();
       var data = { "id" : id };
       Permissions.remove(data, function(data){
         $scope.renderList();
@@ -453,8 +467,9 @@ Atlas.controller('PermissionCreateController', [
   'DataSourceService',
   'Dashboards',
   '$routeParams',
+  '$location',
 
-  function($scope, Permissions, Users, DataSourceService, Dashboards, $routeParams){
+  function($scope, Permissions, Users, DataSourceService, Dashboards, $routeParams, $location){
     $scope.permission     = {};
     $scope.availableUsers = [];
     $scope.availableDataSourceService = [];
@@ -477,11 +492,11 @@ Atlas.controller('PermissionCreateController', [
 
       if ($scope.permission.id) {
         Permissions.update(data, function(){
-
+          $location.path('/permission/');
         });
       }else{
         Permissions.save(data, function(){
-
+          $location.path('/permission/');
         });
       }
     };
@@ -697,8 +712,9 @@ Atlas.controller('QueryCreateController', [
   'Dashboards',
   'SourceService',
   '$routeParams',
+  '$location',
 
-  function($scope, Dashboards, SourceService, $routeParams){
+  function($scope, Dashboards, SourceService, $routeParams, $location){
 
     $scope.showAdvancedOptions = true;
     $scope.showResults         = false;
@@ -718,18 +734,21 @@ Atlas.controller('QueryCreateController', [
 
       if ($scope.statement.id) {
         SourceService.update(data, function(data){
+          $location.path('/origem/');
         });
       }else{
         SourceService.save(data, function(data){
+          $location.path('/origem/');
         });
       }
 
     };
 
     $scope.validateParams = function(){
+      console.log($scope.statement.parameters);
       for(var i = 0; i < $scope.statement.parameters.length; i++){
         var param = $scope.statement.parameters[i];
-        if( param.name.trim() === '' || param.value.trim() === '')
+        if( param.name.trim() === '' )
           $scope.statement.parameters.splice(i,1);
       }
     };
@@ -777,8 +796,9 @@ Atlas.controller('AggregationCreateController', [
   'SourceService',
   '$routeParams',
   'FunctionsService',
+  '$location',
 
-  function($scope, Dashboards, SourceService, $routeParams, FunctionsService){
+  function($scope, Dashboards, SourceService, $routeParams, FunctionsService, $location){
     $scope.data_types     = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
 
 
@@ -832,9 +852,11 @@ Atlas.controller('AggregationCreateController', [
 
       if ($scope.aggregation.id) {
         SourceService.update(data, function(data){
+          $location.path('/origem/');
         });
       }else{
         SourceService.save(data, function(data){
+          $location.path('/origem/');
         });
       }
     };
