@@ -59,7 +59,7 @@
   </div>
   <!-- Fim Navbar -->
 
-  <div class="container" ng-view ng-if="isLoggedIn()"></div>
+  <div class="container" ng-if="isLoggedIn()"  ng-view></div>
   <div class="container" ng-if="!isLoggedIn()" ng-include="'/admin/home.html'" ng-controller="appController"></div>
 
   <!-- SCRIPTS PARA O CONSOLE -->
@@ -75,6 +75,7 @@
   <script src="/assets/plugins/moment/moment-with-locales.js"></script>
   <script src="/assets/plugins/floatThead/jquery.floatThead-slim.min.js"></script>
   <script src="/assets/scripts/helpers/number_helpers.js"></script>
+  <script src="/assets/plugins/daterangepicker/daterangepicker.js"></script>
   <script src="/assets/plugins/lodash/lodash.min.js"></script>
 
   <script src="/configuration.js"></script>

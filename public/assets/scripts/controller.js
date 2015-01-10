@@ -942,7 +942,6 @@ Atlas.controller('dashboardDetailController', [
 
     $scope.getGraph = function(widget, data){
       var valores = $scope.prepareDataset(data.statement.rows);
-      console.log(widget);
       var title   = widget.customized ? widget.name : widget.indicator.name;
 
       $.each(valores.values, function(index, val) {
@@ -1082,12 +1081,87 @@ Atlas.controller('dashboardDetailController', [
       grafico(valores);
     };
 
+    $scope.getPie = function(widget, data){
+      var colors     = ['#1abc9c', "#2ecc71", "#e74c3c", "#e67e22", "#f1c40f", "#3498db", "#9b59b6", "#34495e","#95a5a6", "#ecf0f1" ].reverse();
+      var dataset    = [];
+      var percentual = 0;
+      var total      = 0;
+      var title      = widget.customized ? widget.name : widget.indicator.name;
+      var serie      = 'Quantidade';
+
+      if(data.statement.rows.length > 0){
+        var volumeTotal = 0;
+        var produtos = (data.statement.rows).sort(function(a,b){
+          if (a[1] > b[1])
+            return -1;
+          if (a[1] < b[1])
+            return 1;
+          return 0;
+        });
+
+        _.each(produtos, function(widget, index){
+          volumeTotal+= widget[1];
+        });
+
+        for (var i = 0; i < 9; i++) {
+          percentual = (produtos[i][1] * 100) / volumeTotal;
+          dataset.push([ $.trim(produtos[i][0].toUpperCase()), percentual ]);
+          total += percentual;
+        };
+        dataset.push([ "OUTROS", 100 - total ]);
+      }
+
+
+      $('[data-behaivor=widget][data-id=' + widget.id + '] .content').highcharts({
+        colors : colors,
+        chart: {
+          type: 'pie',
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false
+        },
+        credits: {
+          enabled: false
+        },
+        legend : false,
+        plotOptions: {
+          pie: {
+            borderColor: '#FFF',
+            innerSize: '60%',
+            dataLabels: {
+              enabled: false
+            }
+          }
+        },
+        title: {
+          text: title,
+          useHtml : true,
+        },
+        tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        series: [{
+          type: 'pie',
+          name: serie,
+          data: dataset
+        }]
+      },
+      function(chart) {
+        var xpos = '50%';
+        var ypos = '53%';
+        var circleradius = 102;
+
+        chart.renderer.circle(xpos, ypos, circleradius).attr({
+            fill: '#fff'
+        }).add();
+      });
+
+    };
+
     $scope.loadWidgets = function(){
 
       $scope.dashboard.widgets.forEach(function(widget, index){
         widget.loading = true;
-        // console.log(widget);
-
 
         SourceService.get({ id : widget.indicator.source_id }, function(data){
           var query = data.query;
@@ -1097,11 +1171,18 @@ Atlas.controller('dashboardDetailController', [
             .post("http://localhost:3000/api/queries", data )
             .success(function(data, status, headers, config) {
               var type = widget.widget_type.name;
-              if (type==="status") {
-                $scope.getStatus(data.statement.rows[0][0], widget);
-              }else if(type==='line'){
-                $scope.getGraph(widget, data);
-              }
+
+              switch(type){
+                case 'status':
+                  $scope.getStatus(data.statement.rows[0][0], widget);
+                break;
+                case 'line':
+                  $scope.getGraph(widget, data);
+                break;
+                case 'pie':
+                  $scope.getPie(widget, data);
+                break;
+              };
 
 
               widget.loading = false;
@@ -1112,6 +1193,74 @@ Atlas.controller('dashboardDetailController', [
     };
 
 
+    $scope.initDaterangepicker = function(){
+      var i = document.createElement("input");
+          i.setAttribute("type", "date");
+      hasInputDate = i.type !== "text";
+
+      format = hasInputDate ? 'YYYY-MM-DD' : 'DD/MM/YYYY';
+
+      $('#reportrange').daterangepicker(
+        {
+          ranges: {
+            'Hoje': [moment(), moment()],
+            'Ontem': [moment().subtract(1,'days'), moment().subtract(1,'days')],
+            'Últimos 7 Dias': [moment().subtract(6,'days'), moment()],
+            'Últimos 30 Dias': [moment().subtract(29,'days'), moment()],
+            'Últimos 90 Dias': [moment().subtract(89,'days'), moment()],
+            'Este Mês': [moment().startOf('month'), moment().endOf('month')],
+            'Último Mês': [moment().subtract(1,'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          format : format,
+          showDropdowns : true,
+          minDate : moment({year : 2000, month: 0, day: 1}),
+          maxDate : moment().add(1, 'month'),
+          startDate: moment().subtract(29,'days'),
+          endDate: moment(),
+          locale: {
+            applyLabel: 'Aplicar',
+            cancelLabel: 'Limpar',
+            fromLabel: 'De',
+            toLabel: 'Para',
+            customRangeLabel: 'Personalizado',
+            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex','Sab'],
+            monthNames: ['Janeiro', 'Favereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+          }
+        },
+        function(start, end, range) {
+            var text;
+            if (range !== undefined && range !== "Personalizado") {
+              text = range;
+            }else{
+              var formato = "D [de] MMMM";
+              if (start.format('YYYY') === end.format('YYYY')) {
+                if (start.format('MMMM') === end.format('MMMM')) {
+                  formato = 'D';
+                };
+              }else{
+                formato = 'D [de] MMMM, YYYY';
+              }
+              text = start.format(formato) + '  até  ' + end.format('D [de] MMMM, YYYY');
+            }
+
+            $('[data-behaivor=show-actual-date]').html(text);
+
+            $scope.indicadores.periodo.inicio = start.format("YYYY-MM-DD 00:00:00");
+            $scope.indicadores.periodo.fim    = end.format("YYYY-MM-DD 00:00:00");
+
+
+            $scope.loadWidgets();
+        }
+      );
+
+      $('.daterangepicker').css('width', $('#reportrange').innerWidth() + 'px');
+
+      if(hasInputDate){
+        $('[name=daterangepicker_start]').attr('type','date');
+        $('[name=daterangepicker_end]').attr('type','date');
+      }
+    };
+
 
 
     $scope.indicadores = {
@@ -1120,13 +1269,15 @@ Atlas.controller('dashboardDetailController', [
         fim       : (moment().format("YYYY-MM-DD 00:00:00")),
         duracao   : function(grandeza) {
           var grandeza  = grandeza || 'days';
-          var fim       = moment(Indicadores.periodo.fim);
-          var inicio    = moment(Indicadores.periodo.inicio);
+          var fim       = moment($scope.indicadores.periodo.fim);
+          var inicio    = moment($scope.indicadores.periodo.inicio);
           var diferenca = fim.diff(inicio,grandeza);
           return diferenca + 1;
         },
       },
     };
+
+    $scope.initDaterangepicker();
 
   }
 ]);

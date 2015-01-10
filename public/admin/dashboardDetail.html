@@ -29,7 +29,7 @@
         <div class="toolbar">
           <button id="reportrange" class="btn btn-primary btn-block">
             <span class="fa fa-calendar"></span>
-            <span class="text" data-behaivor="show-actual-date"></span>
+            <span class="text" data-behaivor="show-actual-date">Últimos 30 dias</span>
           </button>
         </div>
 
@@ -42,7 +42,8 @@
       <div class="area indicadores-container" data-behaivor="widgets-container">
         <div ng-repeat="widget in dashboard.widgets">
           <z-widget-status ng-if="widget.widget_type.name=='status'"></z-widget-status>
-          <z-widget-line ng-if="widget.widget_type.name=='line'"></z-widget-line>
+          <z-widget-line   ng-if="widget.widget_type.name=='line'"></z-widget-line>
+          <z-widget-pie    ng-if="widget.widget_type.name=='pie'"></z-widget-pie>
         </div>
       </div>
     </div>

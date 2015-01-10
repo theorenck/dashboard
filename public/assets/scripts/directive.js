@@ -100,7 +100,7 @@ Atlas.directive('zExecutions', function() {
 Atlas.directive('zWidgetStatus', function() {
   return {
     restrict: 'E',
-    templateUrl: '/admin//widget/tplStatus.html',
+    templateUrl: '/admin/widget/tplStatus.html',
     link: function($scope, element, attr, ngController) {
 
     }
@@ -110,12 +110,23 @@ Atlas.directive('zWidgetStatus', function() {
 Atlas.directive('zWidgetLine', function() {
   return {
     restrict: 'E',
-    templateUrl: '/admin//widget/tplLine.html',
+    templateUrl: '/admin/widget/tplLine.html',
     link: function($scope, element, attr, ngController) {
 
     }
   };
 });
+
+Atlas.directive('zWidgetPie', function() {
+  return {
+    restrict: 'E',
+    templateUrl: '/admin/widget/tplPie.html',
+    link: function($scope, element, attr, ngController) {
+
+    }
+  };
+});
+
 
 Atlas.directive('zErrorbox', [function(){
   return {
