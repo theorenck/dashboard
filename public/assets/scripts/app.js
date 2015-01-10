@@ -83,6 +83,11 @@ Atlas.config(function($routeProvider){
     templateUrl: '/admin/dashboardsList.html'
   })
 
+  .when('/dashboards/12', {
+    controller: 'dashboardFakeDetailController',
+    templateUrl: '/admin/dashboardFakeDetail.html'
+  })
+
 
   .when('/dashboards/:id', {
     controller: 'dashboardDetailController',
