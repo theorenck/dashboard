@@ -42,11 +42,11 @@ Atlas.controller('appController', [
  * DATA SOURCE INDEX CONTROLLER
  */
 Atlas.controller('DataSourceIndexController', [
-  'DataSourceService',
   '$scope',
   '$location',
+  'DataSourceService',
 
-  function(DataSourceService, $scope, $location){
+  function($scope, $location, DataSourceService){
     $scope.serverList         = [];
 
     $scope.renderList = function(){
@@ -116,14 +116,14 @@ Atlas.controller('DataSourceCreateController', [
  */
 Atlas.controller('DashboardIndexController', [
   '$scope',
-  'Dashboards',
   '$location',
+  'DashboardService',
 
-  function($scope, Dashboards, $location){
+  function($scope, $location, DashboardService){
     $scope.dashboardList = [];
 
     $scope.renderList = function(){
-      Dashboards.get(function(data){
+      DashboardService.get(function(data){
         $scope.dashboardList = data.dashboards;
       });
     }
@@ -136,7 +136,7 @@ Atlas.controller('DashboardIndexController', [
       $event.preventDefault();
 
       var data = { "id" : id };
-      Dashboards.remove(data, function(data){
+      DashboardService.remove(data, function(data){
         $scope.renderList();
       });
     }
@@ -150,22 +150,22 @@ Atlas.controller('DashboardIndexController', [
  */
 Atlas.controller('DashboardCreateController', [
   '$scope',
-  'Dashboards',
   '$routeParams',
   '$location',
+  'DashboardService',
 
-  function($scope, Dashboards, $routeParams, $location){
+  function($scope, $routeParams, $location, DashboardService){
     $scope.dashboard = {};
 
     $scope.salvar = function(){
       var data =  { "dashboard" : $scope.dashboard };
 
       if ($scope.dashboard.id) {
-        Dashboards.update(data, function(){
+        DashboardService.update(data, function(){
           $location.path('/dashboard/');
         });
       }else{
-        Dashboards.save(data, function(data){
+        DashboardService.save(data, function(data){
           $location.path('/dashboard/');
         });
       }
@@ -176,7 +176,7 @@ Atlas.controller('DashboardCreateController', [
     }
 
     if ($routeParams.id) {
-      Dashboards.get({ id : $routeParams.id}, function(data){
+      DashboardService.get({ id : $routeParams.id}, function(data){
         $scope.dashboard = data.dashboard;
       });
     };
@@ -188,14 +188,14 @@ Atlas.controller('DashboardCreateController', [
 
 Atlas.controller('IndicatorIndexController', [
   '$scope',
-  'IndicatorsService',
   '$location',
+  'IndicatorService',
 
-  function($scope, IndicatorsService, $location){
+  function($scope, $location, IndicatorService){
     $scope.indicatorList = [];
 
     $scope.renderList = function(){
-      IndicatorsService.get(function(data){
+      IndicatorService.get(function(data){
         $scope.indicatorList = data.indicators;
       });
     }
@@ -207,7 +207,7 @@ Atlas.controller('IndicatorIndexController', [
     $scope.delete = function (id, $index, $event) {
       $event.preventDefault();
       var data = { "id" : id };
-      IndicatorsService.remove(data, function(data){
+      IndicatorService.remove(data, function(data){
         $scope.renderList();
       });
     }
@@ -220,12 +220,12 @@ Atlas.controller('IndicatorIndexController', [
 Atlas.controller('IndicatorCreateController', [
   '$scope',
   '$routeParams',
-  'IndicatorsService',
+  '$location',
+  'IndicatorService',
   'SourceService',
   'UnityService',
-  '$location',
 
-  function($scope, $routeParams, IndicatorsService, SourceService, UnityService, $location){
+  function($scope, $routeParams, $location, IndicatorService, SourceService, UnityService){
     $scope.sourceList = [];
     $scope.unityList  = [];
 
@@ -242,18 +242,18 @@ Atlas.controller('IndicatorCreateController', [
 
 
       if ($scope.indicator.id) {
-        IndicatorsService.update(data, function(){
+        IndicatorService.update(data, function(){
           $location.path('/indicator/')
         });
       }else{
-        IndicatorsService.save(data, function(data){
+        IndicatorService.save(data, function(data){
           $location.path('/indicator/')
         });
       }
     };
 
     if ($routeParams.id) {
-      IndicatorsService.get({ id : $routeParams.id}, function(data){
+      IndicatorService.get({ id : $routeParams.id}, function(data){
         $scope.indicator = data.indicator;
       });
     };
@@ -266,16 +266,16 @@ Atlas.controller('IndicatorCreateController', [
  */
 Atlas.controller('WidgetIndexController', [
   '$scope',
-  'Widgets',
   '$location',
+  'WidgetService',
 
-  function($scope, Widgets, $location){
+  function($scope, $location, WidgetService){
     $scope.widget     = {};
     $scope.widgetList = [];
 
     $scope.delete = function(id, $index, $event){
       $event.preventDefault();
-      Widgets.remove({ "id" : id },function(){
+      WidgetService.remove({ "id" : id },function(){
         $scope.renderList();
       });
     }
@@ -285,7 +285,7 @@ Atlas.controller('WidgetIndexController', [
     }
 
     $scope.renderList = function(){
-      Widgets.get(function(data){
+      WidgetService.get(function(data){
         $scope.widgetList = data.widgets;
       });
     }
@@ -300,31 +300,31 @@ Atlas.controller('WidgetIndexController', [
  */
 Atlas.controller('WidgetCreateController', [
   '$scope',
-  'Widgets',
-  'IndicatorsService',
-  'Dashboards',
-  'WidgetTypes',
   '$routeParams',
   '$location',
+  'WidgetService',
+  'IndicatorService',
+  'DashboardService',
+  'WidgetTypeService',
 
-  function($scope, Widgets, IndicatorsService, Dashboards, WidgetTypes, $routeParams, $location){
+  function($scope, $routeParams, $location, WidgetService, IndicatorService, DashboardService, WidgetTypeService){
     $scope.widget     = {};
     $scope.widgetList = [];
 
-    IndicatorsService.get(function(data){
+    IndicatorService.get(function(data){
       $scope.availableIndicators = data.indicators;
     });
 
-    Dashboards.get(function(data){
+    DashboardService.get(function(data){
       $scope.availableDashboards = data.dashboards;
     });
 
-    WidgetTypes.get(function(data){
+    WidgetTypeService.get(function(data){
       $scope.availableWidgetTypes = data.widget_types;
     });
 
     if ($routeParams.id) {
-      Widgets.get({ id : $routeParams.id }, function(data){
+      WidgetService.get({ id : $routeParams.id }, function(data){
         $scope.widget = data.widget;
       });
     };
@@ -335,11 +335,11 @@ Atlas.controller('WidgetCreateController', [
       data.widget.widget_type_id = $scope.widget.widget_type.id;
 
       if ($scope.widget.id) {
-        Widgets.update(data, function(){
+        WidgetService.update(data, function(){
           $location.path('/widget/');
         });
       }else{
-        Widgets.save(data, function(){
+        WidgetService.save(data, function(){
           $location.path('/widget/');
         });
       }
@@ -354,14 +354,14 @@ Atlas.controller('WidgetCreateController', [
  */
 Atlas.controller('UserIndexController', [
   '$scope',
-  'Users',
   '$location',
+  'UserService',
 
-  function($scope, Users, $location){
+  function($scope, $location, UserService){
     $scope.userList = [];
 
     $scope.renderList = function(){
-      Users.get(function(data){
+      UserService.get(function(data){
         $scope.userList = data.users;
       });
     }
@@ -373,7 +373,7 @@ Atlas.controller('UserIndexController', [
     $scope.delete = function (id, $index, $event) {
       $event.preventDefault();
       var data = { "id" : id };
-      Users.remove(data, function(data){
+      UserService.remove(data, function(data){
         $scope.renderList();
       });
     }
@@ -389,11 +389,11 @@ Atlas.controller('UserIndexController', [
  */
 Atlas.controller('UserCreateController', [
   '$scope',
-  'Users',
   '$routeParams',
   '$location',
+  'UserService',
 
-  function($scope, Users, $routeParams, $location){
+  function($scope, $routeParams, $location, UserService){
     $scope.user     = {};
 
     $scope.cancelar = function(){
@@ -404,18 +404,18 @@ Atlas.controller('UserCreateController', [
       var data =  { "user" : $scope.user };
 
       if ($scope.user.id) {
-        Users.update(data, function(){
+        UserService.update(data, function(){
           $location.path('/user/');
         });
       }else{
-        Users.save(data, function(){
+        UserService.save(data, function(){
           $location.path('/user/');
         });
       }
     };
 
     if ($routeParams.id) {
-      Users.get({id : $routeParams.id}, function(data){
+      UserService.get({id : $routeParams.id}, function(data){
         $scope.user = data.user;
       });
     }
@@ -428,14 +428,14 @@ Atlas.controller('UserCreateController', [
  */
 Atlas.controller('PermissionIndexController', [
   '$scope',
-  'Permissions',
   '$location',
+  'PermissionService',
 
-  function($scope, Permissions, $location){
+  function($scope, $location, PermissionService){
     $scope.permissionList = [];
 
     $scope.renderList = function(){
-      Permissions.get(function(data){
+      PermissionService.get(function(data){
         $scope.permissionList = data.permissions;
       });
     }
@@ -447,7 +447,7 @@ Atlas.controller('PermissionIndexController', [
     $scope.delete = function (id, $index, $event) {
       $event.preventDefault();
       var data = { "id" : id };
-      Permissions.remove(data, function(data){
+      PermissionService.remove(data, function(data){
         $scope.renderList();
       });
     }
@@ -462,20 +462,20 @@ Atlas.controller('PermissionIndexController', [
  */
 Atlas.controller('PermissionCreateController', [
   '$scope',
-  'Permissions',
-  'Users',
-  'DataSourceService',
-  'Dashboards',
   '$routeParams',
   '$location',
+  'PermissionService',
+  'UserService',
+  'DataSourceService',
+  'DashboardService',
 
-  function($scope, Permissions, Users, DataSourceService, Dashboards, $routeParams, $location){
+  function($scope, $routeParams, $location, PermissionService, UserService, DataSourceService, DashboardService){
     $scope.permission     = {};
     $scope.availableUsers = [];
     $scope.availableDataSourceService = [];
     $scope.availableDashboards = [];
 
-    Users.get(function(data){
+    UserService.get(function(data){
       $scope.availableUsers = data.users;
     });
 
@@ -483,7 +483,7 @@ Atlas.controller('PermissionCreateController', [
       $scope.availableDataSourceService = data.data_source_servers;
     });
 
-    Dashboards.get(function(data){
+    DashboardService.get(function(data){
       $scope.availableDashboards = data.dashboards;
     });
 
@@ -491,22 +491,21 @@ Atlas.controller('PermissionCreateController', [
       var data =  { "permission" : $scope.permission };
 
       if ($scope.permission.id) {
-        Permissions.update(data, function(){
+        PermissionService.update(data, function(){
           $location.path('/permission/');
         });
       }else{
-        Permissions.save(data, function(){
+        PermissionService.save(data, function(){
           $location.path('/permission/');
         });
       }
     };
 
     if($routeParams.id){
-      Permissions.get({ id : $routeParams.id }, function (data) {
+      PermissionService.get({ id : $routeParams.id }, function (data) {
         $scope.permission = data.permission;
       });
     }
-
   }
 ]);
 
@@ -516,12 +515,12 @@ Atlas.controller('PermissionCreateController', [
  */
 Atlas.controller('consoleController', [
   '$scope',
-  'Statements',
-  'Tables',
-  'History',
+  'StatementService',
+  'SchemaService',
+  'HistoryService',
   'zCodeMirror',
 
-  function($scope, Statements, Tables, History, zCodeMirror){
+  function($scope, StatementService, SchemaService, HistoryService, zCodeMirror){
     var code;
 
 
@@ -597,7 +596,7 @@ Atlas.controller('consoleController', [
         delete data.statement.offset;
       };
 
-      Statements.execute(data, function(data){
+      StatementService.execute(data, function(data){
         $scope.saveHistory();
 
         $scope.errors = [];
@@ -621,14 +620,14 @@ Atlas.controller('consoleController', [
     };
 
     $scope.saveHistory = function(){
-      History.post($scope.statement);
+      HistoryService.post($scope.statement);
       $scope.renderHistory();
     },
 
     $scope.fetchTables = function(){
       $scope.isFetching = true;
 
-      Tables.get(function(data){
+      SchemaService.get(function(data){
         localStorage.setItem("tables", JSON.stringify(data.schema.tables));
 
         code.setOption("hintOptions",{
@@ -643,13 +642,13 @@ Atlas.controller('consoleController', [
     }
 
     $scope.renderHistory = function(){
-      History.get(function(data){
+      HistoryService.get(function(data){
         $scope.historyItems = data;
       });
     }
 
     $scope.delete = function(id){
-      History.delete(id, function(data){
+      HistoryService.delete(id, function(data){
         $scope.historyItems = data;
       });
     }
@@ -671,11 +670,11 @@ Atlas.controller('consoleController', [
  */
 Atlas.controller('dashboardsController', [
   '$scope',
-  'Dashboards',
-  function($scope, Dashboards){
+  'DashboardService',
+  function($scope, DashboardService){
     $scope.dashboards = [];
 
-    Dashboards.get(function(data){
+    DashboardService.get(function(data){
       $scope.dashboards = data.dashboards;
     });
   }
@@ -687,11 +686,10 @@ Atlas.controller('dashboardsController', [
  */
 Atlas.controller('OrigemIndexController', [
   '$scope',
-  'Dashboards',
-  'SourceService',
   '$location',
+  'SourceService',
 
-  function($scope, Dashboards, SourceService, $location){
+  function($scope, $location, SourceService){
     $scope.queriesList = [];
 
     SourceService.get(function(data){
@@ -718,12 +716,11 @@ Atlas.controller('OrigemIndexController', [
  */
 Atlas.controller('QueryCreateController', [
   '$scope',
-  'Dashboards',
-  'SourceService',
   '$routeParams',
   '$location',
+  'SourceService',
 
-  function($scope, Dashboards, SourceService, $routeParams, $location){
+  function($scope, $routeParams, $location, SourceService){
 
     $scope.showAdvancedOptions = true;
     $scope.showResults         = false;
@@ -754,11 +751,12 @@ Atlas.controller('QueryCreateController', [
     };
 
     $scope.validateParams = function(){
-      console.log($scope.statement.parameters);
       for(var i = 0; i < $scope.statement.parameters.length; i++){
         var param = $scope.statement.parameters[i];
-        if( param.name.trim() === '' )
+        if( param.name.trim() === '' ){
           $scope.statement.parameters.splice(i,1);
+          i--;
+        }
       }
     };
 
@@ -801,13 +799,12 @@ Atlas.controller('QueryCreateController', [
  */
 Atlas.controller('AggregationCreateController', [
   '$scope',
-  'Dashboards',
-  'SourceService',
   '$routeParams',
-  'FunctionsService',
   '$location',
+  'SourceService',
+  'FunctionService',
 
-  function($scope, Dashboards, SourceService, $routeParams, FunctionsService, $location){
+  function($scope, $routeParams, $location, SourceService, FunctionService){
     $scope.data_types     = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
 
 
@@ -817,7 +814,7 @@ Atlas.controller('AggregationCreateController', [
       });
     });
 
-    FunctionsService.get(function(data){
+    FunctionService.get(function(data){
       $scope.functionList = data.functions;
     });
 
@@ -890,18 +887,18 @@ Atlas.controller('AggregationCreateController', [
 Atlas.controller('dashboardDetailController', [
   '$scope',
   '$routeParams',
-  'Dashboards',
+  'DashboardService',
   'SourceService',
   'QueryService',
   'AggregationService',
 
-  function($scope, $routeParams, Dashboards, SourceService, QueryService, AggregationService){
+  function($scope, $routeParams, DashboardService, SourceService, QueryService, AggregationService){
     $scope.dashboard        = {};
     $scope.sourceList       = [];
     $scope.dataSourceServer = {};
     $scope.activeDataSourceServer;
 
-    Dashboards.get({ id : $routeParams.id }, function(data){
+    DashboardService.get({ id : $routeParams.id }, function(data){
       $scope.dashboard              = data.dashboard;
       $scope.dataSourceServer       = data.dashboard.data_source_servers[0];
       $scope.activeDataSourceServer = $scope.dataSourceServer.id;
@@ -1204,8 +1201,6 @@ Atlas.controller('dashboardDetailController', [
       return x[1];
     };
 
-
-
     $scope.loadWidgets = function(){
       $scope.dashboard.widgets.forEach(function(widget, index){
         widget.loading = true;
@@ -1239,7 +1234,6 @@ Atlas.controller('dashboardDetailController', [
           });
         });
       });
-
     };
 
     $scope.initDaterangepicker = function(){
@@ -1335,13 +1329,13 @@ Atlas.controller('dashboardDetailController', [
 Atlas.controller('dashboardFakeDetailController', [
   '$scope',
   '$routeParams',
-  'Dashboards',
+  '$window',
+  'DashboardService',
   'SourceService',
   'QueryService',
   'AggregationService',
-  '$window',
 
-  function($scope, $routeParams, Dashboards, SourceService, QueryService, AggregationService, $window){
+  function($scope, $routeParams, $window, DashboardService, SourceService, QueryService, AggregationService){
     data = {"id":1, "name":"Painel de Mecânica", "description":"Painel de Mecânica", "data_source_servers":[{"id":1, "url":"http://localhost:3000/api", "name":"localhost", "description":"localhost", "alive":true } ], "widgets":[{"id":9, "customized":false, "name":"Faturamento", "description":"Faturamento", "color":"green", "position":0, "size":3, "dashboard_id":1, "indicator":{"id":9, "name":"Faturamento", "description":"faturamento", "code":"faturamento", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"R$"} }, "widget_type":{"id":2, "name":"status"} }, {"id":6, "customized":false, "name":"Ticket Médio Peças", "description":"Ticket Médio Peças", "color":"orange", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":6, "name":"Ticket Médio Peças", "description":"ticket_medio_pecas", "code":"ticket_medio_pecas", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"R$"} }, "widget_type":{"id":2, "name":"status"} }, {"id":7, "customized":false, "name":"Ticket Médio MO", "description":"Ticket Médio MO", "color":"blue", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":7, "name":"Ticket Médio PO", "description":"ticket_medio_mao_de_obra", "code":"ticket_medio_mao_de_obra", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"R$"} }, "widget_type":{"id":2, "name":"status"} }, {"id":8, "customized":false, "name":"Inadimplência", "description":"Inadimplência", "color":"red", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":8, "name":"Inadimplência", "description":"inadimplencia", "code":"inadimplencia", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":1, "customized":false, "name":"Rentabilidade Peças", "description":"Rentabilidade Peças", "color":"purple", "position":0, "size":3, "dashboard_id":1, "indicator":{"id":1, "name":"Rentabilidade Peças", "description":"rent_pecas", "code":"rent_pecas", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":2, "customized":false, "name":"Rentabilidade MO", "description":"Rentabilidade MO", "color":"purple", "position":1, "size":3, "dashboard_id":1, "indicator":{"id":2, "name":"Rentabilidade MO", "description":"rent_mo", "code":"rent_mo", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":3, "customized":false, "name":"Rentabilidade Terceiros", "description":"Rentabilidade Terceiros", "color":"purple", "position":2, "size":3, "dashboard_id":1, "indicator":{"id":3, "name":"Rentabilidade Terceiros", "description":"rent_terceiros", "code":"rent_terceiros", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":4, "customized":false, "name":"Rentabilidade MC", "description":"Rentabilidade MC", "color":"purple", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":4, "name":"Rentabilidade MC", "description":"rent_mc", "code":"rent_mc", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":5, "customized":false, "name":"Novas OS por dia", "description":"Novas OS por dia", "color":"blue", "position":3, "size":12, "dashboard_id":1, "indicator":{"id":5, "name":"Novas OS por dia", "description":"novas_os_dia", "code":"novas_os_dia", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"line"} }, ] };
     $scope.dashboard              = {};
     $scope.sourceList             = [];

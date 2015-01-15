@@ -1,7 +1,6 @@
 Atlas.factory(
   'QueryService',
-  [
-    '$resource',
+  ['$resource',
 
     function($resource){
 
@@ -14,8 +13,7 @@ Atlas.factory(
 
 Atlas.factory(
   'AggregationService',
-  [
-    '$resource',
+  ['$resource',
 
     function($resource){
 
@@ -26,11 +24,9 @@ Atlas.factory(
   ]
 );
 
-
 Atlas.factory(
   'DataSourceService',
-  [
-    '$resource',
+  ['$resource',
 
     function($resource){
 
@@ -78,7 +74,7 @@ Atlas.factory(
 );
 
 Atlas.factory(
-  'Dashboards',
+  'DashboardService',
   ['$resource',
 
     function($resource){
@@ -90,7 +86,7 @@ Atlas.factory(
 );
 
 Atlas.factory(
-  'IndicatorsService',
+  'IndicatorService',
   ['$resource',
 
     function($resource){
@@ -102,7 +98,7 @@ Atlas.factory(
 );
 
 Atlas.factory(
-  'Widgets',
+  'WidgetService',
   ['$resource',
 
     function($resource){
@@ -114,7 +110,7 @@ Atlas.factory(
 );
 
 Atlas.factory(
-  'Users',
+  'UserService',
   ['$resource',
 
     function($resource){
@@ -126,7 +122,7 @@ Atlas.factory(
 );
 
 Atlas.factory(
-  'Permissions',
+  'PermissionService',
   ['$resource',
 
     function($resource){
@@ -138,7 +134,7 @@ Atlas.factory(
 );
 
 Atlas.factory(
-  'WidgetTypes',
+  'WidgetTypeService',
   ['$resource',
     function($resource){
       return $resource('http://:host/api/widget_types/:id', { host : '127.0.0.1:9000', id: '@widget_types.id' }, {
@@ -149,7 +145,7 @@ Atlas.factory(
 );
 
 Atlas.factory(
-  'Tables',
+  'SchemaService',
   ['$resource',
     function($resource){
       return $resource('http://127.0.0.1:3000/api/schema/');
@@ -158,7 +154,7 @@ Atlas.factory(
 );
 
 Atlas.factory(
-  'Statements',
+  'StatementService',
   ['$resource',
     function($resource){
       return $resource('http://127.0.0.1:3000/api/statements', {}, {
@@ -170,7 +166,7 @@ Atlas.factory(
 );
 
 Atlas.factory(
-  'FunctionsService',
+  'FunctionService',
   ['$resource',
     function($resource){
       return $resource('http://127.0.0.1:9000/api/functions');
@@ -179,7 +175,7 @@ Atlas.factory(
 );
 
 Atlas.factory(
-  'History',
+  'HistoryService',
   function(){
 
     var History = {};
@@ -248,7 +244,7 @@ Atlas.factory(
 
 Atlas.factory(
   'zCodeMirror',
-  [function(){
+  function(){
 
     var zCodeMirror = {};
 
@@ -278,17 +274,16 @@ Atlas.factory(
         mode : 'text/x-sql',
         viewportMargin: Infinity
       };
-    }
+    };
 
     zCodeMirror.setHints = function(instance){
       return instance.setOption("hintOptions",{
           tables: JSON.parse(localStorage.getItem("tables"))
       });
-    }
+    };
 
 
     return zCodeMirror;
-
-  }]
+  }
 );
 

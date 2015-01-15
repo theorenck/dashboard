@@ -277,6 +277,10 @@ td .btn-remove {
   line-height: 42px;
 }
 
+.table-striped>tbody>tr:nth-child(even){
+  background: #FFF;
+}
+
 .table-editable td button{
   margin-top: 5px;
 }
@@ -755,4 +759,13 @@ padding: 0px;
     border: 1px solid rgb(212,212,212);
     width: 100%;
     height: 300px
+}
+
+.pacman  h1,
+.pacman .h1,
+.pacman  h2,
+.pacman .h2,
+.pacman  h3,
+.pacman .h3 {
+  color : #ecf0f1;
 }
