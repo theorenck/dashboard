@@ -549,7 +549,7 @@ Atlas.controller('consoleController', [
         var param = $scope.statement.parameters[i];
         if( param.name.trim() === '' || param.value.trim() === ''){
           $scope.statement.parameters.splice(i,1);
-          // i--;
+          i--;
         }
       }
     }
@@ -598,8 +598,7 @@ Atlas.controller('consoleController', [
       };
 
       Statements.execute(data, function(data){
-        History.post($scope.statement);
-        $scope.renderHistory();
+        $scope.saveHistory();
 
         $scope.errors = [];
         $scope.isExecuting = false;
@@ -621,6 +620,10 @@ Atlas.controller('consoleController', [
       });
     };
 
+    $scope.saveHistory = function(){
+      History.post($scope.statement);
+      $scope.renderHistory();
+    },
 
     $scope.fetchTables = function(){
       $scope.isFetching = true;
@@ -1219,7 +1222,6 @@ Atlas.controller('dashboardDetailController', [
           });
 
           Service.save({ host : $scope.getHost() }, data, function(data){
-            console.log(data.statement);
             var type = widget.widget_type.name;
 
             switch(type){

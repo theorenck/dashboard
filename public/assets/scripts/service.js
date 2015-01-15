@@ -257,9 +257,12 @@ Atlas.factory(
         lineNumbers: true,
         extraKeys: {
           "Ctrl-Space": "autocomplete",
-          // "F8" : function(){
-          //   console.log('F8');
-          // },
+          "F8" : function(){
+            $scope.executeQuery();
+          },
+          "Ctrl-S" : function(){
+            $scope.saveHistory();
+          },
           "Ctrl-Enter" : function(e){
             $scope.executeQuery();
           }
