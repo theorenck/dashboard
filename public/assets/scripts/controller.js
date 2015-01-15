@@ -524,6 +524,14 @@ Atlas.controller('consoleController', [
   function($scope, Statements, Tables, History, zCodeMirror){
     var code;
 
+    $scope.editorOptions = zCodeMirror.initialize();
+    $scope.codemirrorLoaded = function(_editor){
+      var _doc = _editor.getDoc();
+      _editor.focus();
+      _doc.markClean();
+      zCodeMirror.setHints(_editor);
+    };
+
     $scope.showAdvancedOptions = true;
     $scope.showResults         = false;
     $scope.data_types          = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
@@ -567,18 +575,12 @@ Atlas.controller('consoleController', [
 
     $scope.executeQuery = function(currentPage){
       $scope.validateParams();
-
       $scope.isExecuting   = true;
-
-      zCodeMirror.save();
-      $scope.statement.sql = zCodeMirror.getValue();
-
 
       if (currentPage) {
         $scope.currentPage += currentPage;
         $scope.statement.offset = $scope.statement.limit * $scope.currentPage;
       };
-
 
       var data  = { "statement" : $scope.statement };
 
@@ -627,7 +629,6 @@ Atlas.controller('consoleController', [
 
     $scope.loadHistoryItem = function(row){
       $scope.statement = row.statement;
-      zCodeMirror.setValue(row.statement.sql);
     }
 
     $scope.renderHistory = function(){
@@ -650,9 +651,6 @@ Atlas.controller('consoleController', [
     },
 
     $scope.resetStatement();
-    zCodeMirror.initialize(document.getElementById("statement"));
-    zCodeMirror.setHints();
-    zCodeMirror.setValue($scope.statement.sql);
     $scope.renderHistory();
   }
 ]);

@@ -17,7 +17,8 @@
             <div class="col-md-12">
               <div class="form-group">
                 <label class="control-label">SQL</label>
-                <textarea autofocus="true"class="form-control" rows="4" id="statement">{{ statement.sql }}</textarea>
+                <!-- <textarea autofocus="true"class="form-control" rows="4" id="statement">{{ statement.sql }}</textarea> -->
+                <div ng-model="statement.sql" ui-codemirror-opts="editorOptions" ui-codemirror="{ onLoad : codemirrorLoaded }"></div>
               </div>
             </div>
 
@@ -73,7 +74,7 @@
                   <div class="input-group-addon">
                     <z-checkbox ng-model="hasLimit"></z-checkbox>
                   </div>
-                  <input type="text" class="form-control" ng-model="statement.limit" ng-disabled="hasLimit" integer />
+                  <input type="text" class="form-control" ng-model="statement.limit" ng-disabled="!hasLimit" integer />
                 </div>
               </div>
             </div>
@@ -99,19 +100,19 @@
             <table class="table table-bordered table-striped">
               <thead>
                 <tr>
-                  <th nowrap ng-repeat="column in results.columns">{{ column.name }}</th>
+                  <th nowrap ng-repeat="column in results.columns">{{ ::column.name }}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr ng-repeat="row in results.rows">
-                  <td nowrap ng-repeat="column in row track by $index">{{ column }}</td>
+                  <td nowrap ng-repeat="column in row track by $index">{{ ::column }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
-      <div class="col-md-12">
+      <div class="col-md-12" ng-show="results.rows.length >= statement.limit">
         <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>
       </div>
     </div>
@@ -121,18 +122,18 @@
       <div class="col-md-12 historico">
         <div class="list-group striped">
 
-          <a ng-repeat="row in historyItems | orderBy:'created_at':true" href="#" class="list-group-item" data-id="{{ row.id }}" ng-click="loadHistoryItem(row)">
+          <a ng-repeat="row in historyItems | orderBy:'created_at':true" href="#" class="list-group-item" data-id="{{ ::row.id }}" ng-click="loadHistoryItem(row)">
             <p class="list-group-item-text">
               <span class="close-history-item" ng-click="delete(row.id)">
                 <span class="fa fa-close"></span>
               </span>
               <span class="label" ng-class="getStyleType(row.type)">
-                {{row.type }}
+                {{ ::row.type }}
               </span>
-              {{ row.statement.sql }}
+              {{ ::row.statement.sql }}
             </p>
             <h6 class="list-group-item-heading" style="font-weight:bold; color:#2c3e50; padding-top:10px;">
-              {{ row.created_at | fromNow }}
+              {{ ::row.created_at | fromNow }}
             </h6>
           </a>
 

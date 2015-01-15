@@ -1,4 +1,4 @@
-var Atlas = angular.module('Atlas', ['ngResource', 'ngRoute']);
+var Atlas = angular.module('Atlas', ['ngResource', 'ngRoute', 'ui.codemirror']);
 
 /**
  * Configura o header para usar autenticação

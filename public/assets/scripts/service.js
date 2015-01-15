@@ -250,57 +250,38 @@ Atlas.factory(
   'zCodeMirror',
   [function(){
 
-    var zCodeMirror = {
-      "instance" : CodeMirror
-    };
+    var zCodeMirror = {};
 
     zCodeMirror.initialize = function(el){
-      try{
-        zCodeMirror.instance = zCodeMirror.instance.fromTextArea(el, {
-          lineNumbers: true,
-          extraKeys: {
-            "Ctrl-Space": "autocomplete",
-            // "F8" : function(){
-            //   console.log('F8');
-            // },
-            // "Ctrl-Enter" : function(e){
-            //   console.log('Ctrl + Enter');
-            // }
-          },
-          mode: {
-            name: "sql",
-            globalVars: true
-          },
-          tabSize : 2,
-          tabMode : "spaces",
-          styleActiveLine: false,
-          matchBrackets: true,
-          mode : 'text/x-sql',
-          viewportMargin: Infinity
-        });
-      }catch(err){
-        zCodeMirror.instance.setOption('lineNumbers', true);
-        zCodeMirror.instance.refresh();
-      }
+      return {
+        lineNumbers: true,
+        extraKeys: {
+          "Ctrl-Space": "autocomplete",
+          // "F8" : function(){
+          //   console.log('F8');
+          // },
+          // "Ctrl-Enter" : function(e){
+          //   console.log('Ctrl + Enter');
+          // }
+        },
+        mode: {
+          name: "sql",
+          globalVars: true
+        },
+        tabSize : 2,
+        tabMode : "spaces",
+        styleActiveLine: false,
+        matchBrackets: true,
+        mode : 'text/x-sql',
+        viewportMargin: Infinity
+      };
     }
 
-    zCodeMirror.setHints = function(){
-      return zCodeMirror.instance.setOption("hintOptions",{
+    zCodeMirror.setHints = function(instance){
+      return instance.setOption("hintOptions",{
           tables: JSON.parse(localStorage.getItem("tables"))
       });
     }
-
-    zCodeMirror.setValue = function(value){
-      return zCodeMirror.instance.setValue(value);
-    };
-
-    zCodeMirror.save = function(){
-      return zCodeMirror.instance.save();
-    };
-
-    zCodeMirror.getValue = function(){
-      return zCodeMirror.instance.getValue();
-    };
 
 
     return zCodeMirror;
