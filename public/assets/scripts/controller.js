@@ -524,7 +524,8 @@ Atlas.controller('consoleController', [
   function($scope, Statements, Tables, History, zCodeMirror){
     var code;
 
-    $scope.editorOptions = zCodeMirror.initialize();
+
+    $scope.editorOptions = zCodeMirror.initialize($scope);
     $scope.codemirrorLoaded = function(_editor){
       var _doc = _editor.getDoc();
       _editor.focus();
@@ -548,7 +549,7 @@ Atlas.controller('consoleController', [
         var param = $scope.statement.parameters[i];
         if( param.name.trim() === '' || param.value.trim() === ''){
           $scope.statement.parameters.splice(i,1);
-          i--;
+          // i--;
         }
       }
     }
@@ -577,6 +578,10 @@ Atlas.controller('consoleController', [
     }
 
     $scope.executeQuery = function(currentPage){
+
+      if ($scope.isExecuting)
+        return;
+
       $scope.validateParams();
       $scope.isExecuting   = true;
 

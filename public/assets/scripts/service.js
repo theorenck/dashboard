@@ -252,7 +252,7 @@ Atlas.factory(
 
     var zCodeMirror = {};
 
-    zCodeMirror.initialize = function(el){
+    zCodeMirror.initialize = function($scope){
       return {
         lineNumbers: true,
         extraKeys: {
@@ -260,9 +260,9 @@ Atlas.factory(
           // "F8" : function(){
           //   console.log('F8');
           // },
-          // "Ctrl-Enter" : function(e){
-          //   console.log('Ctrl + Enter');
-          // }
+          "Ctrl-Enter" : function(e){
+            $scope.executeQuery();
+          }
         },
         mode: {
           name: "sql",
