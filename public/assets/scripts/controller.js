@@ -543,10 +543,13 @@ Atlas.controller('consoleController', [
     $scope.historyItems        = [];
 
     $scope.validateParams = function(){
-      for(var i = 0; i < $scope.statement.parameters.length; i++){
+      var i;
+      for(i = 0; i < $scope.statement.parameters.length; i++){
         var param = $scope.statement.parameters[i];
-        if( param.name.trim() === '' || param.value.trim() === '')
+        if( param.name.trim() === '' || param.value.trim() === ''){
           $scope.statement.parameters.splice(i,1);
+          i--;
+        }
       }
     }
 
