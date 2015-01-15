@@ -3,8 +3,9 @@
  */
 Atlas.controller('appController', [
   "$scope",
+  '$location',
   "AuthService",
-  function($scope, AuthService){
+  function($scope, $location, AuthService){
     $scope.credentials = {};
     $scope.open = false;
 
@@ -16,6 +17,7 @@ Atlas.controller('appController', [
           var token = res.authentication.token;
           localStorage.setItem('token', token);
           localStorage.setItem('logged-in', true);
+          $location.path('/dashboards');
         }else{
           localStorage.setItem('logged-in', false);
         }
@@ -899,10 +901,13 @@ Atlas.controller('dashboardDetailController', [
     $scope.activeDataSourceServer;
 
     DashboardService.get({ id : $routeParams.id }, function(data){
+
       $scope.dashboard              = data.dashboard;
       $scope.dataSourceServer       = data.dashboard.data_source_servers[0];
-      $scope.activeDataSourceServer = $scope.dataSourceServer.id;
-      $scope.loadWidgets();
+      if ($scope.dataSourceServer) {
+        $scope.activeDataSourceServer = $scope.dataSourceServer.id;
+        $scope.loadWidgets();
+      };
     });
 
 
