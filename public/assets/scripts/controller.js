@@ -587,7 +587,7 @@ Atlas.controller('consoleController', [
     }
 
     $scope.executeQuery = function(currentPage){
-
+      $scope.errors = [];
       if ($scope.isExecuting)
         return;
 

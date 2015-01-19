@@ -135,9 +135,14 @@ Atlas.directive('zErrorbox', [function(){
     },
     require: 'ngModel',
     restrict: 'EA',
-    template: '<div class="alert alert-dismissable alert-danger" ng-show="errors.length"><strong>Oh snap! </strong><p ng-repeat="err in errors">{{ err }}</p></div>',
+    template: '<div class="alert alert-dismissable alert-danger" ng-show="errors.length"><button type="button" class="close" ng-click="clearErrors()"> <span aria-hidden="true">×</span> </button><strong>Oh snap! </strong><p ng-repeat="err in errors">{{ err }}</p></div>',
     link: function($scope, iElm, iAttrs, controller) {
+
+      $scope.clearErrors = function(){
+        $scope.errors = [];
+      }
 
     }
   };
 }]);
+
