@@ -901,7 +901,6 @@ Atlas.controller('dashboardDetailController', [
     $scope.activeDataSourceServer;
 
     DashboardService.get({ id : $routeParams.id }, function(data){
-
       $scope.dashboard              = data.dashboard;
       $scope.dataSourceServer       = data.dashboard.data_source_servers[0];
       if ($scope.dataSourceServer) {
@@ -909,7 +908,6 @@ Atlas.controller('dashboardDetailController', [
         $scope.loadWidgets();
       };
     });
-
 
     $scope.getStatus = function(result, widget){
       x  = NumberHelpers.number_to_human(result, {
@@ -925,6 +923,14 @@ Atlas.controller('dashboardDetailController', [
       widget.grandeza = x[1];
     };
 
+    /**
+     * Prapara o dataset para o gráfico de linha.
+     * Percorre desde a data inicial até a final criando valores em branco para preencher os dias sem registros
+     * Prepara os plots de fins de semana e as labels do gráfico
+     *
+     * @param array rows    Result do webservice
+     * @return Object       Valores formatados
+     */
     $scope.prepareDataset = function(rows){
       var dataSet   = [];
       var dataAtual = moment($scope.indicadores.periodo.inicio).format("YYYY-MM-DD");
@@ -936,37 +942,35 @@ Atlas.controller('dashboardDetailController', [
         plotBands : []
       };
 
-
-
       /**
        * Procura nas linhas se existe valor para todos os dias,
        * se não existir insere a data e valor zero no array das linhas
        */
       while(dataAtual <= dataFinal){
-
-        var find = _.find(rows, function(el) {
+        var row = _.find(rows, function(el) {
           return (el[0] === dataAtual);
         });
 
-        find === undefined ? dataSet.push([dataAtual,0,0,0,0]) : dataSet.push(find);
+        if(row === undefined)
+          row = [dataAtual,0,0,0,0];
 
-        dataAtual = moment(dataAtual).add(1, 'day').format("YYYY-MM-DD");
-      }
+        dataSet.push(row);
 
+        var weekDay   = moment(dataAtual).format('dd');
+        var timestamp = parseInt(moment(row[0]).format('x'));
 
-      $.each(dataSet, function(el, val){
-        diaSemana = moment(val[0]).format('dd');
-        valores.values.push([moment(val[0]).format('x'), val[1]]);
+        valores.values.push([ timestamp, row[1] ]);
 
-        if (diaSemana === 'sáb') {
+        if (weekDay === 'sáb') {
           valores.plotBands.push({
-            from: moment(val[0]).format('x'),
-            to: moment(val[0]).add(1,'day').format('x'),
+            from: moment(row[0]).format('x'),
+            to: moment(row[0]).add(1,'day').format('x'),
             color: 'rgba(192, 192, 192, .2)'
           });
         }
 
-      });
+        dataAtual = moment(dataAtual).add(1, 'day').format("YYYY-MM-DD");
+      }
 
       valores.values = (valores.values).sort(function(a, b) {
         return a[0] - b[0];
@@ -978,10 +982,6 @@ Atlas.controller('dashboardDetailController', [
     $scope.getGraph = function(widget, data){
       var valores = $scope.prepareDataset(data.statement.rows);
       var title   = widget.customized ? widget.name : widget.indicator.name;
-
-      $.each(valores.values, function(index, val) {
-        valores.values[index][0] = parseInt(val[0]);
-      });
 
       function grafico(valores) {
         chart = $('[data-behaivor="widget"][data-id=' + widget.id + '] .content').highcharts('StockChart', {
@@ -1212,7 +1212,7 @@ Atlas.controller('dashboardDetailController', [
 
         SourceService.get({ id : widget.indicator.source_id }, function(data){
           var Service = data.query.type === 'Query' ? QueryService : AggregationService;
-          parameters = data.query.type === 'Query' ? data.query.parameters : data.aggregation.parameters;
+          parameters  = data.query.type === 'Query' ? data.query.parameters : data.aggregation.parameters;
 
           // Verifica todos os parâmetros de inicio e fim que sejam nulos e seta os valores do dash
           _.each(parameters,function(el, index) {
@@ -1324,6 +1324,8 @@ Atlas.controller('dashboardDetailController', [
     };
 
     $scope.initDaterangepicker();
+
+
 
   }
 ]);

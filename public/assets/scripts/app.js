@@ -1,4 +1,4 @@
-var Atlas = angular.module('Atlas', ['ngResource', 'ngRoute', 'ui.codemirror']);
+var Atlas = angular.module('Atlas', ['ngResource', 'ngRoute', 'ui.codemirror', 'ui.bootstrap']);
 
 /**
  * Configura o header para usar autenticação
@@ -54,9 +54,9 @@ Atlas.filter('fromNow', function() {
 Atlas.config(function($routeProvider){
   $routeProvider
 
-  .when('/', {
-    templateUrl: '/admin/home.html'
-  })
+  // .when('/', {
+  //   templateUrl: '/admin/home.html'
+  // })
 
   .when('/data-source-server', {
     controller: 'DataSourceIndexController',
@@ -155,6 +155,6 @@ Atlas.config(function($routeProvider){
   })
 
   .otherwise({
-    redirectTo : '/'
+    redirectTo : '/dashboards'
   });
 });
