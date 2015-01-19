@@ -910,6 +910,7 @@ Atlas.controller('dashboardDetailController', [
     });
 
     $scope.getStatus = function(result, widget){
+      widget.full_result = result;
       x  = NumberHelpers.number_to_human(result, {
         labels : { thousand : 'mil', million : 'Mi', billion : 'Bi', trillion : 'Tri' },
         precision: 3,

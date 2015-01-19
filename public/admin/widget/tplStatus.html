@@ -3,7 +3,7 @@
   data-type="{{ widget.widget_type.name }}"
   data-id="{{ widget.id }}"
   data-position="{{ widget.position }}">
-  <div class="widget {{ widget.color }}" data-original-title="1.398">
+  <div class="widget {{ widget.color }}" tooltip="{{ widget.full_result }}" tooltip-placement="bottom">
 
     <div class="loader loader-inverse" data-behaivor="loader" ng-show="widget.loading">
       <p class="text-center"><span class="fa fa-3x fa-spinner fa-spin"></span></p>
@@ -16,7 +16,6 @@
         <small>
           <button
             class="pull-right"
-
             popover-placement="top"
             popover-trigger="focus"
             popover-title="{{ widget.name }}"
