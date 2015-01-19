@@ -276,9 +276,10 @@ Atlas.factory(
       };
     };
 
-    zCodeMirror.setHints = function(instance){
+    zCodeMirror.setHints = function(instance, tables){
+      var tables = tables ? tables : JSON.parse(localStorage.getItem("tables"));
       return instance.setOption("hintOptions",{
-          tables: JSON.parse(localStorage.getItem("tables"))
+          tables: tables
       });
     };
 

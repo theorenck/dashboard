@@ -532,6 +532,14 @@ Atlas.controller('consoleController', [
       _editor.focus();
       _doc.markClean();
       zCodeMirror.setHints(_editor);
+
+      if (!localStorage.getItem("tables")){
+        SchemaService.get(function(data){
+          localStorage.setItem("tables", JSON.stringify(data.schema.tables));
+          zCodeMirror.setHints(_editor, data.schema.tables);
+        });
+      };
+
     };
 
     $scope.showAdvancedOptions = true;
@@ -625,19 +633,6 @@ Atlas.controller('consoleController', [
       HistoryService.post($scope.statement);
       $scope.renderHistory();
     },
-
-    $scope.fetchTables = function(){
-      $scope.isFetching = true;
-
-      SchemaService.get(function(data){
-        localStorage.setItem("tables", JSON.stringify(data.schema.tables));
-
-        code.setOption("hintOptions",{
-          tables: data.schema.tables
-        });
-
-      });
-    }
 
     $scope.loadHistoryItem = function(row){
       $scope.statement = row.statement;
