@@ -157,7 +157,7 @@ Atlas.factory(
   'StatementService',
   ['$resource',
     function($resource){
-      return $resource('http://127.0.0.1:3000/api/statements', {}, {
+      return $resource('http://:host/api/statements', { host : '127.0.0.1:3000' }, {
          'update' : { method:'PUT' },
          'execute': { method:'POST' }
       });

@@ -755,6 +755,10 @@ padding: 0px;
   background-color: #FFF;
 }
 
+.widget.hover {
+  cursor: pointer;
+}
+
 .gridStyle {
     border: 1px solid rgb(212,212,212);
     width: 100%;

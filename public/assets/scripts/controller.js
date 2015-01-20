@@ -520,13 +520,40 @@ Atlas.controller('consoleController', [
   'StatementService',
   'SchemaService',
   'HistoryService',
+  'DataSourceService',
   'zCodeMirror',
 
-  function($scope, StatementService, SchemaService, HistoryService, zCodeMirror){
-    var code;
+  function($scope, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror){
+    $scope.showAdvancedOptions   = true;
+    $scope.showResults           = false;
+    $scope.data_types            = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
+    $scope.isExecuting           = false;
+    $scope.hasLimit              = true;
+    $scope.results               = [];
+    $scope.currentPage           = 1;
+    $scope.errors                = [];
+    $scope.historyItems          = [];
+    $scope.editorOptions         = zCodeMirror.initialize($scope);
+    $scope.listDataSourceService = [];
+
+    DataSourceService.get(function(data){
+      $scope.listDataSourceService   = data.data_source_servers;
+      $scope.activeDataSourceService = data.data_source_servers[0].id;
+    });
 
 
-    $scope.editorOptions = zCodeMirror.initialize($scope);
+    // $scope.getHost = function(){
+    //   var dataSource = _.find($scope.listDataSourceService, function(el){
+    //     return $scope.activeDataSourceService === el.id;
+    //   });
+
+    //   var re  = new RegExp('https?://(.*:[0-9]{4})', 'i');
+    //   var url = dataSource.url;
+    //   var x   = url.match(re);
+    //   console.log(x[1]);
+    //   return x[1];
+    // };
+
     $scope.codemirrorLoaded = function(_editor){
       var _doc = _editor.getDoc();
       _editor.focus();
@@ -539,18 +566,7 @@ Atlas.controller('consoleController', [
           zCodeMirror.setHints(_editor, data.schema.tables);
         });
       };
-
     };
-
-    $scope.showAdvancedOptions = true;
-    $scope.showResults         = false;
-    $scope.data_types          = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
-    $scope.isExecuting         = false;
-    $scope.hasLimit            = true;
-    $scope.results             = [];
-    $scope.currentPage         = 1;
-    $scope.errors              = [];
-    $scope.historyItems        = [];
 
     $scope.validateParams = function(){
       var i;
@@ -624,8 +640,9 @@ Atlas.controller('consoleController', [
           $scope.errors = [err.statusText];
         else if(err.status === 0)
           $scope.errors = ["Servidor indisponível"];
-        else
+        else{
           $scope.errors = err.data.errors.base || err.data.errors.sql;
+        }
       });
     };
 
@@ -667,13 +684,22 @@ Atlas.controller('consoleController', [
  */
 Atlas.controller('dashboardsController', [
   '$scope',
+  '$location',
   'DashboardService',
-  function($scope, DashboardService){
+
+
+  function($scope, $location, DashboardService){
     $scope.dashboards = [];
 
     DashboardService.get(function(data){
       $scope.dashboards = data.dashboards;
     });
+
+
+    $scope.loadDash = function(id){
+      $location.path('/dashboards/' + id);
+    };
+
   }
 ]);
 
@@ -1320,8 +1346,6 @@ Atlas.controller('dashboardDetailController', [
     };
 
     $scope.initDaterangepicker();
-
-
 
   }
 ]);
