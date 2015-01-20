@@ -146,3 +146,40 @@ Atlas.directive('zErrorbox', [function(){
   };
 }]);
 
+
+Atlas.directive('zFloatthead', ['$timeout', function($timeout){
+  return {
+    scope: {
+      'results' : '=ngModel'
+    },
+    require: 'ngModel',
+    restrict: 'EA',
+    templateUrl: '/assets/templates/zFloatThead.html',
+    link: function($scope, iElm, iAttrs, controller) {
+
+      function loadFloatThead(){
+        $table = iElm.find('.table');
+        $timeout(function(){
+          $table.floatThead({
+              scrollContainer: function($table){
+              return $table.closest('.wrapper');
+            }
+          });
+        }, 100);
+      }
+
+      iElm.on('$destroy', function() {
+        $table.floatThead('destroy');
+      });
+
+      $scope.$watch('results', function(value){
+        var records = value.records || 0;
+        if(records > 0)
+          loadFloatThead();
+      });
+
+
+    }
+  };
+}]);
+

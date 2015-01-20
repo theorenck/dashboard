@@ -1,0 +1,12 @@
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th nowrap ng-repeat="column in results.columns">{{ ::column.name }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="row in results.rows">
+      <td nowrap ng-repeat="column in row track by $index">{{ ::column }}</td>
+    </tr>
+  </tbody>
+</table>
