@@ -1139,16 +1139,17 @@ Atlas.controller('dashboardDetailController', [
     };
 
     $scope.getPie = function(widget, data){
-      var colors     = ['#1abc9c', "#2ecc71", "#e74c3c", "#e67e22", "#f1c40f", "#3498db", "#9b59b6", "#34495e","#95a5a6", "#ecf0f1" ].reverse();
-      var dataset    = [];
-      var percentual = 0;
-      var total      = 0;
-      var title      = widget.customized ? widget.name : widget.indicator.name;
-      var serie      = 'Quantidade';
+      var colors         = ['#1abc9c', "#2ecc71", "#e74c3c", "#e67e22", "#f1c40f", "#3498db", "#9b59b6", "#34495e","#95a5a6", "#ecf0f1" ].reverse();
+      var dataset        = [];
+      var percentual     = 0;
+      var total          = 0;
+      var title          = widget.customized ? widget.name : widget.indicator.name;
+      var serie          = 'Quantidade';
+      var enabledTooltip = true;
 
       if(data.statement.rows.length > 0){
         var volumeTotal = 0;
-        var produtos = (data.statement.rows).sort(function(a,b){
+        var produtos    = (data.statement.rows).sort(function(a,b){
           if (a[1] > b[1])
             return -1;
           if (a[1] < b[1])
@@ -1156,17 +1157,27 @@ Atlas.controller('dashboardDetailController', [
           return 0;
         });
 
+        var produtosLength = produtos.length >= 9 ? 9 : produtos.length;
+
         _.each(produtos, function(widget, index){
           volumeTotal+= widget[1];
         });
 
-        for (var i = 0; i < 9; i++) {
+        for (var i = 0; i < produtosLength; i++) {
           percentual = (produtos[i][1] * 100) / volumeTotal;
           dataset.push([ $.trim(produtos[i][0].toUpperCase()), percentual ]);
           total += percentual;
         };
         dataset.push([ "OUTROS", 100 - total ]);
+        widget.hasData = true;
+      }else{
+        widget.hasData = false;
+        dataset.push([ "", 100 ]);
+        // dataset.push([ "", 75 ]);
+        enabledTooltip = false;
+        console.log(dataset);
       }
+
 
 
       $('[data-behaivor=widget][data-id=' + widget.id + '] .content').highcharts({
@@ -1175,7 +1186,7 @@ Atlas.controller('dashboardDetailController', [
           type: 'pie',
           plotBackgroundColor: null,
           plotBorderWidth: null,
-          plotShadow: false
+          plotShadow: false,
         },
         credits: {
           enabled: false
@@ -1187,6 +1198,11 @@ Atlas.controller('dashboardDetailController', [
             innerSize: '60%',
             dataLabels: {
               enabled: false
+            },
+            states: {
+              hover: {
+                enabled: enabledTooltip
+              }
             }
           }
         },
@@ -1195,6 +1211,7 @@ Atlas.controller('dashboardDetailController', [
           useHtml : true,
         },
         tooltip: {
+          enabled : enabledTooltip,
           pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
         },
         series: [{
