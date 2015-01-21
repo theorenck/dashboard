@@ -3,13 +3,11 @@
     <div class="header-area">
       <div class="row">
         <div class="col-sm-6">
-          <h1>
+          <h2>
             Dashboard
-          </h1>
+          </h2>
         </div>
-        <div class="col-sm-1">
-        </div>
-        <div class="col-sm-3">
+        <div class="col-sm-3 col-sm-offset-1">
           <select class="form-control"
             ng-model="activeDataSourceServer"
             ng-options="source.id as source.name for source in dashboard.data_source_servers"
@@ -17,7 +15,7 @@
           </select>
         </div>
         <div class="col-sm-2">
-          <button class="btn btn-primary" ng-click="loadWidgets()">
+          <button class="btn btn-block btn-primary" ng-click="loadWidgets()">
             <span class="fa fa-refresh"></span>
             Atualizar
           </button>

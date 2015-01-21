@@ -112,7 +112,7 @@ padding: 10px 0;
 }
 
 .grafico-content .content{
-  height: 400px;
+  height: 450px;
   margin: 0 auto;
   min-width: 310px;
 }
@@ -781,4 +781,15 @@ padding: 0px;
 .pacman  h3,
 .pacman .h3 {
   color : #ecf0f1;
+}
+
+
+
+.header-area select,
+.header-area button{
+  margin-top:10px;
+}
+
+button .fa{
+  margin-right: 2px
 }

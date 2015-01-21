@@ -158,14 +158,15 @@ Atlas.directive('zFloatthead', ['$timeout', function($timeout){
     link: function($scope, iElm, iAttrs, controller) {
 
       function loadFloatThead(){
-        $table = iElm.find('.table');
+        $table = iElm.find('.table[data-floatThead=true]');
+        $table.floatThead('destroy');
         $timeout(function(){
           $table.floatThead({
               scrollContainer: function($table){
               return $table.closest('.wrapper');
             }
           });
-        }, 100);
+        }, 500);
       }
 
       iElm.on('$destroy', function() {
