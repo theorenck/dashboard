@@ -236,10 +236,10 @@ padding: 10px 0;
 
 [data-type="pie"] .no-data{
   position: absolute;
-  top: 220px;
+  top: 210px;
   width: 100%;
   margin: 0px;
-  margin-left: -14px;
+  margin-left: -15px;
 }
 
 .popover{

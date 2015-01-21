@@ -1016,7 +1016,12 @@ Atlas.controller('dashboardDetailController', [
                 fontSize : '19px'
               }
             },
-
+            navigator: {
+              enabled: false
+            },
+            scrollbar: {
+              enabled: false
+            },
             chart : {
               zoomType : 'x',
               panning: true,
@@ -1146,6 +1151,7 @@ Atlas.controller('dashboardDetailController', [
       var title          = widget.customized ? widget.name : widget.indicator.name;
       var serie          = 'Quantidade';
       var enabledTooltip = true;
+      widget.hasData     = true;
 
       if(data.statement.rows.length > 0){
         var volumeTotal = 0;
@@ -1169,7 +1175,6 @@ Atlas.controller('dashboardDetailController', [
           total += percentual;
         };
         dataset.push([ "OUTROS", 100 - total ]);
-        widget.hasData = true;
       }else{
         widget.hasData = false;
         dataset.push([ "", 100 ]);
