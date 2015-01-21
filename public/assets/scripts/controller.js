@@ -1,3 +1,5 @@
+var results;
+
 /**
  * APP CONTROLLER
  */
@@ -536,23 +538,18 @@ Atlas.controller('consoleController', [
     $scope.editorOptions         = zCodeMirror.initialize($scope);
     $scope.listDataSourceService = [];
 
+    $scope.results = {
+      "records": 0,
+      "fetched": 0,
+      "columns": [],
+      "rows": []
+    };
+
     DataSourceService.get(function(data){
       $scope.listDataSourceService   = data.data_source_servers;
       $scope.activeDataSourceService = data.data_source_servers[0].id;
     });
 
-
-    // $scope.getHost = function(){
-    //   var dataSource = _.find($scope.listDataSourceService, function(el){
-    //     return $scope.activeDataSourceService === el.id;
-    //   });
-
-    //   var re  = new RegExp('https?://(.*:[0-9]{4})', 'i');
-    //   var url = dataSource.url;
-    //   var x   = url.match(re);
-    //   console.log(x[1]);
-    //   return x[1];
-    // };
 
     $scope.codemirrorLoaded = function(_editor){
       var _doc = _editor.getDoc();
@@ -582,9 +579,7 @@ Atlas.controller('consoleController', [
     $scope.resetStatement = function(){
       $scope.statement = {
         parameters : [],
-        sql : 'SELECT p.codproduto, p.codbarras, p.descricao1 FROM zw14ppro p WHERE p.situacao = \'N\'',
-        limit : 100,
-        offset : 0,
+        sql : 'SELECT p.codproduto, p.codbarras, p.descricao1 FROM zw14ppro p WHERE p.situacao = \'N\''
       };
       $scope.addParam();
     };

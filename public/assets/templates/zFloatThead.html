@@ -6,7 +6,7 @@
   </thead>
   <tbody>
     <tr ng-repeat="row in results.rows">
-      <td nowrap ng-repeat="column in row track by $index">{{ ::column }}</td>
+      <td nowrap ng-repeat="column in row">{{ ::column }}</td>
     </tr>
   </tbody>
 </table>

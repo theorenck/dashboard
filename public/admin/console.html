@@ -75,16 +75,8 @@
                 </table>
                 <button class="btn btn-info " type="button" ng-click="addParam()">Adicionar parâmetro</button>
               </div>
-              <div class="form-group">
-                <label class="control-label">Limite</label>
 
-                <div class="input-group">
-                  <div class="input-group-addon">
-                    <z-checkbox ng-model="hasLimit"></z-checkbox>
-                  </div>
-                  <input type="text" class="form-control" ng-model="statement.limit" ng-disabled="!hasLimit" integer />
-                </div>
-              </div>
+
             </div>
           </div>
 
@@ -105,7 +97,8 @@
       <div class="col-md-12">
         <div class="panel panel-default">
           <div class="table-responsive">
-            <z-floatthead ng-model="results"></z-floatthead>
+            <fast-repeat data="results"></fast-repeat>
+            <!-- <z-floatthead ng-model="results"></z-floatthead> -->
           </div>
         </div>
       </div>

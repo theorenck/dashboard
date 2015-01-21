@@ -158,7 +158,7 @@ Atlas.directive('zFloatthead', ['$timeout', function($timeout){
     link: function($scope, iElm, iAttrs, controller) {
 
       function loadFloatThead(){
-        $table = iElm.find('.table[data-floatThead=true]');
+        $table = iElm.find('.table');
         $table.floatThead('destroy');
         $timeout(function(){
           $table.floatThead({
@@ -169,14 +169,15 @@ Atlas.directive('zFloatthead', ['$timeout', function($timeout){
         }, 500);
       }
 
-      iElm.on('$destroy', function() {
-        $table.floatThead('destroy');
-      });
+     // iElm.on('$destroy', function() {
+     //   $table.floatThead('destroy');
+     // });
 
       $scope.$watch('results', function(value){
         var records = value.records || 0;
+        console.log(records);
         if(records > 0)
-          loadFloatThead();
+         loadFloatThead();
       });
 
 
@@ -184,3 +185,44 @@ Atlas.directive('zFloatthead', ['$timeout', function($timeout){
   };
 }]);
 
+Atlas.directive('fastRepeat', ['$timeout', function($timeout){
+  return {
+    restrict: 'E',
+    scope: {
+      data: '='
+    },
+    link : function(scope, el, attrs) {
+
+      scope.$watchCollection('data', function(newValue, oldValue){
+        var records = newValue.fetched || 0;
+
+        React.renderComponent(
+          RTable(newValue),
+          el[0],
+          loadFloatThead(records)
+        );
+      });
+
+      function loadFloatThead(records){
+        if (records > 0) {
+          $table = el.find('.table-float-thead');
+          console.log($table);
+          $table.floatThead('destroy');
+          $timeout(function(){
+            $table.floatThead({
+              scrollContainer: function($table){
+                return $table.closest('.wrapper');
+              }
+            });
+          }, 100);
+        }
+      }
+
+      el.on('$destroy', function() {
+        $table = el.find('.table');
+        $table.floatThead('destroy');
+      });
+
+    }
+  }
+}]);
