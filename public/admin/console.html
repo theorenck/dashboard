@@ -93,15 +93,6 @@
     </div>
 
     <!-- RESULTADOS -->
-    <div class="row">
-      <div class="col-md-12">
-        <div class="panel panel-default">
-          <div class="panel-body">
-            <b>1928</b> linhas afetadas.
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="row" ng-show="showResults">
       <div ng-show="resultset.length">
         <div class="col-md-12">
@@ -114,6 +105,16 @@
         </div>
         <div class="col-md-12" ng-show="resultset.fetched >= statement.rows.length">
           <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>
+        </div>
+      </div>
+
+      <div ng-show="result.length">
+        <div class="col-md-12">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <b>{{ result.affected_rows }}</b> linhas afetadas.
+            </div>
+          </div>
         </div>
       </div>
 
