@@ -191,7 +191,6 @@ Atlas.directive('fastRepeat', ['$timeout', function($timeout){
     },
     link : function(scope, el, attrs) {
       scope.$watchCollection('data', function(newValue, oldValue){
-        console.time('Inicio Render');
         var records = newValue.fetched || 0;
 
         React.render(
@@ -202,18 +201,17 @@ Atlas.directive('fastRepeat', ['$timeout', function($timeout){
       });
 
       function loadFloatThead(records){
-        // if (records > 0) {
-        //   $table = el.find('.table-float-thead');
-        //   $table.floatThead('destroy');
-        //   $timeout(function(){
-        //     $table.floatThead({
-        //       scrollContainer: function($table){
-        //         return $table.closest('.wrapper');
-        //       }
-        //     });
-        //   }, 100);
-        // }
-        console.timeEnd('Inicio Render');
+        if (records > 0) {
+          $table = el.find('.table-float-thead');
+          $table.floatThead('destroy');
+          $timeout(function(){
+            $table.floatThead({
+              scrollContainer: function($table){
+                return $table.closest('.wrapper');
+              }
+            });
+          }, 100);
+        }
       }
 
       el.on('$destroy', function() {

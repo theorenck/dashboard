@@ -539,7 +539,7 @@ Atlas.controller('consoleController', [
     $scope.editorOptions         = zCodeMirror.initialize($scope);
     $scope.listDataSourceService = [];
 
-    $scope.results = {
+    $scope.resultset = {
       "records": 0,
       "fetched": 0,
       "columns": [],
@@ -617,22 +617,17 @@ Atlas.controller('consoleController', [
 
       // se houver paginação
       if (currentPage) {
-        var rowsPerPage = criaPaginacao($scope.results.columns.length);
+        var rowsPerPage = criaPaginacao($scope.resultset.columns.length);
         // var data        = allData.slice(rowsPerPage * $scope.currentPage, rowsPerPage * ($scope.currentPage + 1));
-
         var data = [];
         var i = 0;
         var finalIndex = rowsPerPage * ($scope.currentPage + 1);
-        console.time('Loop');
         while(i < finalIndex){
           data[i] = allData[i];
           i++;
         }
-        console.timeEnd('Loop');
 
-        console.time('Atribuição Data');
-        $scope.results.rows = data;
-        console.timeEnd('Atribuição Data');
+        $scope.resultset.rows = data;
         $scope.isExecuting  = false;
         $scope.currentPage++;
 
@@ -645,28 +640,32 @@ Atlas.controller('consoleController', [
         },
         function(data){
           $scope.saveHistory();
-
-          $scope.errors = [];
           $scope.isExecuting = false;
           $scope.showResults = true;
 
-          console.log(data);
-          var rowsPerPage = criaPaginacao(data.statement.columns.length);
-          allData = data.statement.rows;
+          if (data.resultset) {
+            var rowsPerPage = criaPaginacao(data.resultset.columns.length);
+            allData = data.resultset.rows;
 
-          $scope.results = {
-            "records": data.statement.records,
-            "fetched": data.statement.fetched,
-            "columns": data.statement.columns,
-            "rows": allData.slice(0, rowsPerPage)
+            $scope.resultset = {
+              "records": data.resultset.records,
+              "fetched": data.resultset.fetched,
+              "columns": data.resultset.columns,
+              "rows": allData.slice(0, rowsPerPage)
+            }
+          }else if(data.result){
+            $scope.result = '';
           }
+
         },
         function(err){
           $scope.isExecuting = false;
-          if (err.status === 500)
+          if (err.status === 500){
             $scope.errors = [err.statusText];
-          else if(err.status === 0)
+          }
+          else if(err.status === 0){
             $scope.errors = ["Servidor indisponível"];
+          }
           else{
             $scope.errors = err.data.errors.base || err.data.errors.sql;
           }
@@ -702,7 +701,7 @@ Atlas.controller('consoleController', [
           return 'label-info';
         case "UPDATE":
           return 'label-warning';
-        case "CREATE":
+        case "INSERT":
           return 'label-success';
         case "DELETE":
           return 'label-danger';
