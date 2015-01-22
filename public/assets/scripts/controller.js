@@ -654,7 +654,7 @@ Atlas.controller('consoleController', [
               "rows": allData.slice(0, rowsPerPage)
             }
           }else if(data.result){
-            $scope.result = '';
+            $scope.result = data.result;
           }
 
         },

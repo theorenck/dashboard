@@ -93,19 +93,30 @@
     </div>
 
     <!-- RESULTADOS -->
-    <div class="row" ng-show="showResults">
+    <div class="row">
       <div class="col-md-12">
         <div class="panel panel-default">
-          <div class="table-responsive">
-            <fast-repeat data="results"></fast-repeat>
-            <!-- <z-floatthead ng-model="results"></z-floatthead> -->
+          <div class="panel-body">
+            <b>1928</b> linhas afetadas.
           </div>
         </div>
       </div>
-      <div class="col-md-12" ng-show="resultset.fetched >= statement.rows.length">
-
-        <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>
+    </div>
+    <div class="row" ng-show="showResults">
+      <div ng-show="resultset.length">
+        <div class="col-md-12">
+          <div class="panel panel-default">
+            <div class="table-responsive">
+              <fast-repeat data="results"></fast-repeat>
+              <!-- <z-floatthead ng-model="results"></z-floatthead> -->
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12" ng-show="resultset.fetched >= statement.rows.length">
+          <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>
+        </div>
       </div>
+
     </div>
 
     <!-- HISTÓRICO -->
