@@ -2,19 +2,19 @@
 
     <div class="header-area">
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-5 col-md-6">
           <h2>
             Dashboard
           </h2>
         </div>
-        <div class="col-sm-3 col-sm-offset-1">
+        <div class="col-sm-4 col-md-4 col-offset-md-1">
           <select class="form-control"
             ng-model="activeDataSourceServer"
             ng-options="source.id as source.name for source in dashboard.data_source_servers"
             ng-change="setActiveDataSourceServer()">
           </select>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-3 col-md-2">
           <button class="btn btn-block btn-primary" ng-click="loadWidgets()">
             <span class="fa fa-refresh"></span>
             Atualizar

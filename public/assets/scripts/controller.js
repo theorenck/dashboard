@@ -643,14 +643,14 @@ Atlas.controller('consoleController', [
           $scope.isExecuting = false;
           $scope.showResults = true;
 
-          if (data.resultset) {
-            var rowsPerPage = criaPaginacao(data.resultset.columns.length);
-            allData = data.resultset.rows;
+          if (data.result) {
+            var rowsPerPage = criaPaginacao(data.result.columns.length);
+            allData = data.result.rows;
 
-            $scope.resultset = {
-              "records": data.resultset.records,
-              "fetched": data.resultset.fetched,
-              "columns": data.resultset.columns,
+            $scope.result = {
+              "records": data.result.records,
+              "fetched": data.result.fetched,
+              "columns": data.result.columns,
               "rows": allData.slice(0, rowsPerPage)
             }
           }else if(data.result){

@@ -6,9 +6,9 @@
         <div class="row">
           <div class="col-md-6">
             <h2 ng-hide="showResults">Console</h2>
-            <h2 ng-show="showResults">Resultados <small>{{ resultset.records }} registros</small></h2>
+            <h2 ng-show="showResults">Resultados <small>{{ result.records }} registros</small></h2>
           </div>
-          <div class="col-md-6">
+          <div class="col-md-offset-3 col-md-3">
             <select class="form-control"
               ng-options="dataSource.id as dataSource.name for dataSource in listDataSourceService track by $index"
               ng-model="activeDataSourceService">
@@ -94,7 +94,7 @@
 
     <!-- RESULTADOS -->
     <div class="row" ng-show="showResults">
-      <div ng-show="resultset.length">
+      <div ng-show="result.rows.length">
         <div class="col-md-12">
           <div class="panel panel-default">
             <div class="table-responsive">
@@ -102,7 +102,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-12" ng-show="resultset.fetched >= statement.rows.length">
+        <div class="col-md-12" ng-show="result.fetched >= statement.rows.length">
           <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>
         </div>
       </div>

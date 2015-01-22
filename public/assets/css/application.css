@@ -451,6 +451,7 @@ td .z-checkbox{
   -webkit-transition: top 0.5s;
   -o-transition: top 0.5s;
   transition: top 0.5s;
+  cursor: pointer;
 }
 
 .historico:hover .clear-history{
@@ -803,10 +804,13 @@ padding: 0px;
 }
 
 
+.header-area{
+  margin-bottom:10px;
+}
 
 .header-area select,
 .header-area button{
-  margin-top:10px;
+  margin-top:15px;
 }
 
 button .fa{
