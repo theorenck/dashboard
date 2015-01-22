@@ -526,6 +526,7 @@ Atlas.controller('consoleController', [
   'zCodeMirror',
 
   function($scope, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror){
+
     $scope.showAdvancedOptions   = true;
     $scope.showResults           = false;
     $scope.data_types            = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
@@ -545,11 +546,20 @@ Atlas.controller('consoleController', [
       "rows": []
     };
 
+    var allData = [];
+
     DataSourceService.get(function(data){
       $scope.listDataSourceService   = data.data_source_servers;
       $scope.activeDataSourceService = data.data_source_servers[0].id;
     });
 
+
+    function criaPaginacao(totalCols){
+      var MAX_ITENS_PAGE = 5000;
+      var rowsPerPage    = Math.floor(MAX_ITENS_PAGE / totalCols);
+
+      return rowsPerPage;
+    }
 
     $scope.codemirrorLoaded = function(_editor){
       var _doc = _editor.getDoc();
@@ -605,40 +615,63 @@ Atlas.controller('consoleController', [
       $scope.validateParams();
       $scope.isExecuting   = true;
 
+      // se houver paginação
       if (currentPage) {
-        $scope.currentPage += currentPage;
-        $scope.statement.offset = $scope.statement.limit * $scope.currentPage;
-      };
+        var rowsPerPage = criaPaginacao($scope.results.columns.length);
+        // var data        = allData.slice(rowsPerPage * $scope.currentPage, rowsPerPage * ($scope.currentPage + 1));
 
-      var data  = { "statement" : $scope.statement };
-
-      if (!$scope.hasLimit) {
-        delete data.statement.limit;
-        delete data.statement.offset;
-      };
-
-      StatementService.execute(data, function(data){
-        $scope.saveHistory();
-
-        $scope.errors = [];
-        $scope.isExecuting = false;
-        $scope.showResults = true;
-
-        if($scope.currentPage > 1)
-          $scope.results.rows = $scope.results.rows.concat(data.statement.rows);
-        else
-          $scope.results = data.statement;
-
-      }, function(err){
-        $scope.isExecuting = false;
-        if (err.status === 500)
-          $scope.errors = [err.statusText];
-        else if(err.status === 0)
-          $scope.errors = ["Servidor indisponível"];
-        else{
-          $scope.errors = err.data.errors.base || err.data.errors.sql;
+        var data = [];
+        var i = 0;
+        var finalIndex = rowsPerPage * ($scope.currentPage + 1);
+        console.time('Loop');
+        while(i < finalIndex){
+          data[i] = allData[i];
+          i++;
         }
-      });
+        console.timeEnd('Loop');
+
+        console.time('Atribuição Data');
+        $scope.results.rows = data;
+        console.timeEnd('Atribuição Data');
+        $scope.isExecuting  = false;
+        $scope.currentPage++;
+
+        return;
+      };
+
+      // executa o statement
+      StatementService.execute({
+          "statement" : $scope.statement
+        },
+        function(data){
+          $scope.saveHistory();
+
+          $scope.errors = [];
+          $scope.isExecuting = false;
+          $scope.showResults = true;
+
+          console.log(data);
+          var rowsPerPage = criaPaginacao(data.statement.columns.length);
+          allData = data.statement.rows;
+
+          $scope.results = {
+            "records": data.statement.records,
+            "fetched": data.statement.fetched,
+            "columns": data.statement.columns,
+            "rows": allData.slice(0, rowsPerPage)
+          }
+        },
+        function(err){
+          $scope.isExecuting = false;
+          if (err.status === 500)
+            $scope.errors = [err.statusText];
+          else if(err.status === 0)
+            $scope.errors = ["Servidor indisponível"];
+          else{
+            $scope.errors = err.data.errors.base || err.data.errors.sql;
+          }
+        }
+      );
     };
 
     $scope.saveHistory = function(){
@@ -663,9 +696,16 @@ Atlas.controller('consoleController', [
     }
 
     $scope.getStyleType = function(type){
+      type = type.toUpperCase();
       switch(type){
         case "SELECT":
           return 'label-info';
+        case "UPDATE":
+          return 'label-warning';
+        case "CREATE":
+          return 'label-success';
+        case "DELETE":
+          return 'label-danger';
       }
     },
 
@@ -1175,7 +1215,6 @@ Atlas.controller('dashboardDetailController', [
         dataset.push([ "", 100 ]);
         // dataset.push([ "", 75 ]);
         enabledTooltip = false;
-        console.log(dataset);
       }
 
 

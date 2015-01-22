@@ -793,3 +793,7 @@ padding: 0px;
 button .fa{
   margin-right: 2px
 }
+
+.table-float-thead td{
+  white-space: nowrap;
+}

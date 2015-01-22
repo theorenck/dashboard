@@ -102,7 +102,8 @@
           </div>
         </div>
       </div>
-      <div class="col-md-12" ng-show="results.rows.length >= statement.limit">
+      <div class="col-md-12" ng-show="results.fetched >= statement.rows.length">
+
         <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>
       </div>
     </div>
