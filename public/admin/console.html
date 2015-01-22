@@ -94,11 +94,11 @@
 
     <!-- RESULTADOS -->
     <div class="row" ng-show="showResults">
-      <div ng-show="result.rows.length">
+      <div ng-show="!!result.rows">
         <div class="col-md-12">
           <div class="panel panel-default">
             <div class="table-responsive">
-              <fast-repeat data="resultset"></fast-repeat>
+              <fast-repeat data="result"></fast-repeat>
             </div>
           </div>
         </div>
