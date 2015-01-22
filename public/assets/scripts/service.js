@@ -204,7 +204,7 @@ Atlas.factory(
 
     },
 
-    History.post = function(statement){
+    History.post = function(statement, callback){
       var id      = parseInt(Math.random() * 0xFFFFFF, 10).toString(16);
       var history = JSON.parse(localStorage.getItem('history')) || [];
       var type    = (statement.sql).match(/^[\n|\t|\s|\r]*(SELECT|DELETE|UPDATE|INSERT)\b/i)[1].toUpperCase();
@@ -218,7 +218,13 @@ Atlas.factory(
 
       history.push(item);
       localStorage.setItem('history', JSON.stringify(history));
+      callback();
     };
+
+    History.clear  = function(callback){
+      localStorage.removeItem('history');
+      callback();
+    }
 
     History.delete = function(id, callback){
       var items = JSON.parse(localStorage.getItem('history')) || [];

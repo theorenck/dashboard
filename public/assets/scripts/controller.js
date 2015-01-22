@@ -674,8 +674,9 @@ Atlas.controller('consoleController', [
     };
 
     $scope.saveHistory = function(){
-      HistoryService.post($scope.statement);
-      $scope.renderHistory();
+      HistoryService.post($scope.statement, function(){
+        $scope.renderHistory();
+      });
     },
 
     $scope.loadHistoryItem = function(row){
@@ -685,12 +686,21 @@ Atlas.controller('consoleController', [
     $scope.renderHistory = function(){
       HistoryService.get(function(data){
         $scope.historyItems = data;
+        if(!$scope.$$phase) {
+          $scope.$digest($scope);
+        }
       });
     }
 
     $scope.delete = function(id){
       HistoryService.delete(id, function(data){
         $scope.historyItems = data;
+      });
+    }
+
+    $scope.clearHistory = function(){
+      HistoryService.clear(function(){
+        $scope.renderHistory()
       });
     }
 
@@ -944,12 +954,13 @@ Atlas.controller('AggregationCreateController', [
 Atlas.controller('dashboardDetailController', [
   '$scope',
   '$routeParams',
+  '$interval',
   'DashboardService',
   'SourceService',
   'QueryService',
   'AggregationService',
 
-  function($scope, $routeParams, DashboardService, SourceService, QueryService, AggregationService){
+  function($scope, $routeParams, $interval,  DashboardService, SourceService, QueryService, AggregationService){
     $scope.dashboard        = {};
     $scope.sourceList       = [];
     $scope.dataSourceServer = {};
@@ -963,6 +974,10 @@ Atlas.controller('dashboardDetailController', [
         $scope.loadWidgets();
       };
     });
+
+    $interval(function(){
+      $scope.loadWidgets();
+    }, Configuration.time_to_refresh);
 
     $scope.getStatus = function(result, widget){
       widget.full_result = result;

@@ -98,8 +98,7 @@
         <div class="col-md-12">
           <div class="panel panel-default">
             <div class="table-responsive">
-              <fast-repeat data="results"></fast-repeat>
-              <!-- <z-floatthead ng-model="results"></z-floatthead> -->
+              <fast-repeat data="resultset"></fast-repeat>
             </div>
           </div>
         </div>
@@ -122,10 +121,14 @@
 
     <!-- HISTÓRICO -->
     <div class="row" data-type="history" ng-hide="showResults">
-      <div class="col-md-12 historico">
+      <!-- <pre>{{ historyItems | json }}</pre> -->
+      <div class="col-md-12 historico" ng-show="historyItems.length">
+        <div class="clear-history">
+          <a ng-click="clearHistory()">Limpar Histórico</a>
+        </div>
         <div class="list-group striped">
 
-          <a ng-repeat="row in historyItems | orderBy:'created_at':true" href="#" class="list-group-item" data-id="{{ ::row.id }}" ng-click="loadHistoryItem(row)">
+          <a ng-repeat="row in historyItems | orderBy:'created_at':true" href="#" class="list-group-item" data-id="{{ row.id }}" ng-click="loadHistoryItem(row)">
             <p class="list-group-item-text">
               <span class="close-history-item" ng-click="delete(row.id)">
                 <span class="fa fa-close"></span>
