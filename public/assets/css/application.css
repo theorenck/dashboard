@@ -821,3 +821,9 @@ button .fa{
   white-space: nowrap;
 }
 
+.btn-reset-zoom{
+  position: absolute;
+  z-index: 20;
+  right: 0px;
+  top: 90px;
+}

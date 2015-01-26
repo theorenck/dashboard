@@ -1053,9 +1053,18 @@ Atlas.controller('dashboardDetailController', [
     $scope.getGraph = function(widget, data){
       var valores = $scope.prepareDataset(data.statement.rows);
       var title   = widget.customized ? widget.name : widget.indicator.name;
+      var hasZoom = false;
+      var chart;
+
+      try{
+        $('[data-behaivor="widget"][data-id=' + widget.id + '] .content').highcharts().destroy();
+        $(document).off('click', '[data-resetbutton]');
+      }catch(err){
+        console.log(err.message);
+      }
 
       function grafico(valores) {
-        chart = $('[data-behaivor="widget"][data-id=' + widget.id + '] .content').highcharts('StockChart', {
+        return chart = new Highcharts.StockChart({
             colors : [ Configuration.colors[widget.color] ],
             title : {
               text : "<h3>" + title + "</h3>",
@@ -1072,27 +1081,21 @@ Atlas.controller('dashboardDetailController', [
               enabled: false
             },
             chart : {
+              renderTo : $('[data-behaivor="widget"][data-id=' + widget.id + '] .content')[0],
               zoomType : 'x',
               panning: true,
               panKey: 'shift',
-              resetZoomButton: {
-                theme: {
-                  fill: '#2c3e50',
-                  stroke: '#2c3e50',
-                  style: {
-                    color: 'white',
-                  },
-                  r: 0,
-                  states: {
-                    hover: {
-                      fill: '#1a242f',
-                      stroke: '#2c3e50',
-                      style: {
-                        color: 'white',
-                        cursor: "pointer"
-                      }
-                    }
+              events : {
+                selection: function (event) {
+                  if(event.xAxis){
+                    hasZoom = true;
+                  }else{
+                    hasZoom = false;
                   }
+
+                  console.log(hasZoom);
+
+                  $('[data-resetbutton]').css('display', hasZoom ? 'block' : 'none' );
                 }
               }
             },
@@ -1189,7 +1192,10 @@ Atlas.controller('dashboardDetailController', [
         });
       }
 
-      grafico(valores);
+      chart = grafico(valores);
+      $(document).on('click', '[data-resetbutton]', function(){
+        chart.zoomOut();
+      });
     };
 
     $scope.getPie = function(widget, data){
