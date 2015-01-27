@@ -553,6 +553,12 @@ Atlas.controller('consoleController', [
       $scope.activeDataSourceService = data.data_source_servers[0].id;
     });
 
+
+    function getStatementType(sql){
+      return sql.match(/^\s*(SELECT|DELETE|UPDATE|INSERT|DROP|CREATE)\b/i)[1].toUpperCase() || '';
+    }
+
+
     function resetAlert(){
       $scope.alert = {
         'type' : 'info',
@@ -661,9 +667,33 @@ Atlas.controller('consoleController', [
             }
           }
 
-          $scope.alert = {
-            type : "success",
-            messages : [data.result.fetched + ' registros encontrados']
+
+          switch(getStatementType($scope.statement.sql)){
+            case 'SELECT':
+              $scope.alert = {
+                type : "success",
+                messages : [data.result.fetched + ' registro(s) encontrado(s)']
+              }
+            break;
+
+            case 'UPDATE':
+            case 'DELETE':
+            case 'INSERT':
+              $scope.alert = {
+                type : "success",
+                messages : [data.result.records + ' registro(s) afetados(s)']
+              }
+              $scope.showResults = false;
+            break;
+
+            case 'CREATE':
+            case 'DROP':
+              $scope.alert = {
+                type : "success",
+                messages : ['Sucesso na operação']
+              }
+              $scope.showResults = false;
+            break;
           }
 
         },
