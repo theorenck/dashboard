@@ -145,6 +145,27 @@ Atlas.directive('zErrorbox', [function(){
   };
 }]);
 
+Atlas.directive('zAlertbox', [function(){
+  return {
+    scope: {
+      'alert' : '=ngModel'
+    },
+    require: 'ngModel',
+    restrict: 'EA',
+    templateUrl: '/assets/templates/zAlertbox.html',
+    link: function($scope, iElm, iAttrs, controller) {
+
+      $scope.clearMessages = function(){
+        $scope.alert = {
+          'type' : '',
+          'messages' : []
+        };
+      }
+
+    }
+  };
+}]);
+
 
 Atlas.directive('zFloatthead', ['$timeout', function($timeout){
   return {
@@ -191,13 +212,15 @@ Atlas.directive('fastRepeat', ['$timeout', function($timeout){
     },
     link : function(scope, el, attrs) {
       scope.$watchCollection('data', function(newValue, oldValue){
-        var records = newValue.fetched || 0;
+        if (newValue) {
+          var records = newValue.fetched || 0;
 
-        React.render(
-          RTable(newValue),
-          el[0],
-          loadFloatThead(records)
-        );
+          React.render(
+            RTable(newValue),
+            el[0],
+            loadFloatThead(records)
+          );
+        };
       });
 
       function loadFloatThead(records){

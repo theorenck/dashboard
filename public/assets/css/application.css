@@ -826,4 +826,5 @@ button .fa{
   z-index: 20;
   right: 0px;
   top: 90px;
+  display: none;
 }

@@ -534,7 +534,7 @@ Atlas.controller('consoleController', [
     $scope.hasLimit              = true;
     $scope.results               = [];
     $scope.currentPage           = 1;
-    $scope.errors                = [];
+    $scope.alert                 = {};
     $scope.historyItems          = [];
     $scope.editorOptions         = zCodeMirror.initialize($scope);
     $scope.listDataSourceService = [];
@@ -553,6 +553,12 @@ Atlas.controller('consoleController', [
       $scope.activeDataSourceService = data.data_source_servers[0].id;
     });
 
+    function resetAlert(){
+      $scope.alert = {
+        'type' : 'info',
+        'messages' : [],
+      };
+    }
 
     function criaPaginacao(totalCols){
       var MAX_ITENS_PAGE = 5000;
@@ -608,7 +614,7 @@ Atlas.controller('consoleController', [
     }
 
     $scope.executeQuery = function(currentPage){
-      $scope.errors = [];
+      resetAlert();
       if ($scope.isExecuting)
         return;
 
@@ -653,22 +659,29 @@ Atlas.controller('consoleController', [
               "columns": data.result.columns,
               "rows": allData.slice(0, rowsPerPage)
             }
-          }else if(data.result){
-            $scope.result = data.result;
+          }
+
+          $scope.alert = {
+            type : "success",
+            messages : [data.result.fetched + ' registros encontrados']
           }
 
         },
         function(err){
           $scope.isExecuting = false;
-          if (err.status === 500){
-            $scope.errors = [err.statusText];
+          var errors;
+          if (err.status === 500)
+            errors = [err.statusText];
+          else if(err.status === 0)
+            errors = ["Servidor indisponível"];
+          else
+            errors = err.data.errors.base || err.data.errors.sql;
+
+          $scope.alert = {
+            type : "danger",
+            messages : errors
           }
-          else if(err.status === 0){
-            $scope.errors = ["Servidor indisponível"];
-          }
-          else{
-            $scope.errors = err.data.errors.base || err.data.errors.sql;
-          }
+
         }
       );
     };
@@ -1087,15 +1100,7 @@ Atlas.controller('dashboardDetailController', [
               panKey: 'shift',
               events : {
                 selection: function (event) {
-                  if(event.xAxis){
-                    hasZoom = true;
-                  }else{
-                    hasZoom = false;
-                  }
-
-                  console.log(hasZoom);
-
-                  $('[data-resetbutton]').css('display', hasZoom ? 'block' : 'none' );
+                  $('[data-resetbutton]').css('display', event.xAxis ? 'block' : 'none' );
                 }
               }
             },
@@ -1148,10 +1153,6 @@ Atlas.controller('dashboardDetailController', [
                   type: 'month',
                   count: 6,
                   text: '6m'
-                },
-                {
-                  type: 'all',
-                  text: 'Tudo'
                 }]
             },
 
