@@ -728,6 +728,9 @@ Atlas.controller('consoleController', [
           return 'label-success';
         case "DELETE":
           return 'label-danger';
+        case "DROP":
+        case "CREATE":
+          return 'label-default';
       }
     },
 

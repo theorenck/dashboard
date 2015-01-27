@@ -207,7 +207,7 @@ Atlas.factory(
     History.post = function(statement, callback){
       var id      = parseInt(Math.random() * 0xFFFFFF, 10).toString(16);
       var history = JSON.parse(localStorage.getItem('history')) || [];
-      var type    = (statement.sql).match(/^[\n|\t|\s|\r]*(SELECT|DELETE|UPDATE|INSERT)\b/i)[1].toUpperCase();
+      var type    = (statement.sql).match(/^\s*(SELECT|DELETE|UPDATE|INSERT|DROP|CREATE)\b/i)[1].toUpperCase() || '';
 
       var item    = {
         "id"         : id,
