@@ -1013,12 +1013,14 @@ Atlas.controller('dashboardDetailController', [
     $scope.activeDataSourceServer;
 
     DashboardService.get({ id : $routeParams.id }, function(data){
-      $scope.dashboard              = data.dashboard;
-      $scope.dataSourceServer       = data.dashboard.data_source_servers[0];
+      $scope.dashboard        = data.dashboard;
+      $scope.dataSourceServer = data.dashboard.data_source_servers[0];
+
       if ($scope.dataSourceServer) {
         $scope.activeDataSourceServer = $scope.dataSourceServer.id;
         $scope.loadWidgets();
       };
+
     });
 
     $interval(function(){
@@ -1097,7 +1099,7 @@ Atlas.controller('dashboardDetailController', [
     },
 
     $scope.getGraph = function(widget, data){
-      var valores = $scope.prepareDataset(data.statement.rows);
+      var valores = $scope.prepareDataset(data.result.rows);
       var title   = widget.customized ? widget.name : widget.indicator.name;
       var hasZoom = false;
       var chart;
@@ -1242,9 +1244,9 @@ Atlas.controller('dashboardDetailController', [
       var enabledTooltip = true;
       widget.hasData     = true;
 
-      if(data.statement.rows.length > 0){
+      if(data.result.rows.length > 0){
         var volumeTotal = 0;
-        var produtos    = (data.statement.rows).sort(function(a,b){
+        var produtos    = (data.result.rows).sort(function(a,b){
           if (a[1] > b[1])
             return -1;
           if (a[1] < b[1])
@@ -1339,6 +1341,8 @@ Atlas.controller('dashboardDetailController', [
     };
 
     $scope.loadWidgets = function(){
+      var widgetsLoaded = 0;
+      $scope.isLoadingWidgets = true;
       $scope.dashboard.widgets.forEach(function(widget, index){
         widget.loading = true;
 
@@ -1358,7 +1362,7 @@ Atlas.controller('dashboardDetailController', [
 
             switch(type){
               case 'status':
-                $scope.getStatus(data.statement.rows[0][0], widget);
+                $scope.getStatus(data.result.rows[0][0], widget);
               break;
               case 'line':
                 $scope.getGraph(widget, data);
@@ -1368,6 +1372,8 @@ Atlas.controller('dashboardDetailController', [
               break;
             };
             widget.loading = false;
+            widgetsLoaded++;
+            $scope.isLoadingWidgets = $scope.dashboard.widgets.length == widgetsLoaded ? false : true;
           });
         });
       });
@@ -1433,7 +1439,7 @@ Atlas.controller('dashboardDetailController', [
         }
       );
 
-      $('.daterangepicker').css('width', $('#reportrange').innerWidth() + 'px');
+      $('.daterangepicker').css('width', $('.toolbar').innerWidth() - 30 + 'px');
 
       if(hasInputDate){
         $('[name=daterangepicker_start]').attr('type','date');
@@ -1548,7 +1554,7 @@ Atlas.controller('dashboardFakeDetailController', [
     },
 
     $scope.getGraph = function(widget, data){
-      var valores = $scope.prepareDataset(data.statement.rows);
+      var valores = $scope.prepareDataset(data.result.rows);
       var title   = widget.customized ? widget.name : widget.indicator.name;
 
       $.each(valores.values, function(index, val) {
@@ -1698,9 +1704,9 @@ Atlas.controller('dashboardFakeDetailController', [
       var title      = widget.customized ? widget.name : widget.indicator.name;
       var serie      = 'Quantidade';
 
-      if(data.statement.rows.length > 0){
+      if(data.result.rows.length > 0){
         var volumeTotal = 0;
-        var produtos = (data.statement.rows).sort(function(a,b){
+        var produtos = (data.result.rows).sort(function(a,b){
           if (a[1] > b[1])
             return -1;
           if (a[1] < b[1])
@@ -1794,10 +1800,9 @@ Atlas.controller('dashboardFakeDetailController', [
         "ticket_medio_mao_de_obra" : {"statement":{"records":1,"fetched":1,"columns":[{"name":"faturamento_tipo_item_servico","type":3}],"rows":[["1076.4129"]]}},
       };
 
-
+      $scope.isLoadingWidgets = true;
       $scope.dashboard.widgets.forEach(function(widget, index) {
         $scope.dashboard.widgets[index].loading = true;
-
 
 
         var type       = widget.widget_type.name;
@@ -1805,7 +1810,7 @@ Atlas.controller('dashboardFakeDetailController', [
 
         switch(type){
           case 'status':
-            $scope.getStatus(data.statement.rows[0][0], widget);
+            $scope.getStatus(data.result.rows[0][0], widget);
           break;
           case 'line':
             $scope.getGraph(widget, data);
@@ -1817,9 +1822,8 @@ Atlas.controller('dashboardFakeDetailController', [
 
 
         $scope.dashboard.widgets[index].loading = false;
-
-
       });
+      $scope.isLoadingWidgets = false;
     };
 
     $scope.initDaterangepicker = function(){

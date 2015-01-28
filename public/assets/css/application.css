@@ -91,14 +91,8 @@ padding: 10px 0;
 }
 
 /* Dashboard */
-.toolbar button{
-  margin-bottom: 21px;
-  text-align: left;
-}
-
-.toolbar button .text{
-  margin-left: 10px;
-  display: inline-block;
+.toolbar{
+  margin-bottom: 20px;
 }
 
 .grafico-cabecalho{
@@ -827,4 +821,26 @@ button .fa{
   right: 0px;
   top: 90px;
   display: none;
+}
+
+.toolbar .navbar-nav>li>a{
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.navbar {
+  min-height: 40px;
+}
+
+.row.no-pad > [class*='col-'] {
+  padding-right:0;
+  padding-left:0;
+}
+
+.row.no-pad > [class*='col-']:first-child {
+  padding-left:15px;
+}
+
+.row.no-pad > [class*='col-']:last-child {
+  padding-right:15px;
 }

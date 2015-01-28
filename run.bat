@@ -1,1 +1,1 @@
-rackup --port=4567 --env=production --host 127.0.0.1
+rackup --port=4567 --env=production --host 0.0.0.0

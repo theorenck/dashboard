@@ -2,23 +2,24 @@
 
     <div class="header-area">
       <div class="row">
-        <div class="col-sm-5 col-md-6">
+        <div class="col-sm-5 col-md-8">
           <h2>
             Dashboard
           </h2>
         </div>
-        <div class="col-sm-4 col-md-4 col-offset-md-1">
-          <select class="form-control"
-            ng-model="activeDataSourceServer"
-            ng-options="source.id as source.name for source in dashboard.data_source_servers"
-            ng-change="setActiveDataSourceServer()">
-          </select>
-        </div>
-        <div class="col-sm-3 col-md-2">
-          <button class="btn btn-block btn-primary" ng-click="loadWidgets()">
-            <span class="fa fa-refresh"></span>
-            Atualizar
-          </button>
+        <div class="col-sm-4 col-md-4">
+          <!-- <div class="input-group"> -->
+          <!--   <select class="form-control"
+              ng-model="activeDataSourceServer"
+              ng-options="source.id as source.name for source in dashboard.data_source_servers"
+              ng-change="setActiveDataSourceServer()">
+            </select> -->
+            <!-- <span class="input-group-btn">
+              <button class="btn btn-block btn-primary" ng-click="loadWidgets()" type="button">
+                Atualizar
+              </button>
+            </span> -->
+          <!-- /</div>/input-group -->
         </div>
       </div>
     </div>
@@ -27,12 +28,51 @@
     <div class="row">
       <div class="col-sm-12">
 
-        <div class="toolbar">
-          <button id="reportrange" class="btn btn-primary btn-block">
-            <span class="fa fa-calendar"></span>
-            <span class="text" data-behaivor="show-actual-date">Últimos 30 dias</span>
-          </button>
+        <div class="navbar navbar-default toolbar">
+          <div class="navbar-collapse collapse navbar-responsive-collapse">
+            <ul class="nav navbar-nav">
+              <li tooltip="Alterar Período" tooltip-placement="top">
+                <a href="#" id="reportrange">
+                  <span class="fa fa-calendar"></span>
+                  &nbsp;
+                  <span data-behaivor="show-actual-date" style="border-bottom: 1px dashed;">Últimos 30 dias</span>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li>
+                <a href="#" ng-click="loadWidgets()" tooltip="Atualizar manualmente" tooltip-placement="top">
+                  <span class="fa fa-refresh" ng-class="{ 'fa-spin' : isLoadingWidgets }"></span>
+                </a>
+              </li>
+              <li class="dropdown" ng-class="{ 'open' : openToolbar }">
+                <a href="#" aria-expanded="false" ng-click="openToolbar=!openToolbar" tooltip="Configurações" tooltip-placement="top">
+                  <span class="fa " ng-class="{ 'fa-cog' : !openToolbar, 'fa-times' : openToolbar }"></span>
+                </a>
+                <ul class="dropdown-menu" style="min-width:300px">
+                  <li class="dropdown-header">Configurações</li>
+                  <li style="padding:10px;">
+                    <label for="">Fonte de Dados</label>
+                    <select class="form-control input-sm"
+                      ng-model="activeDataSourceServer"
+                      ng-options="source.id as source.name for source in dashboard.data_source_servers"
+                      ng-change="setActiveDataSourceServer()">
+                      <option value="">Fonte de dados</option>
+                    </select>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
         </div>
+
+       <!--  <div class="row toolbar no-pad" id="reportrange" tooltip="Clique aqui para alterar o período" tooltip-placement="top">
+
+          <div class="col-md-10 col-xs-10">
+
+          </div>
+
+        </div> -->
 
       </div>
     </div>
