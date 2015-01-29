@@ -629,17 +629,17 @@ Atlas.controller('consoleController', [
 
       // se houver paginação
       if (currentPage) {
-        var rowsPerPage = criaPaginacao($scope.resultset.columns.length);
-        // var data        = allData.slice(rowsPerPage * $scope.currentPage, rowsPerPage * ($scope.currentPage + 1));
+        var rowsPerPage = criaPaginacao($scope.result.columns.length);
         var data = [];
         var i = 0;
         var finalIndex = rowsPerPage * ($scope.currentPage + 1);
-        while(i < finalIndex){
+
+        while(i < finalIndex && i < allData.length){
           data[i] = allData[i];
           i++;
         }
 
-        $scope.resultset.rows = data;
+        $scope.result.rows = data;
         $scope.isExecuting  = false;
         $scope.currentPage++;
 
@@ -660,8 +660,7 @@ Atlas.controller('consoleController', [
             allData = data.result.rows;
 
             $scope.result = {
-              "records": data.result.records,
-              "fetched": data.result.fetched,
+              "records": allData.length,
               "columns": data.result.columns,
               "rows": allData.slice(0, rowsPerPage)
             }
@@ -1167,8 +1166,13 @@ Atlas.controller('dashboardDetailController', [
 
             rangeSelector : {
                 buttonTheme: {
+                  fill : "#3498DB",
+                  color : "#FFF",
                   width: 90,
                   r : 0,
+                  style : {
+                    background: '#3498DB'
+                  }
                 },
 
                 inputEnabled : false,
@@ -1177,17 +1181,17 @@ Atlas.controller('dashboardDetailController', [
                 {
                   type: 'month',
                   count: 1,
-                  text: '1m'
+                  text: '1 mês'
                 },
                 {
                   type: 'month',
                   count: 3,
-                  text: '3m'
+                  text: '3 meses'
                 },
                 {
                   type: 'month',
                   count: 6,
-                  text: '6m'
+                  text: '6 meses'
                 }]
             },
 

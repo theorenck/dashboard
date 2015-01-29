@@ -93,6 +93,10 @@
 
     <!-- RESULTADOS -->
     <div class="row" ng-show="showResults">
+      <!-- <pre>
+        {{ result.fetched }}
+        {{ result.rows.length }}
+      </pre> -->
       <div ng-show="!!result.rows">
         <div class="col-md-12">
           <div class="panel panel-default">
@@ -101,7 +105,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-12" ng-show="result.fetched >= statement.rows.length">
+        <div class="col-md-12" ng-show="result.records > result.rows.length">
           <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>
         </div>
       </div>
