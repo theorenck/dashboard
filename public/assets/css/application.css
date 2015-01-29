@@ -844,3 +844,8 @@ button .fa{
 .row.no-pad > [class*='col-']:last-child {
   padding-right:15px;
 }
+
+
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus{
+  color: #BDC3C7;
+}

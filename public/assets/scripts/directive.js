@@ -204,6 +204,95 @@ Atlas.directive('zFloatthead', ['$timeout', function($timeout){
   };
 }]);
 
+
+Atlas.directive('zDaterangepicker', [function($timeout){
+  return {
+    scope: {
+      'indicadores' : '=ngModel',
+      'loadWidgets'  : '&callback'
+    },
+    require: 'ngModel',
+    restrict: 'EA',
+    link: function(scope, el, attrs, controller) {
+      var hasInputDate = verifyInputDate();
+      var format       = hasInputDate ? 'YYYY-MM-DD' : 'DD/MM/YYYY';
+
+      function verifyInputDate(){
+        var i = document.createElement("input");
+          i.setAttribute("type", "date");
+        return i.type !== "text";
+      }
+
+      function callbackDatePicker(start, end, range){
+        var text;
+        if (range !== undefined && range !== "Personalizado") {
+          text = range;
+        }
+        else {
+          var formato = "D [de] MMMM";
+          if (start.format('YYYY') === end.format('YYYY')) {
+            if (start.format('MMMM') === end.format('MMMM')) {
+              formato = 'D';
+            };
+          }
+          else {
+            formato = 'D [de] MMMM, YYYY';
+          }
+          text = start.format(formato) + '  até  ' + end.format('D [de] MMMM, YYYY');
+        }
+
+        $('[data-behaivor=show-actual-date]').html(text);
+
+        if (scope.indicadores) {
+          scope.indicadores.periodo.inicio = start.format("YYYY-MM-DD 00:00:00");
+          scope.indicadores.periodo.fim    = end.format("YYYY-MM-DD 00:00:00");
+        };
+
+        if (typeof scope.loadWidgets === "function") {
+          scope.loadWidgets();
+        };
+      }
+
+      el.daterangepicker(
+        {
+          ranges: {
+            'Hoje': [moment(), moment()],
+            'Ontem': [moment().subtract(1,'days'), moment().subtract(1,'days')],
+            'Últimos 7 Dias': [moment().subtract(6,'days'), moment()],
+            'Últimos 30 Dias': [moment().subtract(29,'days'), moment()],
+            'Últimos 90 Dias': [moment().subtract(89,'days'), moment()],
+            'Este Mês': [moment().startOf('month'), moment().endOf('month')],
+            'Último Mês': [moment().subtract(1,'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+          },
+          format : format,
+          showDropdowns : true,
+          minDate : moment({year : 2000, month: 0, day: 1}),
+          maxDate : moment().add(1, 'month'),
+          startDate: moment().subtract(29,'days'),
+          endDate: moment(),
+          locale: {
+            applyLabel: 'Aplicar',
+            cancelLabel: 'Limpar',
+            fromLabel: 'De',
+            toLabel: 'Para',
+            customRangeLabel: 'Personalizado',
+            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex','Sab'],
+            monthNames: ['Janeiro', 'Favereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+          }
+        },
+        callbackDatePicker
+      );
+
+      $('.daterangepicker').css('width', $(el).closest('.toolbar').innerWidth() - 30 + 'px');
+
+      if(hasInputDate){
+        $('[name=daterangepicker_start]').attr('type','date');
+        $('[name=daterangepicker_end]').attr('type','date');
+      }
+    }
+  };
+}]);
+
 Atlas.directive('fastRepeat', ['$timeout', function($timeout){
   return {
     restrict: 'E',
