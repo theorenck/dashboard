@@ -1135,6 +1135,26 @@ Atlas.controller('dashboardDetailController', [
               events : {
                 selection: function (event) {
                   $('[data-resetbutton]').css('display', event.xAxis ? 'block' : 'none' );
+                },
+
+                load : function(){
+                  var buttons = this.rangeSelector.buttons;
+
+                  buttons.forEach(function(e, i){
+
+                    $(e.element).click(function(event){
+                      if (e.state && e.state !== 3) {
+                        $('[data-resetbutton]').css('display', 'block');
+                      }
+                    });
+
+                    if (e.state && e.state === 3) {
+                      var t = e.element.childNodes[1];
+                      var s = 'font-weight:normal;color:#FFF;fill:#FFF;';
+                      t.setAttribute('style', s)
+                      e.attr({opacity:0.65});
+                    }
+                  });
                 }
               }
             },
@@ -1167,16 +1187,36 @@ Atlas.controller('dashboardDetailController', [
             rangeSelector : {
                 buttonTheme: {
                   fill : "#3498DB",
-                  color : "#FFF",
                   width: 90,
                   r : 0,
                   style : {
-                    background: '#3498DB'
+                    background: '#3498DB',
+                    color : "#FFF",
+                  },
+                  states: {
+                    hover : {
+                      fill : "#217DBB",
+                      background: "#217DBB",
+                      style: {
+                        color: 'white'
+                      }
+                    },
+                    select: {
+                      fill: '#217DBB',
+                      style: {
+                        color: 'white',
+                        fontWeight: 'normal'
+                      }
+                    }
                   }
                 },
 
+                labelStyle: {
+                  display: 'none'
+                },
+
                 inputEnabled : false,
-                selected : 1,
+                // selected : 1,
                 buttons: [
                 {
                   type: 'month',
