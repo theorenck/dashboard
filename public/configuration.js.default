@@ -1,5 +1,19 @@
-var Configuration =  {
-  api : {
-    address : "http://localhost:3000/api"
+var Configuration = {
+
+  "time_to_refresh" : 1000 * 1000, // default: 30 seconds
+
+  "statement_server" : null,
+
+  "api" : {
+    "address" : "http://localhost:3000/api"
+  },
+
+  "colors": {
+    red    : '#e74c3c',
+    blue   : '#3498db',
+    orange : '#f39c12',
+    green  : '#18bc9c',
+    yellow : '',
+    purple : ''
   }
 }

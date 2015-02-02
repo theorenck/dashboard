@@ -554,6 +554,16 @@ Atlas.controller('consoleController', [
     });
 
 
+    function getActiveDataSourceServer(){
+      var el =  _.find($scope.listDataSourceService, function(el){
+        return $scope.activeDataSourceService === el.id;
+      });
+
+      // var url =
+
+      return el.url
+    };
+
     function getStatementType(sql){
       return sql.match(/^\s*(SELECT|DELETE|UPDATE|INSERT|DROP|CREATE)\b/i)[1].toUpperCase() || '';
     }
@@ -620,7 +630,9 @@ Atlas.controller('consoleController', [
     }
 
     $scope.executeQuery = function(currentPage){
+      Configuration.statement_server = getActiveDataSourceServer();
       resetAlert();
+
       if ($scope.isExecuting)
         return;
 
@@ -646,11 +658,10 @@ Atlas.controller('consoleController', [
         return;
       };
 
-      // executa o statement
-      StatementService.execute({
-          "statement" : $scope.statement
-        },
-        function(data){
+      var data   = {"statement" : $scope.statement};
+      var server = Configuration.statement_server;
+      StatementService.execute(data, server)
+        .success(function(data){
           $scope.saveHistory();
           $scope.isExecuting = false;
           $scope.showResults = true;
@@ -694,9 +705,8 @@ Atlas.controller('consoleController', [
               $scope.showResults = false;
             break;
           }
-
-        },
-        function(err){
+        })
+        .error(function(err){
           $scope.isExecuting = false;
           var errors;
           if (err.status === 500)
@@ -710,9 +720,8 @@ Atlas.controller('consoleController', [
             type : "danger",
             messages : errors
           }
+        });
 
-        }
-      );
     };
 
     $scope.saveHistory = function(){
@@ -1461,7 +1470,6 @@ Atlas.controller('dashboardFakeDetailController', [
     $scope.dashboard              = data;
     $scope.dataSourceServer       = data.data_source_servers[0];
     $scope.activeDataSourceServer = $scope.dataSourceServer.id;
-
 
     $scope.getStatus = function(result, widget){
       x  = NumberHelpers.number_to_human(result, {
