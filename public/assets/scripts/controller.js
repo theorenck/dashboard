@@ -1,13 +1,41 @@
-var results;
+(function(){
+  'use strict';
 
-/**
- * APP CONTROLLER
- */
-Atlas.controller('appController', [
-  "$scope",
-  '$location',
-  "AuthService",
-  function($scope, $location, AuthService){
+  angular.module('Atlas')
+    .controller('AppController', AppController)
+
+    .controller('DataSourceIndexController', DataSourceIndexController)
+    .controller('DataSourceCreateController', DataSourceCreateController)
+
+    .controller('DashboardIndexController', DashboardIndexController)
+    .controller('DashboardCreateController', DashboardCreateController)
+
+    .controller('IndicatorIndexController', IndicatorIndexController)
+    .controller('IndicatorCreateController', IndicatorCreateController)
+
+    .controller('WidgetIndexController', WidgetIndexController)
+    .controller('WidgetCreateController', WidgetCreateController)
+
+    .controller('UserIndexController', UserIndexController)
+    .controller('UserCreateController', UserCreateController)
+
+    .controller('PermissionIndexController', PermissionIndexController)
+    .controller('PermissionCreateController', PermissionCreateController)
+
+    .controller('ModalInstanceCtrl', ModalInstanceCtrl)
+    .controller('ConsoleController', ConsoleController)
+
+    .controller('OrigemIndexController', OrigemIndexController)
+    .controller('QueryCreateController', QueryCreateController)
+    .controller('AggregationCreateController', AggregationCreateController)
+
+    .controller('DashboardsController', DashboardsController)
+    .controller('DashboardDetailController', DashboardDetailController)
+    .controller('DashboardFakeDetailController', DashboardFakeDetailController);
+
+
+  AppController.$inject = ["$scope", '$location', "AuthService"];
+  function AppController($scope, $location, AuthService){
     $scope.credentials = {};
     $scope.open = false;
 
@@ -38,21 +66,11 @@ Atlas.controller('appController', [
     $scope.range = function(num){
       return new Array(num);
     };
-
   }
-]);
 
-/**
- * DATA SOURCE INDEX CONTROLLER
- */
-Atlas.controller('DataSourceIndexController', [
-  '$scope',
-  '$location',
-  'DataSourceService',
-
-  function($scope, $location, DataSourceService){
+  DataSourceIndexController.$inject = ['$scope', '$location', 'DataSourceService' ];
+  function DataSourceIndexController($scope, $location, DataSourceService){
     $scope.serverList         = [];
-
     $scope.renderList = function(){
       DataSourceService.get(function(data){
         $scope.serverList = data.data_source_servers;
@@ -72,18 +90,9 @@ Atlas.controller('DataSourceIndexController', [
 
     $scope.renderList();
   }
-]);
 
-/**
- * DATA SOURCE CREATE / UPDATE CONTROLLER
- */
-Atlas.controller('DataSourceCreateController', [
-  'DataSourceService',
-  '$scope',
-  '$routeParams',
-  '$location',
-
-  function(DataSourceService, $scope, $routeParams, $location){
+  DataSourceCreateController.$inject = ['DataSourceService', '$scope', '$routeParams', '$location'];
+  function DataSourceCreateController(DataSourceService, $scope, $routeParams, $location){
     $scope.data_source_server = {};
 
     $scope.cancelarApiServer = function(){
@@ -112,18 +121,9 @@ Atlas.controller('DataSourceCreateController', [
       });
     };
   }
-]);
 
-
-/**
- * DASHBOARD CRUD INDEX CONTROLLER
- */
-Atlas.controller('DashboardIndexController', [
-  '$scope',
-  '$location',
-  'DashboardService',
-
-  function($scope, $location, DashboardService){
+  DashboardIndexController.$inject = ['$scope', '$location', 'DashboardService'];
+  function DashboardIndexController($scope, $location, DashboardService){
     $scope.dashboardList = [];
 
     $scope.renderList = function(){
@@ -147,18 +147,9 @@ Atlas.controller('DashboardIndexController', [
 
     $scope.renderList();
   }
-]);
 
-/**
- * DASHBOARD Create/Update CONTROLLER
- */
-Atlas.controller('DashboardCreateController', [
-  '$scope',
-  '$routeParams',
-  '$location',
-  'DashboardService',
-
-  function($scope, $routeParams, $location, DashboardService){
+  DashboardCreateController.$inject = ['$scope', '$routeParams', '$location', 'DashboardService'];
+  function DashboardCreateController($scope, $routeParams, $location, DashboardService){
     $scope.dashboard = {};
 
     $scope.salvar = function(){
@@ -184,18 +175,10 @@ Atlas.controller('DashboardCreateController', [
         $scope.dashboard = data.dashboard;
       });
     };
-
   }
-]);
 
-
-
-Atlas.controller('IndicatorIndexController', [
-  '$scope',
-  '$location',
-  'IndicatorService',
-
-  function($scope, $location, IndicatorService){
+  IndicatorIndexController.$inject = ['$scope', '$location', 'IndicatorService'];
+  function IndicatorIndexController($scope, $location, IndicatorService){
     $scope.indicatorList = [];
 
     $scope.renderList = function(){
@@ -218,18 +201,9 @@ Atlas.controller('IndicatorIndexController', [
 
     $scope.renderList();
   }
-]);
 
-
-Atlas.controller('IndicatorCreateController', [
-  '$scope',
-  '$routeParams',
-  '$location',
-  'IndicatorService',
-  'SourceService',
-  'UnityService',
-
-  function($scope, $routeParams, $location, IndicatorService, SourceService, UnityService){
+  IndicatorCreateController.$inject = ['$scope', '$routeParams', '$location', 'IndicatorService', 'SourceService', 'UnityService'];
+  function IndicatorCreateController($scope, $routeParams, $location, IndicatorService, SourceService, UnityService){
     $scope.sourceList = [];
     $scope.unityList  = [];
 
@@ -262,18 +236,9 @@ Atlas.controller('IndicatorCreateController', [
       });
     };
   }
-]);
 
-
-/**
- * WIDGET CONTROLLER
- */
-Atlas.controller('WidgetIndexController', [
-  '$scope',
-  '$location',
-  'WidgetService',
-
-  function($scope, $location, WidgetService){
+  WidgetIndexController.$inject = ['$scope', '$location', 'WidgetService']
+  function WidgetIndexController($scope, $location, WidgetService){
     $scope.widget     = {};
     $scope.widgetList = [];
 
@@ -296,22 +261,9 @@ Atlas.controller('WidgetIndexController', [
 
     $scope.renderList();
   }
-]);
 
-
-/**
- * WIDGET CONTROLLER
- */
-Atlas.controller('WidgetCreateController', [
-  '$scope',
-  '$routeParams',
-  '$location',
-  'WidgetService',
-  'IndicatorService',
-  'DashboardService',
-  'WidgetTypeService',
-
-  function($scope, $routeParams, $location, WidgetService, IndicatorService, DashboardService, WidgetTypeService){
+  WidgetCreateController.$inject = ['$scope', '$routeParams', '$location', 'WidgetService', 'IndicatorService', 'DashboardService', 'WidgetTypeService'];
+  function WidgetCreateController($scope, $routeParams, $location, WidgetService, IndicatorService, DashboardService, WidgetTypeService){
     $scope.widget     = {};
     $scope.widgetList = [];
 
@@ -348,20 +300,10 @@ Atlas.controller('WidgetCreateController', [
         });
       }
     };
-
   }
-]);
 
-
-/**
- * USERS CONTROLLER
- */
-Atlas.controller('UserIndexController', [
-  '$scope',
-  '$location',
-  'UserService',
-
-  function($scope, $location, UserService){
+  UserIndexController.$inject = ['$scope', '$location', 'UserService'];
+  function UserIndexController($scope, $location, UserService){
     $scope.userList = [];
 
     $scope.renderList = function(){
@@ -385,19 +327,9 @@ Atlas.controller('UserIndexController', [
 
     $scope.renderList();
   }
-]);
 
-
-/**
- * USERS CONTROLLER
- */
-Atlas.controller('UserCreateController', [
-  '$scope',
-  '$routeParams',
-  '$location',
-  'UserService',
-
-  function($scope, $routeParams, $location, UserService){
+  UserCreateController.$inject = ['$scope', '$routeParams', '$location', 'UserService'];
+  function UserCreateController($scope, $routeParams, $location, UserService){
     $scope.user     = {};
 
     $scope.cancelar = function(){
@@ -424,18 +356,9 @@ Atlas.controller('UserCreateController', [
       });
     }
   }
-]);
 
-
-/**
- * PERMISSIONS CONTROLLER
- */
-Atlas.controller('PermissionIndexController', [
-  '$scope',
-  '$location',
-  'PermissionService',
-
-  function($scope, $location, PermissionService){
+  PermissionIndexController.$inject = ['$scope', '$location', 'PermissionService'];
+  function PermissionIndexController($scope, $location, PermissionService){
     $scope.permissionList = [];
 
     $scope.renderList = function(){
@@ -458,22 +381,9 @@ Atlas.controller('PermissionIndexController', [
 
     $scope.renderList();
   }
-]);
 
-
-/**
- * PERMISSIONS CONTROLLER
- */
-Atlas.controller('PermissionCreateController', [
-  '$scope',
-  '$routeParams',
-  '$location',
-  'PermissionService',
-  'UserService',
-  'DataSourceService',
-  'DashboardService',
-
-  function($scope, $routeParams, $location, PermissionService, UserService, DataSourceService, DashboardService){
+  PermissionCreateController.$inject = ['$scope', '$routeParams', '$location', 'PermissionService', 'UserService', 'DataSourceService', 'DashboardService'];
+  function PermissionCreateController($scope, $routeParams, $location, PermissionService, UserService, DataSourceService, DashboardService){
     $scope.permission     = {};
     $scope.availableUsers = [];
     $scope.availableDataSourceService = [];
@@ -511,22 +421,15 @@ Atlas.controller('PermissionCreateController', [
       });
     }
   }
-]);
 
+  function ModalInstanceCtrl($scope, $modalInstance, items) {
+    $scope.cancel = function () {
+      $modalInstance.dismiss('cancel');
+    };
+  }
 
-/**
- * CONSOLE CONTROLLER
- */
-Atlas.controller('consoleController', [
-  '$scope',
-  'StatementService',
-  'SchemaService',
-  'HistoryService',
-  'DataSourceService',
-  'zCodeMirror',
-
-  function($scope, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror){
-
+  ConsoleController.$inject = ['$scope', 'StatementService', 'SchemaService', 'HistoryService', 'DataSourceService', 'zCodeMirror', '$modal'];
+  function ConsoleController($scope, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror, $modal){
     $scope.showAdvancedOptions   = true;
     $scope.showResults           = false;
     $scope.data_types            = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
@@ -538,6 +441,28 @@ Atlas.controller('consoleController', [
     $scope.historyItems          = [];
     $scope.editorOptions         = zCodeMirror.initialize($scope);
     $scope.listDataSourceService = [];
+
+
+    $scope.open = function (size) {
+
+      var modalInstance = $modal.open({
+        templateUrl: 'myModalContent.html',
+        controller: 'ModalInstanceCtrl',
+        size: size,
+        resolve: {
+          items: function () {
+            return $scope.items;
+          }
+        }
+      });
+
+      modalInstance.result.then(function (selectedItem) {
+        $scope.selected = selectedItem;
+      }, function () {
+        // $log.info('Modal dismissed at: ' + new Date());
+      });
+    };
+
 
     $scope.resultset = {
       "records": 0,
@@ -775,18 +700,9 @@ Atlas.controller('consoleController', [
     $scope.resetStatement();
     $scope.renderHistory();
   }
-]);
 
-/**
- * DASHBOARDS CONTROLLER
- */
-Atlas.controller('dashboardsController', [
-  '$scope',
-  '$location',
-  'DashboardService',
-
-
-  function($scope, $location, DashboardService){
+  DashboardsController.$inject = ['$scope', '$location', 'DashboardService'];
+  function DashboardsController($scope, $location, DashboardService){
     $scope.dashboards = [];
 
     DashboardService.get(function(data){
@@ -797,20 +713,10 @@ Atlas.controller('dashboardsController', [
     $scope.loadDash = function(id){
       $location.path('/dashboards/' + id);
     };
-
   }
-]);
 
-
-/**
- * QUERIES CONTROLLER
- */
-Atlas.controller('OrigemIndexController', [
-  '$scope',
-  '$location',
-  'SourceService',
-
-  function($scope, $location, SourceService){
+  OrigemIndexController.$inject = ['$scope', '$location', 'SourceService'];
+  function OrigemIndexController($scope, $location, SourceService){
     $scope.queriesList = [];
 
     SourceService.get(function(data){
@@ -828,20 +734,10 @@ Atlas.controller('OrigemIndexController', [
         /* @todo: Deletar registro */
       };
     }
-
   }
-]);
 
-/**
- * QUERIES CONTROLLER
- */
-Atlas.controller('QueryCreateController', [
-  '$scope',
-  '$routeParams',
-  '$location',
-  'SourceService',
-
-  function($scope, $routeParams, $location, SourceService){
+  QueryCreateController.$inject = ['$scope', '$routeParams', '$location', 'SourceService'];
+  function QueryCreateController($scope, $routeParams, $location, SourceService){
 
     $scope.showAdvancedOptions = true;
     $scope.showResults         = false;
@@ -912,22 +808,10 @@ Atlas.controller('QueryCreateController', [
       $scope.resetStatement();
     }
   }
-]);
 
-
-/**
- * AGREGAÇÃO CONTROLLER
- */
-Atlas.controller('AggregationCreateController', [
-  '$scope',
-  '$routeParams',
-  '$location',
-  'SourceService',
-  'FunctionService',
-
-  function($scope, $routeParams, $location, SourceService, FunctionService){
+  AggregationCreateController.$inject = ['$scope', '$routeParams', '$location', 'SourceService', 'FunctionService'];
+  function AggregationCreateController($scope, $routeParams, $location, SourceService, FunctionService){
     $scope.data_types     = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
-
 
     SourceService.get(function(data){
       $scope.sourceList = data.sources.filter(function(index, elem) {
@@ -1000,21 +884,9 @@ Atlas.controller('AggregationCreateController', [
       }
     }
   }
-]);
 
-/**
- * DASHBOARDS DETAIL CONTROLLER
- */
-Atlas.controller('dashboardDetailController', [
-  '$scope',
-  '$routeParams',
-  '$interval',
-  'DashboardService',
-  'SourceService',
-  'QueryService',
-  'AggregationService',
-
-  function($scope, $routeParams, $interval,  DashboardService, SourceService, QueryService, AggregationService){
+  DashboardDetailController.$inject = ['$scope', '$routeParams', '$interval', 'DashboardService', 'SourceService', 'QueryService', 'AggregationService'];
+  function DashboardDetailController($scope, $routeParams, $interval,  DashboardService, SourceService, QueryService, AggregationService){
     $scope.dashboard        = {};
     $scope.sourceList       = [];
     $scope.dataSourceServer = {};
@@ -1129,9 +1001,6 @@ Atlas.controller('dashboardDetailController', [
                 fontFamily : "Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif",
                 fontSize : '19px'
               }
-            },
-            navigator: {
-              enabled: false
             },
             scrollbar: {
               enabled: false
@@ -1445,23 +1314,10 @@ Atlas.controller('dashboardDetailController', [
         },
       },
     };
-
   }
-]);
 
-/**
- * DASHBOARDS DETAIL CONTROLLER
- */
-Atlas.controller('dashboardFakeDetailController', [
-  '$scope',
-  '$routeParams',
-  '$window',
-  'DashboardService',
-  'SourceService',
-  'QueryService',
-  'AggregationService',
-
-  function($scope, $routeParams, $window, DashboardService, SourceService, QueryService, AggregationService){
+  DashboardFakeDetailController.$inject = ['$scope', '$routeParams', '$window', 'DashboardService', 'SourceService', 'QueryService', 'AggregationService'];
+  function DashboardFakeDetailController($scope, $routeParams, $window, DashboardService, SourceService, QueryService, AggregationService){
     data = {"id":1, "name":"Painel de Mecânica", "description":"Painel de Mecânica", "data_source_servers":[{"id":1, "url":"http://localhost:3000/api", "name":"localhost", "description":"localhost", "alive":true } ], "widgets":[{"id":9, "customized":false, "name":"Faturamento", "description":"Faturamento", "color":"green", "position":0, "size":3, "dashboard_id":1, "indicator":{"id":9, "name":"Faturamento", "description":"faturamento", "code":"faturamento", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"R$"} }, "widget_type":{"id":2, "name":"status"} }, {"id":6, "customized":false, "name":"Ticket Médio Peças", "description":"Ticket Médio Peças", "color":"orange", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":6, "name":"Ticket Médio Peças", "description":"ticket_medio_pecas", "code":"ticket_medio_pecas", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"R$"} }, "widget_type":{"id":2, "name":"status"} }, {"id":7, "customized":false, "name":"Ticket Médio MO", "description":"Ticket Médio MO", "color":"blue", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":7, "name":"Ticket Médio PO", "description":"ticket_medio_mao_de_obra", "code":"ticket_medio_mao_de_obra", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"R$"} }, "widget_type":{"id":2, "name":"status"} }, {"id":8, "customized":false, "name":"Inadimplência", "description":"Inadimplência", "color":"red", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":8, "name":"Inadimplência", "description":"inadimplencia", "code":"inadimplencia", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":1, "customized":false, "name":"Rentabilidade Peças", "description":"Rentabilidade Peças", "color":"purple", "position":0, "size":3, "dashboard_id":1, "indicator":{"id":1, "name":"Rentabilidade Peças", "description":"rent_pecas", "code":"rent_pecas", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":2, "customized":false, "name":"Rentabilidade MO", "description":"Rentabilidade MO", "color":"purple", "position":1, "size":3, "dashboard_id":1, "indicator":{"id":2, "name":"Rentabilidade MO", "description":"rent_mo", "code":"rent_mo", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":3, "customized":false, "name":"Rentabilidade Terceiros", "description":"Rentabilidade Terceiros", "color":"purple", "position":2, "size":3, "dashboard_id":1, "indicator":{"id":3, "name":"Rentabilidade Terceiros", "description":"rent_terceiros", "code":"rent_terceiros", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":4, "customized":false, "name":"Rentabilidade MC", "description":"Rentabilidade MC", "color":"purple", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":4, "name":"Rentabilidade MC", "description":"rent_mc", "code":"rent_mc", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":5, "customized":false, "name":"Novas OS por dia", "description":"Novas OS por dia", "color":"blue", "position":3, "size":12, "dashboard_id":1, "indicator":{"id":5, "name":"Novas OS por dia", "description":"novas_os_dia", "code":"novas_os_dia", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"line"} }, ] };
     $scope.dashboard              = {};
     $scope.sourceList             = [];
@@ -1894,4 +1750,6 @@ Atlas.controller('dashboardFakeDetailController', [
 
     $scope.initDaterangepicker();
   }
-]);
+
+
+})();
