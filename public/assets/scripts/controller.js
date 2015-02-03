@@ -71,11 +71,8 @@
   DataSourceIndexController.$inject = ['$scope', '$location', 'DataSourceService' ];
   function DataSourceIndexController($scope, $location, DataSourceService){
     $scope.serverList         = [];
-    $scope.renderList = function(){
-      DataSourceService.get(function(data){
-        $scope.serverList = data.data_source_servers;
-      });
-    }
+
+    renderList();
 
     $scope.loadServer = function(id){
       $location.path('/data-source-server/update/' + id);
@@ -88,7 +85,16 @@
       });
     }
 
-    $scope.renderList();
+    $scope.renderList = function(){
+      return renderList();
+    }
+
+    function renderList(){
+      DataSourceService.get(function(data){
+        $scope.serverList = data.data_source_servers;
+      });
+    }
+
   }
 
   DataSourceCreateController.$inject = ['DataSourceService', '$scope', '$routeParams', '$location'];
@@ -126,7 +132,9 @@
   function DashboardIndexController($scope, $location, DashboardService){
     $scope.dashboardList = [];
 
-    $scope.renderList = function(){
+    renderList();
+
+    function renderList(){
       DashboardService.get(function(data){
         $scope.dashboardList = data.dashboards;
       });
@@ -145,7 +153,9 @@
       });
     }
 
-    $scope.renderList();
+    $scope.renderList = function(){
+      return renderList();
+    }
   }
 
   DashboardCreateController.$inject = ['$scope', '$routeParams', '$location', 'DashboardService'];
@@ -430,6 +440,7 @@
 
   ConsoleController.$inject = ['$scope', 'StatementService', 'SchemaService', 'HistoryService', 'DataSourceService', 'zCodeMirror', '$modal'];
   function ConsoleController($scope, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror, $modal){
+    var allData = [];
     $scope.showAdvancedOptions   = true;
     $scope.showResults           = false;
     $scope.data_types            = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
@@ -441,7 +452,12 @@
     $scope.historyItems          = [];
     $scope.editorOptions         = zCodeMirror.initialize($scope);
     $scope.listDataSourceService = [];
-
+    $scope.resultset = {
+      "records": 0,
+      "fetched": 0,
+      "columns": [],
+      "rows": []
+    };
 
     $scope.open = function (size) {
 
@@ -463,36 +479,22 @@
       });
     };
 
-
-    $scope.resultset = {
-      "records": 0,
-      "fetched": 0,
-      "columns": [],
-      "rows": []
-    };
-
-    var allData = [];
-
     DataSourceService.get(function(data){
       $scope.listDataSourceService   = data.data_source_servers;
       $scope.activeDataSourceService = data.data_source_servers[0].id;
     });
-
 
     function getActiveDataSourceServer(){
       var el =  _.find($scope.listDataSourceService, function(el){
         return $scope.activeDataSourceService === el.id;
       });
 
-      // var url =
-
-      return el.url
+      return el.url;
     };
 
     function getStatementType(sql){
       return sql.match(/^\s*(SELECT|DELETE|UPDATE|INSERT|DROP|CREATE)\b/i)[1].toUpperCase() || '';
     }
-
 
     function resetAlert(){
       $scope.alert = {
@@ -1750,6 +1752,5 @@
 
     $scope.initDaterangepicker();
   }
-
 
 })();

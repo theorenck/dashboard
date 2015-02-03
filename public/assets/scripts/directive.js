@@ -181,7 +181,8 @@
       link: function($scope, iElm, iAttrs, controller) {
 
         function loadFloatThead(){
-          $table = iElm.find('.table');
+          console.log('oi');
+          $table = iElm.find('.floatThead');
           $table.floatThead('destroy');
           $timeout(function(){
             $table.floatThead({
@@ -302,10 +303,10 @@
         data: '='
       },
       link : function(scope, el, attrs) {
+
         scope.$watchCollection('data', function(newValue, oldValue){
           if (newValue) {
-            var records = newValue.fetched || 0;
-
+            var records = newValue.records || 0;
             React.render(
               RTable(newValue),
               el[0],
@@ -316,9 +317,10 @@
 
         function loadFloatThead(records){
           if (records > 0) {
-            $table = el.find('.table-float-thead');
-            $table.floatThead('destroy');
             $timeout(function(){
+              var $table = $('.table-float-thead');
+
+              $table.floatThead('destroy');
               $table.floatThead({
                 scrollContainer: function($table){
                   return $table.closest('.wrapper');
@@ -329,7 +331,7 @@
         }
 
         el.on('$destroy', function() {
-          $table = el.find('.table');
+          var $table = el.find('.table-float-thead');
           $table.floatThead('destroy');
         });
 
