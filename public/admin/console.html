@@ -1,4 +1,3 @@
-<button class="btn btn-default" ng-click="open()">Open me!</button>
 <div class="row">
   <div class="col-md-12">
     <div id="query-area">
@@ -20,8 +19,13 @@
       <!-- <z-errorbox ng-model="errors"></z-errorbox> -->
       <z-alertbox ng-model="alert"></z-alertbox>
 
-      <div class="well">
+      <div class="well" style="position:relative">
         <form ng-submit="executeQuery()">
+
+          <a class="btn-question" ng-click="open()" tooltip="Ajuda" tooltip-placement="left">
+            <i class="glyphicon glyphicon-question-sign"></i>
+          </a>
+
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
@@ -150,21 +154,44 @@
     <!-- MODAL ATALHOS -->
     <script type="text/ng-template" id="myModalContent.html">
       <div class="modal-header">
-          <h3 class="modal-title">Im a modal!</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">×</button>
+          <h3 class="modal-title">Teclas de Atalho</h3>
       </div>
       <div class="modal-body">
-          <ul>
-              <li ng-repeat="item in items">
-                  <a ng-click="selected.item = item">{{ item }}</a>
-              </li>
-          </ul>
-          Selected: <b>{{ selected.item }}</b>
-      </div>
-      <div class="modal-footer">
-          <button class="btn btn-primary" ng-click="ok()">OK</button>
-          <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        <p>Quando selecionado o SQL:</p>
+
+        <div class="row">
+          <div class="col-md-3">
+            <p><kbd>CTRL</kbd> + <kbd>S</kbd></p>
+          </div>
+          <div class="col-md-9">
+            <p>- Salvar Query</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <p><kbd>F8</kbd></p>
+          </div>
+          <div class="col-md-9">
+            <p>- Executar query</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <p><kbd>CTRL</kbd> + <kbd>ENTER</kbd></p>
+          </div>
+          <div class="col-md-9">
+            <p>- Executar query</p>
+          </div>
+        </div>
+
+
       </div>
     </script>
 
   </div>
 </div>
+
+
+
+

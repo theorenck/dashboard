@@ -634,14 +634,15 @@
           }
         })
         .error(function(err){
-          $scope.isExecuting = false;
           var errors;
-          if (err.status === 500)
+          $scope.isExecuting = false;
+
+          if (err.status && err.status === 500)
             errors = [err.statusText];
-          else if(err.status === 0)
+          else if(err.status && err.status === 0)
             errors = ["Servidor indisponível"];
           else
-            errors = err.data.errors.base || err.data.errors.sql;
+            errors = err.errors.base || err.errors.sql;
 
           $scope.alert = {
             type : "danger",

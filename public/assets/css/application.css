@@ -849,3 +849,17 @@ button .fa{
 .navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus{
   color: #BDC3C7;
 }
+
+
+.btn-question{
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  cursor: pointer;
+  z-index:10;
+  color: #3498DB
+}
+
+.btn-question:hover{
+  color :#217DBB;
+}
