@@ -460,16 +460,15 @@
     };
 
     $scope.open = function (size) {
-
       var modalInstance = $modal.open({
         templateUrl: 'myModalContent.html',
         controller: 'ModalInstanceCtrl',
         size: size,
-        resolve: {
-          items: function () {
-            return $scope.items;
-          }
-        }
+        // resolve: {
+        //   items: function () {
+        //     return $scope.items;
+        //   }
+        // }
       });
 
       modalInstance.result.then(function (selectedItem) {
@@ -538,7 +537,7 @@
     $scope.resetStatement = function(){
       $scope.statement = {
         parameters : [],
-        sql : 'SELECT p.codproduto, p.codbarras, p.descricao1 FROM zw14ppro p WHERE p.situacao = \'N\' LIMIT 1000'
+        sql : localStorage.getItem('draft') || 'SELECT p.codproduto, p.codbarras, p.descricao1 FROM zw14ppro p WHERE p.situacao = \'N\' LIMIT 1000'
       };
       $scope.addParam();
     };
@@ -699,6 +698,10 @@
           return 'label-default';
       }
     },
+
+    $scope.$watch('statement.sql', function(newValue, oldValue){
+      localStorage.setItem('draft', newValue);
+    });
 
     $scope.resetStatement();
     $scope.renderHistory();
