@@ -34,10 +34,21 @@
     .controller('DashboardFakeDetailController', DashboardFakeDetailController);
 
 
-  AppController.$inject = ["$scope", '$location', "AuthService"];
-  function AppController($scope, $location, AuthService){
+  AppController.$inject = ["$scope", '$rootScope', '$location', "AuthService"];
+  function AppController($scope, $rootScope, $location, AuthService){
     $scope.credentials = { username : '', password : ''};
     $scope.open = false;
+    $scope.showResponsiveMenu = true;
+
+
+    // Esconde o menu quando troca de página
+    $rootScope.$on('$routeChangeSuccess', function (e, data) {
+      $scope.showResponsiveMenu = true;
+    });
+
+    $scope.toggleResponsiveMenu = function(){
+      $scope.showResponsiveMenu = !$scope.showResponsiveMenu;
+    }
 
     function errorHandler(err){
       var errors;

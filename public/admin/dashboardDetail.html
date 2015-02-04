@@ -7,20 +7,6 @@
             Dashboard
           </h2>
         </div>
-        <div class="col-sm-4 col-md-4">
-          <!-- <div class="input-group"> -->
-          <!--   <select class="form-control"
-              ng-model="activeDataSourceServer"
-              ng-options="source.id as source.name for source in dashboard.data_source_servers"
-              ng-change="setActiveDataSourceServer()">
-            </select> -->
-            <!-- <span class="input-group-btn">
-              <button class="btn btn-block btn-primary" ng-click="loadWidgets()" type="button">
-                Atualizar
-              </button>
-            </span> -->
-          <!-- /</div>/input-group -->
-        </div>
       </div>
     </div>
 
@@ -28,7 +14,8 @@
     <div class="row">
       <div class="col-sm-12">
         <div class="navbar navbar-default toolbar">
-          <div class="navbar-collapse collapse navbar-responsive-collapse">
+
+          <div class="navbar-collapse navbar-responsive-collapse">
             <ul class="nav navbar-nav">
               <li tooltip="Alterar período" tooltip-placement="top">
                 <a href="#" z-daterangepicker ng-model="indicadores" callback="loadWidgets()">
@@ -42,14 +29,16 @@
               <li>
                 <a href="#" ng-click="loadWidgets()" tooltip="Atualizar" tooltip-placement="top">
                   <span class="fa fa-refresh" ng-class="{ 'fa-spin' : isLoadingWidgets }"></span>
+                  <span class="visible-xs-inline-block">&nbsp; Atualizar</span>
                 </a>
               </li>
               <li class="dropdown" ng-class="{ 'open' : openToolbar }">
                 <a href="#" aria-expanded="false" ng-click="openToolbar=!openToolbar" tooltip="Configurações" tooltip-placement="top">
                   <span class="fa " ng-class="{ 'fa-cog' : !openToolbar, 'fa-times' : openToolbar }"></span>
+                  <span class="visible-xs-inline-block">&nbsp; Configurações</span>
                 </a>
                 <ul class="dropdown-menu" style="min-width:300px">
-                  <li class="dropdown-header">Configurações</li>
+                  <li class="dropdown-header hidden-xs">Configurações</li>
                   <li style="padding:10px;">
                     <label for="">Fonte de Dados</label>
                     <select class="form-control input-sm"

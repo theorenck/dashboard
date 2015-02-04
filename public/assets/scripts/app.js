@@ -39,6 +39,7 @@
      * Configuração de todas as rotas
      */
     .config(function($routeProvider){
+
       $routeProvider
 
       .when('/data-source-server', {
