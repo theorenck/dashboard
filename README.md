@@ -12,6 +12,8 @@ Atlas Middleware
 - [NumberHelpers](http://emcien.github.io/number-helpers-coffeescript/)
 - [CodeMirror](http://codemirror.net/)
 - [Bootstrap daterangepicker](https://github.com/dangrossman/bootstrap-daterangepicker)
+- [API SQL Format](http://sqlformat.org/api/)
+
 
 **Diferença de datas Clarion**
 <pre>var a = moment('1800-12-28');

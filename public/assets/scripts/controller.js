@@ -36,22 +36,52 @@
 
   AppController.$inject = ["$scope", '$location', "AuthService"];
   function AppController($scope, $location, AuthService){
-    $scope.credentials = {};
+    $scope.credentials = { username : '', password : ''};
     $scope.open = false;
+
+    function errorHandler(err){
+      var errors;
+      if (err.status && (err.status === 500 || err.status === 400))
+        errors = [{ "erro" : err.statusText }]
+      else if(err.status && err.status === 0)
+        errors = [{ "erro" : "Servidor indisponível" }]
+      else
+        errors = err.errors
+
+      $scope.alert = {
+        type : "danger",
+        messages : errors
+      }
+    }
+
+    function validateParams(credentials){
+      return  credentials.username.trim() !== ''
+              && credentials.password.trim() !== '';
+    }
 
     $scope.login = function(credentials){
       var authentication = {"authentication"  : credentials };
 
-      AuthService.save(authentication, function(res){
-        if (res.authentication && res.authentication.token) {
-          var token = res.authentication.token;
-          localStorage.setItem('token', token);
-          localStorage.setItem('logged-in', true);
-          $location.path('/dashboards');
-        }else{
-          localStorage.setItem('logged-in', false);
+      if (validateParams(credentials)) {
+        AuthService.save(authentication, function(res){
+          if (res.authentication && res.authentication.token) {
+            var token = res.authentication.token;
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('logged-in', true);
+
+            $location.path('/dashboards');
+          }
+          else {
+            localStorage.setItem('logged-in', false);
+          }
+        }, errorHandler);
+      }else{
+        $scope.alert = {
+          type : "warning",
+          messages : [{ "Erro" : 'Desculpe, mas usuário e senha devem ser preenchidos' }]
         }
-      });
+      }
     };
 
     $scope.logout = function(){
@@ -432,7 +462,7 @@
     }
   }
 
-  function ModalInstanceCtrl($scope, $modalInstance, items) {
+  function ModalInstanceCtrl($scope, $modalInstance) {
     $scope.cancel = function () {
       $modalInstance.dismiss('cancel');
     };
@@ -742,8 +772,8 @@
     }
   }
 
-  QueryCreateController.$inject = ['$scope', '$routeParams', '$location', 'SourceService'];
-  function QueryCreateController($scope, $routeParams, $location, SourceService){
+  QueryCreateController.$inject = ['$scope', '$routeParams', '$location', 'SourceService', 'zCodeMirror'];
+  function QueryCreateController($scope, $routeParams, $location, SourceService, zCodeMirror){
 
     $scope.showAdvancedOptions = true;
     $scope.showResults         = false;
@@ -754,6 +784,21 @@
     $scope.currentPage         = 1;
     $scope.errors              = [];
     $scope.historyItems        = [];
+    $scope.editorOptions         = zCodeMirror.initialize($scope);
+
+    $scope.codemirrorLoaded = function(_editor){
+      var _doc = _editor.getDoc();
+      _editor.focus();
+      _doc.markClean();
+      zCodeMirror.setHints(_editor);
+
+      if (!localStorage.getItem("tables")){
+        SchemaService.get(function(data){
+          localStorage.setItem("tables", JSON.stringify(data.schema.tables));
+          zCodeMirror.setHints(_editor, data.schema.tables);
+        });
+      };
+    };
 
     $scope.save = function(){
       $scope.validateParams();
@@ -915,7 +960,7 @@
 
     $scope.getStatus = function(result, widget){
       widget.full_result = result;
-      x  = NumberHelpers.number_to_human(result, {
+      var x  = NumberHelpers.number_to_human(result, {
         labels : { thousand : 'mil', million : 'Mi', billion : 'Bi', trillion : 'Tri' },
         precision: 3,
         significant : true,
@@ -1275,8 +1320,8 @@
         widget.loading = true;
 
         SourceService.get({ id : widget.indicator.source_id }, function(data){
-          var Service = data.query.type === 'Query' ? QueryService : AggregationService;
-          parameters  = data.query.type === 'Query' ? data.query.parameters : data.aggregation.parameters;
+          var Service    = data.query.type === 'Query' ? QueryService : AggregationService;
+          var parameters = data.query.type === 'Query' ? data.query.parameters : data.aggregation.parameters;
 
           // Verifica todos os parâmetros de inicio e fim que sejam nulos e seta os valores do dash
           _.each(parameters,function(el, index) {

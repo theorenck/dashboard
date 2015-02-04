@@ -36,7 +36,8 @@
 
                 <div class="form-group">
                   <label class="control-label">SQL</label>
-                  <textarea autofocus="true"class="form-control" rows="4" id="statement" ng-model="statement.statement"></textarea>
+                  <div ng-model="statement.statement" ui-codemirror-opts="editorOptions" ui-codemirror="{ onLoad : codemirrorLoaded }"></div>
+                  <!-- <textarea autofocus="true"class="form-control" rows="4" id="statement" ng-model="statement.statement"></textarea> -->
                 </div>
 
                 <p style="margin-bottom: 20px;">
