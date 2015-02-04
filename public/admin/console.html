@@ -3,7 +3,7 @@
     <div id="query-area">
 
       <div class="header-area">
-        <div class="row">
+        <div class="row" id="top">
           <div class="col-md-6">
             <h2>Console</h2>
           </div>
@@ -21,7 +21,7 @@
       <div class="well" style="position:relative">
         <form ng-submit="executeQuery()">
 
-          <a class="btn-question" ng-click="open()" tooltip="Ajuda" tooltip-placement="left">
+          <a class="btn btn-question hidden-xs" ng-click="open()" tooltip="Ajuda" tooltip-placement="left">
             <i class="glyphicon glyphicon-question-sign"></i>
           </a>
 
@@ -105,6 +105,13 @@
             </div>
           </div>
         </div>
+
+        <button scroll-position="scroll" ng-show="scroll > 700" class="btn btn-info btn-scroll-top" ng-click="scrollTop()">
+          <span class="fa fa-caret-up"></span>
+          &nbsp;
+          Voltar ao topo
+        </button>
+
         <div class="col-md-12" ng-show="result.records > result.rows.length">
           <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>
         </div>
@@ -160,34 +167,34 @@
         <p>Quando selecionado o SQL:</p>
 
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-3 col-xs-6">
             <p><kbd>CTRL</kbd> + <kbd>S</kbd></p>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-9 col-xs-6">
             <p>- Salvar Query</p>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-3 col-xs-6">
             <p><kbd>F8</kbd></p>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-9 col-xs-6">
             <p>- Executar query</p>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-3 col-xs-6">
             <p><kbd>CTRL</kbd> + <kbd>ENTER</kbd></p>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-9 col-xs-6">
             <p>- Executar query</p>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-3 col-xs-6">
             <p><kbd>CTRL</kbd> + <kbd>L</kbd></p>
           </div>
-          <div class="col-md-9">
+          <div class="col-md-9 col-xs-6">
             <p>- Formatar Query</p>
           </div>
         </div>

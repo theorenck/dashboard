@@ -479,8 +479,8 @@
     };
   }
 
-  ConsoleController.$inject = ['$scope', 'StatementService', 'SchemaService', 'HistoryService', 'DataSourceService', 'zCodeMirror', '$modal'];
-  function ConsoleController($scope, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror, $modal){
+  ConsoleController.$inject = ['$scope', '$location', '$anchorScroll', 'StatementService', 'SchemaService', 'HistoryService', 'DataSourceService', 'zCodeMirror', '$modal'];
+  function ConsoleController($scope, $location, $anchorScroll, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror, $modal){
     var allData = [];
     $scope.showAdvancedOptions   = true;
     $scope.showResults           = false;
@@ -500,22 +500,19 @@
       "rows": []
     };
 
+
+    $scope.scrollTop = function(){
+      $location.hash('top');
+      $anchorScroll();
+    }
+
+
+
     $scope.open = function (size) {
       var modalInstance = $modal.open({
         templateUrl: 'myModalContent.html',
         controller: 'ModalInstanceCtrl',
         size: size,
-        // resolve: {
-        //   items: function () {
-        //     return $scope.items;
-        //   }
-        // }
-      });
-
-      modalInstance.result.then(function (selectedItem) {
-        $scope.selected = selectedItem;
-      }, function () {
-        // $log.info('Modal dismissed at: ' + new Date());
       });
     };
 
@@ -649,7 +646,7 @@
             case 'SELECT':
               $scope.alert = {
                 type : "success",
-                messages : [data.result.fetched + ' registro(s) encontrado(s)']
+                messages : [{ "Sucesso" :  data.result.fetched + ' registro(s) encontrado(s)' }]
               }
             break;
 
@@ -658,7 +655,7 @@
             case 'INSERT':
               $scope.alert = {
                 type : "success",
-                messages : [data.result.records + ' registro(s) afetados(s)']
+                messages : [{ "Sucesso" : data.result.records + ' registro(s) afetados(s)' }]
               }
               $scope.showResults = false;
             break;
@@ -667,7 +664,7 @@
             case 'DROP':
               $scope.alert = {
                 type : "success",
-                messages : ['Sucesso na operação']
+                messages : [{ "Sucesso": 'Sucesso na operação' }]
               }
               $scope.showResults = false;
             break;
@@ -682,7 +679,7 @@
           else if(err.status && err.status === 0)
             errors = ["Servidor indisponível"];
           else
-            errors = err.errors.base || err.errors.sql;
+            errors = err.errors;
 
           $scope.alert = {
             type : "danger",
