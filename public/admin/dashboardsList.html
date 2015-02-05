@@ -12,23 +12,13 @@
 
 <div class="row">
 
-  <div class="col-md-3">
-
-    <div class="widget blue hover" ng-click="loadDash(12)">
-      <h4 class="title">
-        Painel de Mecânica
-      </h4>
-      <h5></h5>
-    </div>
-  </div>
-
   <div class="col-md-3" ng-repeat="dash in dashboards">
 
     <div class="widget blue hover" ng-click="loadDash(dash.id)">
       <h4 class="title">
-        {{ dash.name }}
+        {{ ::dash.name }}
       </h4>
-      <h5>{{ dash.description }}</h5>
+      <h5>{{ ::dash.description }}</h5>
     </div>
 
   </div>

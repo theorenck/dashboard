@@ -309,6 +309,11 @@ pre
     background-color: #fff;
 }
 
+[data-type='pie'] .loader
+{
+    min-height: 400px;
+
+}
 
 [data-type='pie'] .loader p
 {

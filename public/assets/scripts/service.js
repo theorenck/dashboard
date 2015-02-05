@@ -9,7 +9,7 @@
 
       function($resource){
 
-        return $resource('http://:host/api/queries', { host : 'zetainfo.dyndns.info:3000' }, {
+        return $resource('http://:host/api/queries', { host : '127.0.0.1:3000' }, {
            'update': { method:'PUT' },
         });
       }
@@ -22,7 +22,7 @@
 
       function($resource){
 
-        return $resource('http://:host/api/aggretations', { host : 'zetainfo.dyndns.info:3000' }, {
+        return $resource('http://:host/api/aggretations', { host : '127.0.0.1:3000' }, {
            'update': { method:'PUT' },
         });
       }
@@ -34,7 +34,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/data_source_servers/:id', { host : 'zetainfo.dyndns.info:9000', id: '@data_source_server.id' }, {
+        return $resource('http://:host/api/data_source_servers/:id', { host : '127.0.0.1:9000', id: '@data_source_server.id' }, {
            'update': { method:'PUT' },
         });
       }
@@ -46,7 +46,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/sources/:id', { host : 'zetainfo.dyndns.info:9000', id: '@source.id' }, {
+        return $resource('http://:host/api/sources/:id', { host : '127.0.0.1:9000', id: '@source.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -58,7 +58,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/unities/:id', { host : 'zetainfo.dyndns.info:9000', id: '@unitiy.id' }, {
+        return $resource('http://:host/api/unities/:id', { host : '127.0.0.1:9000', id: '@unitiy.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -70,7 +70,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/authentications/:id', { host : 'zetainfo.dyndns.info:9000', id: '@authentication.id' }, {
+        return $resource('http://:host/api/authentications/:id', { host : '127.0.0.1:9000', id: '@authentication.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -82,7 +82,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/dashboards/:id', { host : 'zetainfo.dyndns.info:9000', id: '@dashboard.id' }, {
+        return $resource('http://:host/api/dashboards/:id', { host : '127.0.0.1:9000', id: '@dashboard.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -94,7 +94,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/indicators/:id', { host : 'zetainfo.dyndns.info:9000', id: '@indicator.id' }, {
+        return $resource('http://:host/api/indicators/:id', { host : '127.0.0.1:9000', id: '@indicator.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -106,7 +106,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/widgets/:id', { host : 'zetainfo.dyndns.info:9000', id: '@widget.id' }, {
+        return $resource('http://:host/api/widgets/:id', { host : '127.0.0.1:9000', id: '@widget.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -118,7 +118,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/users/:id', { host : 'zetainfo.dyndns.info:9000', id: '@user.id' }, {
+        return $resource('http://:host/api/users/:id', { host : '127.0.0.1:9000', id: '@user.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -130,7 +130,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/permissions/:id', { host : 'zetainfo.dyndns.info:9000', id: '@permission.id' }, {
+        return $resource('http://:host/api/permissions/:id', { host : '127.0.0.1:9000', id: '@permission.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -141,7 +141,7 @@
     'WidgetTypeService',
     ['$resource',
       function($resource){
-        return $resource('http://:host/api/widget_types/:id', { host : 'zetainfo.dyndns.info:9000', id: '@widget_types.id' }, {
+        return $resource('http://:host/api/widget_types/:id', { host : '127.0.0.1:9000', id: '@widget_types.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -152,7 +152,7 @@
     'SchemaService',
     ['$resource',
       function($resource){
-        return $resource('http://zetainfo.dyndns.info:3000/api/schema/');
+        return $resource('http://127.0.0.1:3000/api/schema/');
       }
     ]
   )
@@ -202,7 +202,7 @@
     'FunctionService',
     ['$resource',
       function($resource){
-        return $resource('http://zetainfo.dyndns.info:9000/api/functions');
+        return $resource('http://127.0.0.1:9000/api/functions');
       }
     ]
   )
