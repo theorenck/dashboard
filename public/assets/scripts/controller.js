@@ -622,6 +622,16 @@
         return;
       };
 
+
+      function prepareMessage(data, verbo){
+        if (data === 1)
+          return '01 registro ' + verbo;
+        else if (data === 0)
+          return 'Nenhum registro ' + verbo;
+        else if (data > 0)
+          return data + ' registros ' + verbo + 's' ;
+      }
+
       var data   = {"statement" : $scope.statement};
       var server = Configuration.statement_server;
       StatementService.execute(data, server)
@@ -641,12 +651,11 @@
             }
           }
 
-
           switch(getStatementType($scope.statement.sql)){
             case 'SELECT':
               $scope.alert = {
                 type : "success",
-                messages : [{ "Sucesso" :  data.result.fetched + ' registro(s) encontrado(s)' }]
+                messages : [{ "Sucesso" : prepareMessage(data.result.rows.length, 'encontrado') }]
               }
             break;
 
@@ -655,7 +664,7 @@
             case 'INSERT':
               $scope.alert = {
                 type : "success",
-                messages : [{ "Sucesso" : data.result.records + ' registro(s) afetados(s)' }]
+                messages : [{ "Sucesso" : prepareMessage(data.result.rows.length, 'afetado') }]
               }
               $scope.showResults = false;
             break;
