@@ -94,12 +94,12 @@
 
       .when('/origem/query/:id?', {
         controller: 'QueryCreateController',
-        templateUrl: '/admin/origem/createQuery.html'
+        templateUrl: '/admin/origem/create-query.html'
       })
 
       .when('/origem/aggregation/:id?', {
         controller: 'AggregationCreateController',
-        templateUrl: '/admin/origem/createAggregation.html'
+        templateUrl: '/admin/origem/create-aggregation.html'
       })
 
       .when('/permission', {

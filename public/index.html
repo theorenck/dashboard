@@ -3,15 +3,17 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <link rel="icon" href="/assets/images/online.png">
+  <link rel="icon" href="/assets/images/online.png" id="favicon">
   <title>Atlas Dashboard Admin</title>
+
   <link rel="stylesheet" href="/assets/css/bootstrap-flatly.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/plugins/daterangepicker/daterangepicker.css">
   <link rel="stylesheet" href="/assets/plugins/codemirror/codemirror.css">
   <link rel="stylesheet" href="/assets/css/application.css" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/font-awesome.min.css" rel="stylesheet">
 
   <base href="/" />
+
 </head>
 <body ng-controller="AppController">
 
@@ -19,7 +21,9 @@
   <div class="navbar navbar-default">
 
     <div class="navbar-header">
-      <a class="navbar-brand" href="/"><img src="/assets/images/brand.svg" alt=""></a>
+      <a class="navbar-brand" href="/">
+        <img src="/assets/images/brand.svg" alt="Logo Atlas">
+      </a>
 
       <button ng-if="isLoggedIn()===true" type="button" class="navbar-toggle" ng-click="toggleResponsiveMenu()">
         <span class="icon-bar"></span>
@@ -67,19 +71,25 @@
   <!-- SCRIPTS PARA O CONSOLE -->
   <script src="/assets/plugins/jquery/jquery.min.js"></script>
   <script src="/assets/plugins/bootstrap/bootstrap.min.js"></script>
+
   <script src="/assets/plugins/lodash/lodash.min.js"></script>
+
   <script src="/assets/plugins/codemirror/codemirror.js"></script>
   <script src="/assets/plugins/codemirror/codemirror-sql.js"></script>
   <script src="/assets/plugins/codemirror/show-hint.js"></script>
   <script src="/assets/plugins/codemirror/sql-hint.js"></script>
+
   <script src="/assets/plugins/highstock/highstock.js"></script>
+
   <script src="/assets/plugins/moment/moment-with-locales.js"></script>
+
   <script src="/assets/plugins/floatThead/jquery.floatThead-slim.min.js"></script>
+
   <script src="/assets/scripts/helpers/number_helpers.js"></script>
+
   <script src="/assets/plugins/daterangepicker/daterangepicker.js"></script>
 
   <script src="/configuration.js"></script>
-  <script src="/assets/scripts/console.js"></script>
   <!-- / SCRIPTS PARA O CONSOLE -->
 
   <!-- REACT.JS -->

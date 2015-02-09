@@ -481,6 +481,7 @@
 
   ConsoleController.$inject = ['$scope', '$location', '$anchorScroll', 'StatementService', 'SchemaService', 'HistoryService', 'DataSourceService', 'zCodeMirror', '$modal'];
   function ConsoleController($scope, $location, $anchorScroll, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror, $modal){
+
     var allData = [];
     $scope.showAdvancedOptions   = true;
     $scope.showResults           = false;
@@ -634,6 +635,7 @@
 
       var data   = {"statement" : $scope.statement};
       var server = Configuration.statement_server;
+
       StatementService.execute(data, server)
         .success(function(data){
           $scope.saveHistory();
@@ -754,14 +756,13 @@
     $scope.renderHistory();
   }
 
-  DashboardsController.$inject = ['$scope', '$location', 'DashboardService'];
-  function DashboardsController($scope, $location, DashboardService){
+  DashboardsController.$inject = ['$scope', '$location', 'DashboardService', 'QueryService'];
+  function DashboardsController($scope, $location, DashboardService, QueryService){
     $scope.dashboards = [];
 
     DashboardService.get(function(data){
       $scope.dashboards = data.dashboards;
     });
-
 
     $scope.loadDash = function(id){
       $location.path('/dashboards/' + id);
@@ -1326,8 +1327,8 @@
     $scope.getHost = function(){
       var re  = new RegExp('https?://(.*:[0-9]{4})', 'i');
       var url = $scope.dataSourceServer.url;
-      var x   = url.match(re);
-      return x[1];
+      // var x   = url.match(re);
+      return url;
     };
 
     $scope.loadWidgets = function(){
@@ -1337,6 +1338,7 @@
         widget.loading = true;
 
         SourceService.get({ id : widget.indicator.source_id }, function(data){
+
           var Service    = data.query.type === 'Query' ? QueryService : AggregationService;
           var parameters = data.query.type === 'Query' ? data.query.parameters : data.aggregation.parameters;
 
@@ -1347,7 +1349,8 @@
             };
           });
 
-          Service.save({ host : $scope.getHost() }, data, function(data){
+
+          Service.post(data, $scope.getHost(), function(data){
             var type = widget.widget_type.name;
 
             switch(type){

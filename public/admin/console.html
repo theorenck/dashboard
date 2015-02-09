@@ -93,7 +93,17 @@
           </div>
         </form>
       </div>
+
+
+
     </div>
+
+
+    <button type="button" scroll-position="scroll" ng-show="scroll > 700" class="btn btn-info btn-scroll-top" ng-click="scrollTop()">
+      <span class="fa fa-caret-up"></span>
+      &nbsp;
+      Voltar ao topo
+    </button>
 
     <!-- RESULTADOS -->
     <div class="row" ng-show="showResults">
@@ -105,12 +115,6 @@
             </div>
           </div>
         </div>
-
-        <button scroll-position="scroll" ng-show="scroll > 700" class="btn btn-info btn-scroll-top" ng-click="scrollTop()">
-          <span class="fa fa-caret-up"></span>
-          &nbsp;
-          Voltar ao topo
-        </button>
 
         <div class="col-md-12" ng-show="result.records > result.rows.length">
           <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>

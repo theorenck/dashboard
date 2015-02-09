@@ -3,32 +3,107 @@
 
   angular.module('Atlas')
 
+  .service('zHttp',
+    ['$http',
+
+      function($http){
+
+        var http = {
+
+          url : '',
+
+          req : {
+            method: 'GET',
+            url: 'http://localhost:3000',
+            data: {},
+          },
+
+          setParams : function(method, data, server){
+            if(typeof method !== "undefined")
+              this.setMethod(method);
+
+            if(typeof data !== "undefined")
+              this.setData(data);
+
+            if(typeof server !== "undefined")
+              this.setServer(server);
+          },
+
+          setMethod : function(method){
+            this.req.method = method;
+          },
+
+          get : function(data, server){
+            var self = this;
+            self.setParams('GET', data, server);
+            return $http(self.req);
+          },
+
+          post : function(data, server, callback){
+            var self = this;
+            self.setParams('POST', data, server);
+            return $http(self.req)
+              .success(callback);
+          },
+
+          setServer : function(server){
+            var self = this;
+            server   = server.substr(-1) !== '/' ? server : server.substr(0, server.length - 1);
+
+            // Valida se está sendo passado um ID para atualização ou busca pela URL
+            if(typeof self.req.data.id !== "undefined")
+              self.url += '/' + self.req.data.id;
+
+            $.extend(self.req, { "url" : server + self.url });
+          },
+
+          setData : function(data){
+            var self = this;
+            $.extend(self.req, { "data" : data });
+          }
+        }
+
+        return http;
+      }
+    ]
+  )
+
+  /**
+   * MIDDLEWARE
+   */
   .factory(
     'QueryService',
-    ['$resource',
+    ['zHttp',
 
-      function($resource){
+      function(zHttp){
+        var x = Object.create(zHttp);
+        x.url = '/api/queries';
+        return x;
 
-        return $resource('http://:host/api/queries', { host : '127.0.0.1:3000' }, {
-           'update': { method:'PUT' },
-        });
       }
     ]
   )
 
+  /**
+   * MIDDLEWARE
+   */
   .factory(
     'AggregationService',
-    ['$resource',
+    ['zHttp',
 
-      function($resource){
+      function(zHttp){
+        var x = Object.create(zHttp);
 
-        return $resource('http://:host/api/aggretations', { host : '127.0.0.1:3000' }, {
-           'update': { method:'PUT' },
-        });
+        x.url = '/api/aggretations';
+        return x;
+
       }
     ]
   )
 
+  /**
+   * BUSSINES
+   */
   .factory(
     'DataSourceService',
     ['$resource',
@@ -41,6 +116,9 @@
     ]
   )
 
+  /**
+   * BUSSINES
+   */
   .factory(
     'SourceService',
     ['$resource',
@@ -53,6 +131,9 @@
     ]
   )
 
+  /**
+   * BUSSINES
+   */
   .factory(
     'UnityService',
     ['$resource',
@@ -65,6 +146,9 @@
     ]
   )
 
+  /**
+   * BUSSINES
+   */
   .factory(
     'AuthService',
     ['$resource',
@@ -77,6 +161,9 @@
     ]
   )
 
+  /**
+   * BUSSINES
+   */
   .factory(
     'DashboardService',
     ['$resource',
@@ -89,6 +176,9 @@
     ]
   )
 
+  /**
+   * BUSSINES
+   */
   .factory(
     'IndicatorService',
     ['$resource',
@@ -101,6 +191,9 @@
     ]
   )
 
+  /**
+   * BUSSINES
+   */
   .factory(
     'WidgetService',
     ['$resource',
@@ -113,6 +206,9 @@
     ]
   )
 
+  /**
+   * BUSSINES
+   */
   .factory(
     'UserService',
     ['$resource',
@@ -125,6 +221,9 @@
     ]
   )
 
+  /**
+   * BUSSINES
+   */
   .factory(
     'PermissionService',
     ['$resource',
@@ -137,6 +236,9 @@
     ]
   )
 
+  /**
+   * BUSSINES
+   */
   .factory(
     'WidgetTypeService',
     ['$resource',
@@ -148,6 +250,9 @@
     ]
   )
 
+  /**
+   * MIDDLEWARE - dinamico
+   */
   .factory(
     'SchemaService',
     ['$resource',
@@ -157,10 +262,13 @@
     ]
   )
 
+  /**
+   * MIDDLEWARE
+   */
   .factory(
     'StatementService',
-    [
-      '$http',
+    ['$http',
+
       function($http){
 
         var Statement = {
@@ -177,19 +285,22 @@
            * @param  {[type]} server Servidor a ser conectado
            * @return {[type]}        promisse
            */
-          execute : function(data, server){
-            Statement.setServer(server);
-            Statement.setData(data);
+          execute : function(data, server, callback){
+            var self = this;
+            self.setServer(server);
+            self.setData(data);
 
-            return $http(Statement.req);
+            return $http(self.req);
           },
 
           setServer : function(server){
-            $.extend(Statement.req, { "url" : server + '/api/statements' });
+            var self = this;
+            $.extend(self.req, { "url" : server + '/api/statements' });
           },
 
           setData : function(data){
-            $.extend(Statement.req, { "data" : data });
+            var self = this;
+            $.extend(self.req, { "data" : data });
           }
         }
 
@@ -198,6 +309,9 @@
     ]
   )
 
+  /**
+   * BUSSINES
+   */
   .factory(
     'FunctionService',
     ['$resource',
@@ -278,63 +392,6 @@
       };
 
       return History;
-    }
-  )
-
-  .factory(
-    'zCodeMirror',
-    function(){
-
-      var zCodeMirror = {};
-
-      zCodeMirror.initialize = function($scope){
-        return {
-          lineNumbers: true,
-          extraKeys: {
-            "Ctrl-Space": "autocomplete",
-            "F8" : function(){
-              $scope.executeQuery();
-            },
-            "Ctrl-S" : function(){
-              $scope.saveHistory();
-            },
-            "Ctrl-Enter" : function(e){
-              $scope.executeQuery();
-            },
-            "Ctrl-L" : function(e){
-              function autoFormat() {
-                  var sql = e.doc.getValue();
-                  $.ajax({
-                      url: 'http://sqlformat.org/api/v1/format',
-                      type: 'POST',
-                      dataType: 'json',
-                      crossDomain: true,
-                      data: {sql: sql, reindent: 1},
-                      success: function(data){
-                        e.doc.setValue(data['result']);
-                      },
-                  });
-              }
-              autoFormat();
-            }
-          },
-          tabSize : 2,
-          tabMode : "spaces",
-          styleActiveLine: false,
-          matchBrackets: true,
-          mode : 'text/x-sql',
-          viewportMargin: Infinity
-        };
-      };
-
-      zCodeMirror.setHints = function(instance, tables){
-        var tables = tables ? tables : JSON.parse(localStorage.getItem("tables"));
-        return instance.setOption("hintOptions",{
-            tables: tables
-        });
-      };
-
-      return zCodeMirror;
     }
   )
 

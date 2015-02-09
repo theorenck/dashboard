@@ -337,4 +337,61 @@
       }
     }
   }])
+
+  .factory(
+    'zCodeMirror',
+    function(){
+
+      var zCodeMirror = {};
+
+      zCodeMirror.initialize = function($scope){
+        return {
+          lineNumbers: true,
+          extraKeys: {
+            "Ctrl-Space": "autocomplete",
+            "F8" : function(){
+              $scope.executeQuery();
+            },
+            "Ctrl-S" : function(){
+              $scope.saveHistory();
+            },
+            "Ctrl-Enter" : function(e){
+              $scope.executeQuery();
+            },
+            "Ctrl-L" : function(e){
+              function autoFormat() {
+                  var sql = e.doc.getValue();
+                  $.ajax({
+                      url: 'http://sqlformat.org/api/v1/format',
+                      type: 'POST',
+                      dataType: 'json',
+                      crossDomain: true,
+                      data: {sql: sql, reindent: 1},
+                      success: function(data){
+                        e.doc.setValue(data['result']);
+                      },
+                  });
+              }
+              autoFormat();
+            }
+          },
+          tabSize : 2,
+          tabMode : "spaces",
+          styleActiveLine: false,
+          matchBrackets: true,
+          mode : 'text/x-sql',
+          viewportMargin: Infinity
+        };
+      };
+
+      zCodeMirror.setHints = function(instance, tables){
+        var tables = tables ? tables : JSON.parse(localStorage.getItem("tables"));
+        return instance.setOption("hintOptions",{
+            tables: tables
+        });
+      };
+
+      return zCodeMirror;
+    }
+  )
 })();
