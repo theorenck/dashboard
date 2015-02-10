@@ -50,8 +50,8 @@
             <span ng-if="source.type=='Query'" class="label-success label">consulta</span>
             <span ng-if="source.type=='Aggregation'" class="label-info label">agregação</span>
           </td>
-          <td>{{ source.name }}</td>
-          <td>{{ source.description }}</td>
+          <td>{{ ::source.name }}</td>
+          <td>{{ ::source.description }}</td>
           <td class="text-center no-padding">
             <a href="#" ng-click="deleteQuery(source.id, $index, $event); $event.stopPropagation();" class="btn-remove"><i class="fa fa-close"></i></a>
           </td>

@@ -158,6 +158,18 @@
       templateUrl: '/assets/templates/zAlertbox.html',
       link: function($scope, iElm, iAttrs, controller) {
 
+        // $scope.$watch('alert', function(oldValue, newValue){
+
+        //   if (typeof newValue.messages === 'object') {
+        //     $scope.alert = [];
+        //     for(var m in newValue.messages){
+        //       $scope.alert[m] = newValue.messages[m];
+        //     };
+        //   };
+
+        //   console.log(newValue);
+        // });
+
         $scope.clearMessages = function(){
           $scope.alert = {
             'type' : '',

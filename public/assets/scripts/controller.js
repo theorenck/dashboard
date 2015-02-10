@@ -479,8 +479,8 @@
     };
   }
 
-  ConsoleController.$inject = ['$scope', '$location', '$anchorScroll', 'StatementService', 'SchemaService', 'HistoryService', 'DataSourceService', 'zCodeMirror', '$modal'];
-  function ConsoleController($scope, $location, $anchorScroll, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror, $modal){
+  ConsoleController.$inject = ['$scope', '$location', '$anchorScroll', 'StatementService', 'SchemaService', 'HistoryService', 'DataSourceService', 'zCodeMirror', '$modal', 'zErrors'];
+  function ConsoleController($scope, $location, $anchorScroll, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror, $modal, zErrors){
 
     var allData = [];
     $scope.showAdvancedOptions   = true;
@@ -657,7 +657,7 @@
             case 'SELECT':
               $scope.alert = {
                 type : "success",
-                messages : [{ "Sucesso" : prepareMessage(data.result.rows.length, 'encontrado') }]
+                messages : [prepareMessage(data.result.rows.length, 'encontrado')]
               }
             break;
 
@@ -666,7 +666,7 @@
             case 'INSERT':
               $scope.alert = {
                 type : "success",
-                messages : [{ "Sucesso" : prepareMessage(data.result.rows.length, 'afetado') }]
+                messages : [prepareMessage(data.result.records, 'afetado')]
               }
               $scope.showResults = false;
             break;
@@ -675,26 +675,19 @@
             case 'DROP':
               $scope.alert = {
                 type : "success",
-                messages : [{ "Sucesso": 'Sucesso na operação' }]
+                messages : ['Sucesso na operação']
               }
               $scope.showResults = false;
             break;
           }
         })
         .error(function(err){
-          var errors;
+          var messages;
           $scope.isExecuting = false;
 
-          if (err.status && err.status === 500)
-            errors = [err.statusText];
-          else if(err.status && err.status === 0)
-            errors = ["Servidor indisponível"];
-          else
-            errors = err.errors;
-
           $scope.alert = {
-            type : "danger",
-            messages : errors
+            "type" : "danger",
+            "messages" : zErrors.handling(err)
           }
         });
 
@@ -773,9 +766,11 @@
   function OrigemIndexController($scope, $location, SourceService){
     $scope.queriesList = [];
 
-    SourceService.get(function(data){
-      $scope.queriesList = data.sources;
-    });
+    $scope.renderList = function(){
+      SourceService.get(function(data){
+        $scope.queriesList = data.sources;
+      });
+    }
 
     $scope.loadSource = function(type, id){
       var type = type.toLowerCase();
@@ -784,10 +779,15 @@
 
     $scope.deleteQuery = function(id, $index, $event){
       $event.preventDefault();
+      var data = { "id" : id };
       if (window.confirm('Deseja deletar esse registro?')) {
-        /* @todo: Deletar registro */
-      };
+        SourceService.remove(data, function(data){
+          $scope.renderList();
+        });
+      }
     }
+
+    $scope.renderList();
   }
 
   QueryCreateController.$inject = ['$scope', '$routeParams', '$location', 'SourceService', 'zCodeMirror'];

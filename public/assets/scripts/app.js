@@ -157,6 +157,28 @@
       };
     })
 
+    .factory("zErrors", function(){
+      return {
+        handling: function(err){
+          var messages = [];
+
+          // handling error status
+          if(err === null)
+            messages = ["Conexão recusada"];
+          else if (err.status && err.status === 500)
+            messages = [err.statusText];
+          else if(err.status && err.status === 0)
+            messages = ["Servidor indisponível"];
+          else{
+            for(var index in err.errors) {
+              messages.push(index + ': ' + err.errors[index]);
+            }
+          }
+
+          return messages;
+        }
+      };
+    })
     .filter('fromNow', function() {
       return function(date) {
         return moment(date).fromNow();

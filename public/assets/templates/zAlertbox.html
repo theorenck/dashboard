@@ -3,10 +3,7 @@
     <span aria-hidden="true">×</span>
   </button>
 
-
   <p ng-repeat="msg in alert.messages">
-    <span ng-repeat="(key, value) in msg">
-      <strong>{{ key }}: </strong> {{ value }}
-    </span>
+    {{ ::msg }}
   </p>
 </div>
