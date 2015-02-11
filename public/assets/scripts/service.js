@@ -109,7 +109,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/data_source_servers/:id', { host : '127.0.0.1:9000', id: '@data_source_server.id' }, {
+        return $resource( Configuration.business_server + '/api/data_source_servers/:id', { id: '@data_source_server.id' }, {
            'update': { method:'PUT' },
         });
       }
@@ -124,7 +124,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/sources/:id', { host : '127.0.0.1:9000', id: '@source.id' }, {
+        return $resource( Configuration.business_server + '/api/sources/:id', { id: '@source.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -139,7 +139,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/unities/:id', { host : '127.0.0.1:9000', id: '@unitiy.id' }, {
+        return $resource( Configuration.business_server + '/api/unities/:id', { id: '@unitiy.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -154,7 +154,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/authentications/:id', { host : '127.0.0.1:9000', id: '@authentication.id' }, {
+        return $resource( Configuration.business_server + '/api/authentications/:id', { id: '@authentication.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -169,7 +169,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/dashboards/:id', { host : '127.0.0.1:9000', id: '@dashboard.id' }, {
+        return $resource( Configuration.business_server + '/api/dashboards/:id', { id: '@dashboard.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -184,7 +184,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/indicators/:id', { host : '127.0.0.1:9000', id: '@indicator.id' }, {
+        return $resource( Configuration.business_server + '/api/indicators/:id', { id: '@indicator.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -199,7 +199,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/widgets/:id', { host : '127.0.0.1:9000', id: '@widget.id' }, {
+        return $resource( Configuration.business_server + '/api/widgets/:id', { id: '@widget.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -214,7 +214,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/users/:id', { host : '127.0.0.1:9000', id: '@user.id' }, {
+        return $resource( Configuration.business_server + '/api/users/:id', { id: '@user.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -229,7 +229,7 @@
     ['$resource',
 
       function($resource){
-        return $resource('http://:host/api/permissions/:id', { host : '127.0.0.1:9000', id: '@permission.id' }, {
+        return $resource( Configuration.business_server + '/api/permissions/:id', { id: '@permission.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -243,7 +243,7 @@
     'WidgetTypeService',
     ['$resource',
       function($resource){
-        return $resource('http://:host/api/widget_types/:id', { host : '127.0.0.1:9000', id: '@widget_types.id' }, {
+        return $resource( Configuration.business_server + '/api/widget_types/:id', { id: '@widget_types.id' }, {
            'update': { method:'PUT' }
         });
       }
@@ -316,7 +316,7 @@
     'FunctionService',
     ['$resource',
       function($resource){
-        return $resource('http://127.0.0.1:9000/api/functions');
+        return $resource(Configuration.business_server + '/api/functions');
       }
     ]
   )

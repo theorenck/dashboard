@@ -4,6 +4,8 @@ var Configuration = {
 
   "statement_server" : null,
 
+  "business_server" : null,
+
   "api" : {
     "address" : "http://localhost:3000/api"
   },

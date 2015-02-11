@@ -34,8 +34,8 @@
     .controller('DashboardFakeDetailController', DashboardFakeDetailController);
 
 
-  AppController.$inject = ["$scope", '$rootScope', '$location', "AuthService"];
-  function AppController($scope, $rootScope, $location, AuthService){
+  AppController.$inject = ["$scope", '$rootScope', '$location', "AuthService", 'zErrors'];
+  function AppController($scope, $rootScope, $location, AuthService, zErrors){
     $scope.credentials = { username : '', password : ''};
     $scope.open = false;
     $scope.showResponsiveMenu = true;
@@ -51,17 +51,9 @@
     }
 
     function errorHandler(err){
-      var errors;
-      if (err.status && (err.status === 500 || err.status === 400))
-        errors = [{ "erro" : err.statusText }]
-      else if(err.status && err.status === 0)
-        errors = [{ "erro" : "Servidor indisponível" }]
-      else
-        errors = err.errors
-
       $scope.alert = {
         type : "danger",
-        messages : errors
+        messages : zErrors.handling(err)
       }
     }
 
@@ -90,7 +82,7 @@
       }else{
         $scope.alert = {
           type : "warning",
-          messages : [{ "Erro" : 'Desculpe, mas usuário e senha devem ser preenchidos' }]
+          messages : ['Desculpe, mas usuário e senha devem ser preenchidos']
         }
       }
     };
