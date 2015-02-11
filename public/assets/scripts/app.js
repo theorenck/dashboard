@@ -165,9 +165,9 @@
           // handling error status
           if(err === null)
             messages = ["Conexão recusada"];
-          else if (err.status && err.status === 500)
+          else if (err.status !== 'undefined' && err.status === 500)
             messages = [err.statusText];
-          else if(err.status && err.status === 0)
+          else if(err.status !== 'undefined' && err.status === 0)
             messages = ["Servidor indisponível"];
           else{
             for(var index in err.errors) {

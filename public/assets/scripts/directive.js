@@ -7,9 +7,11 @@
     return {
       require: 'ngModel',
       link: function(scope, ele, attr, ctrl){
+
         ctrl.$parsers.unshift(function(viewValue){
           return parseInt(viewValue, 10);
         });
+
       }
     };
   })
@@ -148,39 +150,6 @@
     };
   })
 
-  .directive('zAlertbox', [function(){
-    return {
-      scope: {
-        'alert' : '=ngModel'
-      },
-      require: 'ngModel',
-      restrict: 'EA',
-      templateUrl: '/assets/templates/zAlertbox.html',
-      link: function($scope, iElm, iAttrs, controller) {
-
-        // $scope.$watch('alert', function(oldValue, newValue){
-
-        //   if (typeof newValue.messages === 'object') {
-        //     $scope.alert = [];
-        //     for(var m in newValue.messages){
-        //       $scope.alert[m] = newValue.messages[m];
-        //     };
-        //   };
-
-        //   console.log(newValue);
-        // });
-
-        $scope.clearMessages = function(){
-          $scope.alert = {
-            'type' : '',
-            'messages' : []
-          };
-        }
-
-      }
-    };
-  }])
-
   .directive('zFloatthead', ['$timeout', function($timeout){
     return {
       scope: {
@@ -192,7 +161,6 @@
       link: function($scope, iElm, iAttrs, controller) {
 
         function loadFloatThead(){
-          console.log('oi');
           $table = iElm.find('.floatThead');
           $table.floatThead('destroy');
           $timeout(function(){
@@ -204,16 +172,11 @@
           }, 500);
         }
 
-       // iElm.on('$destroy', function() {
-       //   $table.floatThead('destroy');
-       // });
-
         $scope.$watch('results', function(value){
           var records = value.records || 0;
           if(records > 0)
            loadFloatThead();
         });
-
 
       }
     };
@@ -406,4 +369,25 @@
       return zCodeMirror;
     }
   )
+
+  .directive('zAlertbox', [function(){
+    return {
+      scope: {
+        'alert' : '=ngModel'
+      },
+      require: 'ngModel',
+      restrict: 'EA',
+      templateUrl: '/assets/templates/zAlertbox.html',
+      link: function($scope, iElm, iAttrs, controller) {
+
+        $scope.clearMessages = function(){
+          $scope.alert = {
+            'type' : '',
+            'messages' : []
+          };
+        }
+
+      }
+    };
+  }])
 })();

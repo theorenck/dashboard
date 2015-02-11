@@ -507,8 +507,6 @@
       $anchorScroll();
     }
 
-
-
     $scope.open = function (size) {
       var modalInstance = $modal.open({
         templateUrl: 'myModalContent.html',
@@ -833,7 +831,6 @@
           $location.path('/origem/');
         });
       }
-
     };
 
     $scope.validateParams = function(){
@@ -923,8 +920,6 @@
       $scope.aggregation.sources.splice(key,1);
     }
 
-
-
     $scope.save = function(){
       $scope.aggregation.type = "Aggregation";
 
@@ -954,27 +949,33 @@
     }
   }
 
-  DashboardDetailController.$inject = ['$scope', '$routeParams', '$interval', 'DashboardService', 'SourceService', 'QueryService', 'AggregationService'];
-  function DashboardDetailController($scope, $routeParams, $interval,  DashboardService, SourceService, QueryService, AggregationService){
+  DashboardDetailController.$inject = ['$scope', '$routeParams', '$interval', 'DashboardService', 'SourceService', 'QueryService', 'AggregationService', 'zErrors'];
+  function DashboardDetailController($scope, $routeParams, $interval,  DashboardService, SourceService, QueryService, AggregationService, zErrors){
     $scope.dashboard        = {};
     $scope.sourceList       = [];
     $scope.dataSourceServer = {};
     $scope.activeDataSourceServer;
+    $scope.alert = {};
+    loadDashboard();
 
-    DashboardService.get({ id : $routeParams.id }, function(data){
-      $scope.dashboard        = data.dashboard;
-      $scope.dataSourceServer = data.dashboard.data_source_servers[0];
+    function loadDashboard(){
+      DashboardService.get({ id : $routeParams.id }, function(data){
+        $scope.dashboard        = data.dashboard;
+        $scope.dataSourceServer = data.dashboard.data_source_servers[0];
 
-      if ($scope.dataSourceServer) {
-        $scope.activeDataSourceServer = $scope.dataSourceServer.id;
-        $scope.loadWidgets();
-      };
+        if ($scope.dataSourceServer) {
+          $scope.activeDataSourceServer = $scope.dataSourceServer.id;
+          $scope.loadWidgets();
+        };
 
-    });
-
-    // $interval(function(){
-    //   $scope.loadWidgets();
-    // }, Configuration.time_to_refresh);
+      }, function(err){
+        $scope.alert = {
+          "type" : "danger",
+          "messages" : zErrors.handling(err)
+        }
+        $scope.isLoadingWidgets = false;
+      });
+    }
 
     $scope.getStatus = function(result, widget){
       widget.full_result = result;
@@ -1057,7 +1058,7 @@
         $('[data-behaivor="widget"][data-id=' + widget.id + '] .content').highcharts().destroy();
         $(document).off('click', '[data-resetbutton]');
       }catch(err){
-        console.log(err.message);
+        // não conseguiu destroir
       }
 
       function grafico(valores) {
@@ -1332,44 +1333,49 @@
     };
 
     $scope.loadWidgets = function(){
-      var widgetsLoaded = 0;
       $scope.isLoadingWidgets = true;
-      $scope.dashboard.widgets.forEach(function(widget, index){
-        widget.loading = true;
+      if (Object.keys($scope.dashboard).length === 0) {
+        loadDashboard();
+      }
+      else{
+        var widgetsLoaded = 0;
+        $scope.dashboard.widgets.forEach(function(widget, index){
+          widget.loading = true;
 
-        SourceService.get({ id : widget.indicator.source_id }, function(data){
+          SourceService.get({ id : widget.indicator.source_id }, function(data){
+            $scope.alert   = {};
+            var Service    = data.query.type === 'Query' ? QueryService : AggregationService;
+            var parameters = data.query.type === 'Query' ? data.query.parameters : data.aggregation.parameters;
 
-          var Service    = data.query.type === 'Query' ? QueryService : AggregationService;
-          var parameters = data.query.type === 'Query' ? data.query.parameters : data.aggregation.parameters;
-
-          // Verifica todos os parâmetros de inicio e fim que sejam nulos e seta os valores do dash
-          _.each(parameters,function(el, index) {
-            if ( el.value === null && (el.name === 'inicio' || el.name === 'fim')){
-              parameters[index].value = (el.name === 'inicio') ? $scope.indicadores.periodo.inicio : $scope.indicadores.periodo.fim;
-            };
-          });
+            // Verifica todos os parâmetros de inicio e fim que sejam nulos e seta os valores do dash
+            _.each(parameters,function(el, index) {
+              if ( el.value === null && (el.name === 'inicio' || el.name === 'fim')){
+                parameters[index].value = (el.name === 'inicio') ? $scope.indicadores.periodo.inicio : $scope.indicadores.periodo.fim;
+              };
+            });
 
 
-          Service.post(data, $scope.getHost(), function(data){
-            var type = widget.widget_type.name;
+            Service.post(data, $scope.getHost(), function(data){
+              var type = widget.widget_type.name;
 
-            switch(type){
-              case 'status':
-                $scope.getStatus(data.result.rows[0][0], widget);
-              break;
-              case 'line':
-                $scope.getGraph(widget, data);
-              break;
-              case 'pie':
-                $scope.getPie(widget, data);
-              break;
-            };
-            widget.loading = false;
-            widgetsLoaded++;
-            $scope.isLoadingWidgets = $scope.dashboard.widgets.length == widgetsLoaded ? false : true;
+              switch(type){
+                case 'status':
+                  $scope.getStatus(data.result.rows[0][0], widget);
+                break;
+                case 'line':
+                  $scope.getGraph(widget, data);
+                break;
+                case 'pie':
+                  $scope.getPie(widget, data);
+                break;
+              };
+              widget.loading = false;
+              widgetsLoaded++;
+              $scope.isLoadingWidgets = $scope.dashboard.widgets.length == widgetsLoaded ? false : true;
+            });
           });
         });
-      });
+      }
     };
 
     $scope.indicadores = {
