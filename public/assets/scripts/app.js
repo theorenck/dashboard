@@ -1,6 +1,13 @@
 (function(){
   'use strict';
 
+  try{
+    if(typeof Configuration.business_server === 'undefined' || Configuration.business_server === null)
+      alert('Por favor verifique seu arquivo de configuração, parece estar faltando alguns dados');
+  }catch(Exception){
+    console.log(Exception);
+  }
+
   angular
     .module('Atlas'
       , [
