@@ -5,10 +5,7 @@ require 'sinatra'
 class Main < Sinatra::Base
 
   set :public_folder, File.dirname(__FILE__) + '/public'
-
-  # before do
-  #   expires 500, :public, :must_revalidate
-  # end
+  set :static_cache_control, [:public, :must_revalidate, :max_age => 3600]
 
   get '/*' do
     send_file 'public/index.html'

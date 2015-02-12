@@ -42,12 +42,11 @@
                 <ul class="dropdown-menu" style="min-width:300px">
                   <li class="dropdown-header hidden-xs">Configurações</li>
                   <li style="padding:10px;">
-                    <label for="">Fonte de Dados</label>
+                    <label>Fonte de Dados</label>
                     <select class="form-control input-sm"
                       ng-model="activeDataSourceServer"
                       ng-options="source.id as source.name for source in dashboard.data_source_servers"
                       ng-change="setActiveDataSourceServer()">
-                      <option value="">Fonte de dados</option>
                     </select>
                   </li>
                 </ul>
@@ -56,21 +55,12 @@
           </div>
         </div>
 
-       <!--  <div class="row toolbar no-pad" id="reportrange" tooltip="Clique aqui para alterar o período" tooltip-placement="top">
-
-          <div class="col-md-10 col-xs-10">
-
-          </div>
-
-        </div> -->
-
       </div>
     </div>
     <!-- Fim Daterangepicker -->
 
-
     <div class="row">
-      <div class="area indicadores-container" data-behaivor="widgets-container">
+      <div class="area indicators-container" data-behaivor="widgets-container">
         <div ng-repeat="widget in dashboard.widgets">
           <z-widget-status ng-if="widget.widget_type.name=='status'"></z-widget-status>
           <z-widget-line   ng-if="widget.widget_type.name=='line'"></z-widget-line>
@@ -79,9 +69,4 @@
       </div>
     </div>
 
-
   </div>
-
-
-<!-- <pre><code>{{ sourceList | json }}</code></pre> -->
-<!-- <pre><code>{{ dashboard.widgets | json }}</code></pre> -->

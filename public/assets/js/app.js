@@ -51,97 +51,97 @@
 
       .when('/data-source-server', {
         controller: 'DataSourceIndexController',
-        templateUrl: '/admin/data-source-server/index.html'
+        templateUrl: '/templates/data-source-server/index.html'
       })
 
       .when('/data-source-server/:action/:id?', {
         controller: 'DataSourceCreateController',
-        templateUrl: '/admin/data-source-server/create.html'
+        templateUrl: '/templates/data-source-server/create.html'
       })
 
       .when('/dashboard', {
         controller: 'DashboardIndexController',
-        templateUrl: '/admin/dashboard/index.html'
+        templateUrl: '/templates/dashboard/index.html'
       })
 
       .when('/dashboard/:action/:id?', {
         controller: 'DashboardCreateController',
-        templateUrl: '/admin/dashboard/create.html'
+        templateUrl: '/templates/dashboard/create.html'
       })
 
       .when('/dashboards', {
         controller: 'DashboardsController',
-        templateUrl: '/admin/dashboardsList.html'
+        templateUrl: '/templates/dashboard-detail/dashboardsList.html'
       })
 
       .when('/dashboards/12', {
         controller: 'DashboardFakeDetailController',
-        templateUrl: '/admin/dashboardFakeDetail.html'
+        templateUrl: '/templates/dashboard-detail/dashboardFakeDetail.html'
       })
 
       .when('/dashboards/:id', {
         controller: 'DashboardDetailController',
-        templateUrl: '/admin/dashboardDetail.html'
+        templateUrl: '/templates/dashboard-detail/dashboardDetail.html'
       })
 
       .when('/indicator', {
         controller: 'IndicatorIndexController',
-        templateUrl: '/admin/indicator/index.html'
+        templateUrl: '/templates/indicator/index.html'
       })
 
       .when('/indicator/:action/:id?', {
         controller: 'IndicatorCreateController',
-        templateUrl: '/admin/indicator/create.html'
+        templateUrl: '/templates/indicator/create.html'
       })
 
       .when('/origem', {
         controller : 'OrigemIndexController',
-        templateUrl: '/admin/origem/index.html'
+        templateUrl: '/templates/origem/index.html'
       })
 
       .when('/origem/query/:id?', {
         controller: 'QueryCreateController',
-        templateUrl: '/admin/origem/create-query.html'
+        templateUrl: '/templates/origem/create-query.html'
       })
 
       .when('/origem/aggregation/:id?', {
         controller: 'AggregationCreateController',
-        templateUrl: '/admin/origem/create-aggregation.html'
+        templateUrl: '/templates/origem/create-aggregation.html'
       })
 
       .when('/permission', {
         controller: 'PermissionIndexController',
-        templateUrl: '/admin/permission/index.html'
+        templateUrl: '/templates/permission/index.html'
       })
 
       .when('/permission/:action/:id?', {
         controller: 'PermissionCreateController',
-        templateUrl: '/admin/permission/create.html'
+        templateUrl: '/templates/permission/create.html'
       })
 
       .when('/widget', {
         controller: 'WidgetIndexController',
-        templateUrl: '/admin/widget/index.html'
+        templateUrl: '/templates/widget/index.html'
       })
 
       .when('/widget/:action/:id?', {
         controller: 'WidgetCreateController',
-        templateUrl: '/admin/widget/create.html'
+        templateUrl: '/templates/widget/create.html'
       })
 
       .when('/user', {
         controller: 'UserIndexController',
-        templateUrl: '/admin/user/index.html'
+        templateUrl: '/templates/user/index.html'
       })
 
       .when('/user/:action/:id?', {
         controller: 'UserCreateController',
-        templateUrl: '/admin/user/create.html'
+        templateUrl: '/templates/user/create.html'
       })
 
       .when('/console', {
         controller: 'ConsoleController',
-        templateUrl: '/admin/console.html'
+        templateUrl: '/templates/console/console.html'
       })
 
       .otherwise({

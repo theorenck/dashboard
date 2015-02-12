@@ -67,7 +67,7 @@
   .directive('zExecutions', function() {
     return {
       restrict: 'E',
-      templateUrl: '/admin/origem/zExecutions.html',
+      templateUrl: '/templates/origem/zExecutions.html',
       link: function($scope, element, attr, ngController) {
 
         /**
@@ -123,7 +123,7 @@
   .directive('zWidgetStatus', function() {
     return {
       restrict: 'E',
-      templateUrl: '/admin/widget/tplStatus.html',
+      templateUrl: '/templates/widget/tplStatus.html',
       link: function($scope, element, attr, ngController) {
 
       }
@@ -133,7 +133,7 @@
   .directive('zWidgetLine', function() {
     return {
       restrict: 'E',
-      templateUrl: '/admin/widget/tplLine.html',
+      templateUrl: '/templates/widget/tplLine.html',
       link: function($scope, element, attr, ngController) {
 
       }
@@ -143,7 +143,7 @@
   .directive('zWidgetPie', function() {
     return {
       restrict: 'E',
-      templateUrl: '/admin/widget/tplPie.html',
+      templateUrl: '/templates/widget/tplPie.html',
       link: function($scope, element, attr, ngController) {
 
       }

@@ -1,9 +1,8 @@
+/* POR FAVOR, TIRAR ISSO! */
 *
 {
     border-radius: 0 !important;
-    /*outline: 1px solid !important;*/
 }
-
 
 /* General Styles */
 .caret.caret-reversed
@@ -28,181 +27,12 @@ pre
     background-color: transparent;
 }
 
-/* SQL Syntax Highlight Customization */
-
-.cm-s-default .cm-keyword
-{
-    font-weight: bold;
-
-    color: #f39c12;
-}
-
-.cm-s-default .cm-number
-{
-    color: #18bc9d;
-}
-
-.cm-s-default .cm-string
-{
-    color: #3498db;
-}
-
-.cm-s-default .cm-comment
-{
-    font-style: italic;
-
-    color: #7f8c8d;
-}
-
-.cm-s-default .cm-variable-2
-{
-    color: #000;
-}
-
-.cm-s-default .cm-builtin
-{
-    color: #000;
-}
-
-.cm-s-default .cm-atom
-{
-    color: #18bc9d;
-}
-
-.CodeMirror
-{
-    /*min-height: 50px;*/
-    height: auto;
-    padding: 0 15px 0 0;
-
-    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-         -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-
-    border: 2px solid #dce4ec;
-    border-radius: 4px;;;;
-}
-
-/*.CodeMirror.CodeMirror-focused.readOnly .CodeMirror-cursors .CodeMirror-cursor { visibility: hidden !important; }*/
-
-.CodeMirror.CodeMirror-focused
-{
-    border-color: #2c3e50;
-}
-
-.CodeMirror-scroll
-{
-    overflow-x: auto;
-    overflow-y: hidden;
-}
-
-.CodeMirror pre,
-.CodeMirror-linenumber
-{
-    font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
-    font-size: 14px;
-    line-height: 1.4;
-}
-.CodeMirror pre
-{
-    padding-left: 16px;
-}
-
-.CodeMirror-lines
-{
-    padding: 10px 0;
-}
-
-/* Dashboard */
 .toolbar
 {
     margin-bottom: 20px;
 }
 
-.grafico-cabecalho
-{
-    padding-bottom: 5px;
-
-    border-bottom: 1px solid #ecf0f1;
-}
-
-.grafico-content
-{
-
-    overflow: hidden;
-    position: relative;
-
-    background: #ecf0f1;
-}
-
-.grafico-content .content
-{
-    min-width: 310px;
-    height: 450px;
-    margin: 0 auto;
-}
-
-@media(max-width: 640px)
-{
-    .grafico-content .content
-    {
-        height: 300px;
-    }
-}
-
-.loader
-{
-    position: absolute;
-    z-index: 50;
-    top: 0;
-    left: 0;
-    /* Internet Explorer 10 */
-
-    display: -ms-flexbox;
-    /* Firefox */
-    display:    -moz-box;
-    /* Safari, Opera, and Chrome */
-    display: -webkit-box;
-    /* W3C */
-    display:         box;
-
-    width: 100%;
-    height: 100%;
-
-    background-color: inherit;
-
-    -ms-flex-pack: center;
-    -ms-flex-align: center;
-       -moz-box-pack: center;
-       -moz-box-align: center;
-    -webkit-box-pack: center;
-    -webkit-box-align: center;
-            box-pack: center;
-            box-align: center;
-}
-
-.loader.loader-inverse,
-.loader.loader-inverse p
-{
-    color: #fff;
-}
-
-.loader.visible
-{
-    display: block;
-}
-
-.loader p
-{
-    /*font-family: 'Helvetica';*/
-    /*font-size: 120%;*/
-
-    /*margin: 0;*/
-
-    color: #2c3e50;
-}
-
-.indicadores-container .info
+.indicators-container .info
 {
     font-size: 36px;
 
@@ -264,11 +94,6 @@ pre
     opacity: .8;
 }
 
-.alert.alert-default
-{
-    border: 1px solid;
-}
-
 .widget.red
 {
     color: #fff;
@@ -300,27 +125,29 @@ pre
     background-color: #8e44ad;
 }
 
+.alert.alert-default
+{
+    border: 1px solid;
+}
 
-
-[data-type='pie']
+.indicators-container [data-type='pie']
 {
     position: relative;
 
     background-color: #fff;
 }
 
-[data-type='pie'] .loader
+.indicators-container [data-type='pie'] .loader
 {
     min-height: 400px;
-
 }
 
-[data-type='pie'] .loader p
+.indicators-container [data-type='pie'] .loader p
 {
     padding-top: 30%;
 }
 
-[data-type='pie'] .no-data
+.indicators-container [data-type='pie'] .no-data
 {
     position: absolute;
     top: 210px;
@@ -329,22 +156,6 @@ pre
     margin: 0;
     margin-left: -15px;
 }
-
-.popover
-{
-    width: 500px !important;
-    max-width: 500px !important;
-}
-
-@media(max-width:500px)
-{
-    .popover
-    {
-        width: 100% !important;
-        max-width: 500px !important;
-    }
-}
-
 
 section
 {
@@ -436,122 +247,6 @@ td .btn-remove
 .table-editable td
 {
     height: 35px;
-}
-
-/*.table-editable + input:focus,
-.table-editable + input:active,
-.table-editable + input
-{
-  border: 2px solid #2c3e50 !important;
-  outline: 0px solid #2c3e50 !important;
-}*/
-
-
-
-.atlCheckbox
-{
-    display: inline-block;
-
-    width: 24px;
-    height: 24px;
-
-    background-image: url('../images/checkmarks-sprite.png');
-}
-
-.atlCheckbox.atlCheckbox_hover
-{
-    background-position: 0 -24px;
-}
-
-.atlCheckbox.atlCheckbox_checked
-{
-    background-position: 0 -96px;
-}
-
-.atlCheckbox.atlCheckbox_disabled,
-.atlCheckbox.atlCheckbox_disabled input
-{
-    cursor: not-allowed;
-
-    background-position: 0 -48px;
-}
-
-.atlCheckbox.atlCheckbox_checked.atlCheckbox_disabled,
-.atlCheckbox.atlCheckbox_checked.atlCheckbox_disabled input
-{
-    cursor: not-allowed;
-
-    background-position: 0 -192px;
-}
-
-.atlCheckbox.atlCheckbox_active.atlCheckbox_checked,
-.atlCheckbox_checked:hover,
-.atlCheckbox_checked:focus
-{
-    background-position: 0 -72px;
-}
-
-.atlCheckbox.atlCheckbox_active
-{
-    background-position: 0 -168px;
-}
-
-.checkbox-control
-{
-    margin-bottom: 10px;
-}
-
-td .z-checkbox
-{
-    font-size: 15px;
-
-    display: block;
-
-    width: 100%;
-    height: 43px;
-    padding: 10px 15px;
-    padding-top: 8px;
-
-    cursor: default;
-}
-
-.checkbox-control .atlCheckbox,
-.checkbox-control label .atlCheckbox
-{
-    float: left;
-}
-
-.checkbox-control label .atlCheckbox
-{
-    line-height: 24px;
-
-    display: block;
-
-    height: 24px;
-    margin-right: 5px;
-}
-
-.atlCheckbox input
-{
-    display: block;
-    overflow: hidden;
-    overflow: hidden;
-
-    width: 24px;
-    height: 24px;
-    margin: 0 !important;
-
-    opacity: .01;
-    border: 0 none;
-    border: 0 none;
-    background-image: url('../images/checkmarks-sprite.png');
-    background-repeat: no-repeat;
-}
-
-.atlCheckbox:hover,
-.atlCheckbox input:hover
-{
-    cursor: pointer;
 }
 
 .input-group-addon
@@ -1147,4 +842,301 @@ button .fa
   {
       float: none !important;
   }
+}
+
+
+
+/*****************************************
+ *
+ * Code Mirror Customization
+ *
+ *****************************************/
+.cm-s-default .cm-keyword
+{
+    font-weight: bold;
+
+    color: #f39c12;
+}
+
+.cm-s-default .cm-number
+{
+    color: #18bc9d;
+}
+
+.cm-s-default .cm-string
+{
+    color: #3498db;
+}
+
+.cm-s-default .cm-comment
+{
+    font-style: italic;
+
+    color: #7f8c8d;
+}
+
+.cm-s-default .cm-variable-2
+{
+    color: #000;
+}
+
+.cm-s-default .cm-builtin
+{
+    color: #000;
+}
+
+.cm-s-default .cm-atom
+{
+    color: #18bc9d;
+}
+
+.CodeMirror
+{
+    height: auto;
+    padding: 0 15px 0 0;
+
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+         -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+
+    border: 2px solid #dce4ec;
+    border-radius: 4px;;;;
+}
+
+.CodeMirror.CodeMirror-focused
+{
+    border-color: #2c3e50;
+}
+
+.CodeMirror-scroll
+{
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.CodeMirror pre,
+.CodeMirror-linenumber
+{
+    font-family: Menlo, Monaco, Consolas, 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.4;
+}
+.CodeMirror pre
+{
+    padding-left: 16px;
+}
+
+.CodeMirror-lines
+{
+    padding: 10px 0;
+}
+
+
+
+/**
+ *
+ * Gráfico e Loader
+ *
+ */
+.graph-content
+{
+    overflow: hidden;
+    position: relative;
+
+    background: #ecf0f1;
+}
+
+.graph-content .content
+{
+    min-width: 310px;
+    height: 450px;
+    margin: 0 auto;
+}
+
+@media(max-width: 640px)
+{
+    .graph-content .content
+    {
+        height: 300px;
+    }
+}
+
+.loader
+{
+    position: absolute;
+    z-index: 50;
+    top: 0;
+    left: 0;
+    /* Internet Explorer 10 */
+
+    display: -ms-flexbox;
+    /* Firefox */
+    display:    -moz-box;
+    /* Safari, Opera, and Chrome */
+    display: -webkit-box;
+    /* W3C */
+    display:         box;
+
+    width: 100%;
+    height: 100%;
+
+    background-color: inherit;
+
+    -ms-flex-pack: center;
+    -ms-flex-align: center;
+       -moz-box-pack: center;
+       -moz-box-align: center;
+    -webkit-box-pack: center;
+    -webkit-box-align: center;
+            box-pack: center;
+            box-align: center;
+}
+
+.loader.loader-inverse,
+.loader.loader-inverse p
+{
+    color: #fff;
+}
+
+.loader.visible
+{
+    display: block;
+}
+
+.loader p
+{
+    color: #2c3e50;
+}
+
+
+/******************************************
+ *
+ * Bootstrap POPOVER customization
+ *
+ *****************************************/
+.popover
+{
+    width: 500px !important;
+    max-width: 500px !important;
+}
+
+@media(max-width:500px)
+{
+    .popover
+    {
+        width: 100% !important;
+        max-width: 500px !important;
+    }
+}
+
+
+/*******************************************
+ *
+ * CHECKBOX CUSTOMIZATION
+ *
+ *******************************************/
+.atlCheckbox
+{
+    display: inline-block;
+
+    width: 24px;
+    height: 24px;
+
+    background-image: url('../images/checkmarks-sprite.png');
+}
+
+.atlCheckbox.atlCheckbox_hover
+{
+    background-position: 0 -24px;
+}
+
+.atlCheckbox.atlCheckbox_checked
+{
+    background-position: 0 -96px;
+}
+
+.atlCheckbox.atlCheckbox_disabled,
+.atlCheckbox.atlCheckbox_disabled input
+{
+    cursor: not-allowed;
+
+    background-position: 0 -48px;
+}
+
+.atlCheckbox.atlCheckbox_checked.atlCheckbox_disabled,
+.atlCheckbox.atlCheckbox_checked.atlCheckbox_disabled input
+{
+    cursor: not-allowed;
+
+    background-position: 0 -192px;
+}
+
+.atlCheckbox.atlCheckbox_active.atlCheckbox_checked,
+.atlCheckbox_checked:hover,
+.atlCheckbox_checked:focus
+{
+    background-position: 0 -72px;
+}
+
+.atlCheckbox.atlCheckbox_active
+{
+    background-position: 0 -168px;
+}
+
+.checkbox-control
+{
+    margin-bottom: 10px;
+}
+
+td .z-checkbox
+{
+    font-size: 15px;
+
+    display: block;
+
+    width: 100%;
+    height: 43px;
+    padding: 10px 15px;
+    padding-top: 8px;
+
+    cursor: default;
+}
+
+.checkbox-control .atlCheckbox,
+.checkbox-control label .atlCheckbox
+{
+    float: left;
+}
+
+.checkbox-control label .atlCheckbox
+{
+    line-height: 24px;
+
+    display: block;
+
+    height: 24px;
+    margin-right: 5px;
+}
+
+.atlCheckbox input
+{
+    display: block;
+    overflow: hidden;
+    overflow: hidden;
+
+    width: 24px;
+    height: 24px;
+    margin: 0 !important;
+
+    opacity: .01;
+    border: 0 none;
+    border: 0 none;
+    background-image: url('../images/checkmarks-sprite.png');
+    background-repeat: no-repeat;
+}
+
+.atlCheckbox:hover,
+.atlCheckbox input:hover
+{
+    cursor: pointer;
 }
