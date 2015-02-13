@@ -4,18 +4,13 @@ module.exports = function(grunt){
 
     cssmin: {
       options : {
-        shorthandCompacting: false,
-        roundingPrecision: -1,
+        // keepSpecialComments: 0,
         rebase : false,
       },
       target: {
-        files: [{
-          expand: true,
-          cwd: 'public/assets/',
-          src: ['**/*.css'],
-          dest: 'public/dist/',
-          ext: '.min.css'
-        }]
+        files: {
+          'public/dist/css/app.min.css': ['public/assets/css/app.css']
+        }
       }
     },
 
@@ -36,16 +31,10 @@ module.exports = function(grunt){
         }
       },
 
-      plugins: {
-        files: [{
-          expand: true,
-          cwd: 'public/assets/js/plugins/',
-          src: '**/*.js',
-          dest: 'public/dist/js/plugins/'
-        }]
-      },
-
       helpers: {
+        options: {
+          mangle : false,
+        },
         files: [{
           expand: true,
           cwd: 'public/assets/js/helpers/',
@@ -54,23 +43,26 @@ module.exports = function(grunt){
         }]
       },
 
-      components: {
+      plugins: {
         files: [{
           expand: true,
-          cwd: 'public/assets/js/components/',
-          src: '**/*.js',
-          dest: 'public/dist/js/components/'
+          cwd: 'public/assets/js/plugins/',
+          dest: 'public/dist/js/plugins/',
+          src : '{,*/}*.js'
         }]
       },
 
-      libs: {
+      components: {
+        options: {
+          mangle : false,
+        },
         files: [{
           expand: true,
-          cwd: 'public/assets/js/libs/',
-          src: ['**/*.js', '!angular-*/*.js'],
-          dest: 'public/dist/js/libs/'
+          cwd: 'public/assets/js/components/',
+          src: '{,*/}*.js',
+          dest: 'public/dist/js/components/'
         }]
-      }
+      },
     },
 
     watch: {
@@ -106,16 +98,23 @@ module.exports = function(grunt){
         }]
       },
 
-      angular: {
+      libs: {
         files: [{
           expand: true,
-          dot: true,
-          cwd: 'public/assets/js/libs',
-          dest: 'public/dist/js/libs',
-          src: ['angular-*/*.*']
+          cwd: 'public/assets/js/libs/',
+          dest: 'public/dist/js/libs/',
+          src : '{,*/}*.*'
         }]
       }
+
     },
+
+    clean: {
+      dist: {
+        files: {src: ['public/dist/**/*']}
+      },
+    },
+
 
     imagemin: {
       prod: {
@@ -125,13 +124,11 @@ module.exports = function(grunt){
         files: [{
           expand: true,
           cwd: 'public/assets',
-          src: ['**/*.{png,jpg,gif}'],
+          src: ['{,*/}*.{png,jpg,gif}'],
           dest: 'public/dist'
         }]
       },
     },
-
-
 
   });
 
@@ -140,8 +137,9 @@ module.exports = function(grunt){
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-imagemin');
 
-  grunt.registerTask('default', ['cssmin', 'uglify', 'copy', 'imagemin']);
+  grunt.registerTask('build', ['clean', 'cssmin', 'uglify', 'copy', 'imagemin']);
 
 }
