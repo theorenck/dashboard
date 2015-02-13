@@ -1,0 +1,30 @@
+{
+  "name": "dashboard",
+  "version": "1.0.0",
+  "description": "Atlas Middleware\r =====",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/theorenck/dashbord.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theorenck/dashbord/issues"
+  },
+  "homepage": "https://github.com/theorenck/dashbord",
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-copy": "^0.7.0",
+    "grunt-contrib-cssmin": "^0.12.1",
+    "grunt-contrib-imagemin": "^0.9.3",
+    "grunt-contrib-uglify": "^0.7.0",
+    "grunt-contrib-watch": "^0.6.1"
+  }
+}

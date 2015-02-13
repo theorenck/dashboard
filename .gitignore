@@ -34,3 +34,5 @@ Gemfile.lock
 .rvmrc
 
 /public/configuration.js
+
+/node_modules/
