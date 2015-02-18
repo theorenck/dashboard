@@ -2,6 +2,11 @@ module.exports = function(grunt){
 
   grunt.initConfig({
 
+    /**
+     * Concatena todo css em apenas um arquivo.
+     * Dentro de "assets/css/app.css" existem @includes para outros arquivos com diferentes localizações
+     * Eles estão em ordem de precedecia correta
+     */
     cssmin: {
       options : {
         // keepSpecialComments: 0,
@@ -14,6 +19,23 @@ module.exports = function(grunt){
       }
     },
 
+
+    /**
+     * Otimiza o código alterando nomes de variáveis e minificando o código em 4 níveis:
+     *
+     * - Core :
+     *   Seleciona app, controllers, diretivas e serviços da aplicação e transforma em um único arquivo
+     *   atlas.js que contém o código minificado.
+     *
+     * - Helpers :
+     *   Usa a pasta de helpers/utils e otimiza todo código.
+     *
+     * - Plugins :
+     *   Busca todos os plugins jQuery, otimiza e coloca em produção.
+     *
+     * - Components :
+     *   Busca todos components ReactJS, otimiza e coloca em produção.
+     */
     uglify: {
       core: {
         options: {
@@ -65,6 +87,20 @@ module.exports = function(grunt){
       },
     },
 
+
+    /**
+     * Observa arquivos para manter a pasta de produção sempre atualizada
+     *
+     * - Scripts:
+     *   Observa a pasta assets por arquivos javascript, qualquer arquivo alterado dispara
+     *   uglify do core, helpers e components ( não há a necessidade de plugins )
+     *
+     * - Css:
+     *   Observa a pasta assets por arquivos css e executa a minificação de todos
+     *
+     * - Images:
+     *   Observa por qualquer edição de imagens em assets, otimiza-as e coloca na pasta de produção
+     */
     watch: {
       scripts: {
         files: ['public/assets/**/*.js'],
@@ -83,6 +119,16 @@ module.exports = function(grunt){
       }
     },
 
+    /**
+     * Copia todos os arquivos que não podem ser otimizados/minificados
+     *
+     * - Other:
+     *   Arquivos de fontes, icones, txt, svg
+     *
+     * - Libs:
+     *   Bibliotecas usadas no projeto, uma vez que já foram baixadas minificadas não há a necessidade
+     *   de otimizá-las
+     */
     copy: {
       other: {
         files: [{
@@ -109,13 +155,19 @@ module.exports = function(grunt){
 
     },
 
+    /**
+     * Tarefa para limpar a pasta de produção
+     * Exclui todos os arquivos dentro da pasta 'dist'
+     */
     clean: {
       dist: {
         files: {src: ['public/dist/**/*']}
       },
     },
 
-
+    /**
+     * Otimiza imagens png, jpg, gif
+     */
     imagemin: {
       prod: {
         options: {
@@ -140,6 +192,17 @@ module.exports = function(grunt){
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-imagemin');
 
-  grunt.registerTask('build', ['clean', 'cssmin', 'uglify', 'copy', 'imagemin']);
+  /**
+   * Registra a tarefa de build do sistema com as seguintes tasks:
+   *   - Limpa pasta de dist
+   *   - minifica todo css
+   *   - minifica/uglify de todo js
+   *   - minifica imagens
+   *   - copia demais arquivos
+   */
+  grunt.registerTask('build', ['clean', 'cssmin', 'uglify', 'imagemin', 'copy']);
+
+  // Registra task default para "watch"
+  grunt.registerTask('default', ['watch']);
 
 }
