@@ -1054,6 +1054,9 @@
       }
 
       function grafico(valores) {
+
+        window.dataset = valores.values;
+
         return chart = new Highcharts.StockChart({
             colors : [ Configuration.colors[widget.color] ],
             title : {
@@ -1193,7 +1196,12 @@
                 minRange: 14 * 24 * 3600000,
                 minTickInterval: 24 * 3600 * 1000,
                 plotBands: valores.plotBands,
-                labels : { maxStaggerLines : 1 }
+                labels : { maxStaggerLines : 1 },
+                dateTimeLabelFormats: {
+                  week: '%d/%b',
+                  day: '%d/%b',
+                  month: '%b/%Y'
+                }
             },
 
             series : [{
@@ -1372,8 +1380,8 @@
 
     $scope.indicadores = {
       periodo : {
-        inicio    : (moment().subtract(29,'days').format("YYYY-MM-DD 00:00:00")),
-        fim       : (moment().format("YYYY-MM-DD 00:00:00")),
+        inicio    : (moment({ day : 01, month: 10, year : 2014 }).format("YYYY-MM-DD 00:00:00")),
+        fim       : (moment({ day : 30, month: 10, year : 2014 }).format("YYYY-MM-DD 00:00:00")),
         duracao   : function(grandeza) {
           var grandeza  = grandeza || 'days';
           var fim       = moment($scope.indicadores.periodo.fim);

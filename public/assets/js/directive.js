@@ -67,7 +67,7 @@
   .directive('zExecutions', function() {
     return {
       restrict: 'E',
-      templateUrl: '/templates/origem/zExecutions.html',
+      templateUrl: '/dist/templates/origem/zExecutions.html',
       link: function($scope, element, attr, ngController) {
 
         /**
@@ -123,7 +123,7 @@
   .directive('zWidgetStatus', function() {
     return {
       restrict: 'E',
-      templateUrl: '/templates/widget/tplStatus.html',
+      templateUrl: '/dist/templates/widget/tplStatus.html',
       link: function($scope, element, attr, ngController) {
 
       }
@@ -133,7 +133,7 @@
   .directive('zWidgetLine', function() {
     return {
       restrict: 'E',
-      templateUrl: '/templates/widget/tplLine.html',
+      templateUrl: '/dist/templates/widget/tplLine.html',
       link: function($scope, element, attr, ngController) {
 
       }
@@ -143,7 +143,7 @@
   .directive('zWidgetPie', function() {
     return {
       restrict: 'E',
-      templateUrl: '/templates/widget/tplPie.html',
+      templateUrl: '/dist/templates/widget/tplPie.html',
       link: function($scope, element, attr, ngController) {
 
       }
@@ -157,7 +157,7 @@
       },
       require: 'ngModel',
       restrict: 'EA',
-      templateUrl: '/assets/templates/zFloatThead.html',
+      templateUrl: '/dist/templates/directives/zFloatThead.html',
       link: function($scope, iElm, iAttrs, controller) {
 
         function loadFloatThead(){
@@ -377,7 +377,7 @@
       },
       require: 'ngModel',
       restrict: 'EA',
-      templateUrl: '/assets/templates/zAlertbox.html',
+      templateUrl: '/dist/templates/directives/zAlertbox.html',
       link: function($scope, iElm, iAttrs, controller) {
 
         $scope.clearMessages = function(){

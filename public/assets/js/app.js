@@ -51,97 +51,97 @@
 
       .when('/data-source-server', {
         controller: 'DataSourceIndexController',
-        templateUrl: '/templates/data-source-server/index.html'
+        templateUrl: '/dist/templates/data-source-server/index.html'
       })
 
       .when('/data-source-server/:action/:id?', {
         controller: 'DataSourceCreateController',
-        templateUrl: '/templates/data-source-server/create.html'
+        templateUrl: '/dist/templates/data-source-server/create.html'
       })
 
       .when('/dashboard', {
         controller: 'DashboardIndexController',
-        templateUrl: '/templates/dashboard/index.html'
+        templateUrl: '/dist/templates/dashboard/index.html'
       })
 
       .when('/dashboard/:action/:id?', {
         controller: 'DashboardCreateController',
-        templateUrl: '/templates/dashboard/create.html'
+        templateUrl: '/dist/templates/dashboard/create.html'
       })
 
       .when('/dashboards', {
         controller: 'DashboardsController',
-        templateUrl: '/templates/dashboard-detail/dashboardsList.html'
+        templateUrl: '/dist/templates/dashboard-detail/dashboardsList.html'
       })
 
       .when('/dashboards/12', {
         controller: 'DashboardFakeDetailController',
-        templateUrl: '/templates/dashboard-detail/dashboardFakeDetail.html'
+        templateUrl: '/dist/templates/dashboard-detail/dashboardFakeDetail.html'
       })
 
       .when('/dashboards/:id', {
         controller: 'DashboardDetailController',
-        templateUrl: '/templates/dashboard-detail/dashboardDetail.html'
+        templateUrl: '/dist/templates/dashboard-detail/dashboardDetail.html'
       })
 
       .when('/indicator', {
         controller: 'IndicatorIndexController',
-        templateUrl: '/templates/indicator/index.html'
+        templateUrl: '/dist/templates/indicator/index.html'
       })
 
       .when('/indicator/:action/:id?', {
         controller: 'IndicatorCreateController',
-        templateUrl: '/templates/indicator/create.html'
+        templateUrl: '/dist/templates/indicator/create.html'
       })
 
       .when('/origem', {
         controller : 'OrigemIndexController',
-        templateUrl: '/templates/origem/index.html'
+        templateUrl: '/dist/templates/origem/index.html'
       })
 
       .when('/origem/query/:id?', {
         controller: 'QueryCreateController',
-        templateUrl: '/templates/origem/create-query.html'
+        templateUrl: '/dist/templates/origem/create-query.html'
       })
 
       .when('/origem/aggregation/:id?', {
         controller: 'AggregationCreateController',
-        templateUrl: '/templates/origem/create-aggregation.html'
+        templateUrl: '/dist/templates/origem/create-aggregation.html'
       })
 
       .when('/permission', {
         controller: 'PermissionIndexController',
-        templateUrl: '/templates/permission/index.html'
+        templateUrl: '/dist/templates/permission/index.html'
       })
 
       .when('/permission/:action/:id?', {
         controller: 'PermissionCreateController',
-        templateUrl: '/templates/permission/create.html'
+        templateUrl: '/dist/templates/permission/create.html'
       })
 
       .when('/widget', {
         controller: 'WidgetIndexController',
-        templateUrl: '/templates/widget/index.html'
+        templateUrl: '/dist/templates/widget/index.html'
       })
 
       .when('/widget/:action/:id?', {
         controller: 'WidgetCreateController',
-        templateUrl: '/templates/widget/create.html'
+        templateUrl: '/dist/templates/widget/create.html'
       })
 
       .when('/user', {
         controller: 'UserIndexController',
-        templateUrl: '/templates/user/index.html'
+        templateUrl: '/dist/templates/user/index.html'
       })
 
       .when('/user/:action/:id?', {
         controller: 'UserCreateController',
-        templateUrl: '/templates/user/create.html'
+        templateUrl: '/dist/templates/user/create.html'
       })
 
       .when('/console', {
         controller: 'ConsoleController',
-        templateUrl: '/templates/console/console.html'
+        templateUrl: '/dist/templates/console/console.html'
       })
 
       .otherwise({

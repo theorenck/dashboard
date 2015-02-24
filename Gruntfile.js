@@ -100,6 +100,9 @@ module.exports = function(grunt){
      *
      * - Images:
      *   Observa por qualquer edição de imagens em assets, otimiza-as e coloca na pasta de produção
+     *
+     * - Templates/Html:
+     *   Observa alterações nos templates e na index.html
      */
     watch: {
       scripts: {
@@ -116,6 +119,14 @@ module.exports = function(grunt){
       images : {
         files : ["public/assets/**/*.{png,jpg,gif}"],
         tasks : ['imagemin']
+      },
+      templates : {
+        files : ["public/assets/**/*.html", "!public/assets/templates/index.html"],
+        tasks : ['htmlmin:templates']
+      },
+      html : {
+        files : ["public/assets/templates/index.html"],
+        tasks : ['htmlmin:index']
       }
     },
 
@@ -182,6 +193,40 @@ module.exports = function(grunt){
       },
     },
 
+    /**
+     * Tarefa para minificar os templates do sistema
+     * - Index:
+     *   Minifica apenas a index, página que é carregada via Ruby
+     *
+     * - Templates:
+     *   Minifica todos os templates
+     */
+    htmlmin: {
+
+      index: {
+        options: {
+          removeComments: true,
+          collapseWhitespace: true
+        },
+        files: {
+          'public/index.html': 'public/assets/templates/index.html',
+        }
+      },
+
+      templates: {
+        options: {
+          removeComments: true,
+          collapseWhitespace: true
+        },
+        files: [{
+          expand: true,
+          cwd: 'public/assets',
+          src: ['**/*.html'],
+          dest: 'public/dist'
+        }]
+      }
+    }
+
   });
 
 
@@ -191,6 +236,7 @@ module.exports = function(grunt){
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-imagemin');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
 
   /**
    * Registra a tarefa de build do sistema com as seguintes tasks:
@@ -200,7 +246,7 @@ module.exports = function(grunt){
    *   - minifica imagens
    *   - copia demais arquivos
    */
-  grunt.registerTask('build', ['clean', 'cssmin', 'uglify', 'imagemin', 'copy']);
+  grunt.registerTask('build', ['clean', 'cssmin', 'uglify', 'imagemin', 'htmlmin', 'copy']);
 
   // Registra task default para "watch"
   grunt.registerTask('default', ['watch']);
