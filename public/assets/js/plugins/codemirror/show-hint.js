@@ -61,7 +61,7 @@
     },
 
     pick: function(data, i) {
-      var completion = data.list[i];
+      var completion = data.list[i].replace(/<span.*.<\/span>/ig,'').trim();
       if (completion.hint) completion.hint(this.cm, data, completion);
       else this.cm.replaceRange(getText(completion), completion.from || data.from,
                                 completion.to || data.to, "complete");
@@ -214,7 +214,11 @@
       if (cur.className != null) className = cur.className + " " + className;
       elt.className = className;
       if (cur.render) cur.render(elt, data, cur);
-      else elt.appendChild(document.createTextNode(cur.displayText || getText(cur)));
+      else {
+        var elList = document.createElement('span');
+        elList.innerHTML = (cur.displayText || getText(cur));
+        elt.appendChild(elList);
+      }
       elt.hintId = i;
     }
 
@@ -378,7 +382,7 @@
     completeSingle: true,
     alignWithWord: true,
     closeCharacters: /[\s()\[\]{};:>,]/,
-    closeOnUnfocus: true,
+    closeOnUnfocus: false,
     completeOnSingleClick: false,
     container: null,
     customKeys: null,

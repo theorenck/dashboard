@@ -39,7 +39,9 @@
         word = wordlist[word];
       }
       if (match(search, word)) {
-        result.push(formatter(word));
+        word = word.charAt(0) == "." ? word.substr(1) : word;
+        word = formatter(word);
+        result.push(word);
       }
     }
   }

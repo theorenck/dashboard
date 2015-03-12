@@ -34,7 +34,7 @@
     .controller('DashboardFakeDetailController', DashboardFakeDetailController);
 
 
-  AppController.$inject = ["$scope", '$rootScope', '$location', "AuthService", 'zErrors'];
+  AppController.$inject = ['$scope', '$rootScope', '$location', 'AuthService', 'zErrors'];
   function AppController($scope, $rootScope, $location, AuthService, zErrors){
     $scope.credentials = { username : '', password : ''};
     $scope.open = false;
@@ -48,22 +48,21 @@
 
     $scope.toggleResponsiveMenu = function(){
       $scope.showResponsiveMenu = !$scope.showResponsiveMenu;
-    }
+    };
 
     function errorHandler(err){
       $scope.alert = {
-        type : "danger",
+        type : 'danger',
         messages : zErrors.handling(err)
-      }
+      };
     }
 
     function validateParams(credentials){
-      return  credentials.username.trim() !== ''
-              && credentials.password.trim() !== '';
+      return credentials.username.trim() !== '' && credentials.password.trim() !== '';
     }
 
     $scope.login = function(credentials){
-      var authentication = {"authentication"  : credentials };
+      var authentication = {'authentication'  : credentials };
 
       if (validateParams(credentials)) {
         AuthService.save(authentication, function(res){
@@ -81,9 +80,9 @@
         }, errorHandler);
       }else{
         $scope.alert = {
-          type : "warning",
+          type : 'warning',
           messages : ['Desculpe, mas usuário e senha devem ser preenchidos']
-        }
+        };
       }
     };
 
@@ -94,7 +93,7 @@
 
     $scope.isLoggedIn = function(){
       return !!localStorage.getItem('logged-in') && !!localStorage.getItem('token') || false;
-    }
+    };
 
     $scope.range = function(num){
       return new Array(num);
@@ -109,18 +108,18 @@
 
     $scope.loadServer = function(id){
       $location.path('/data-source-server/update/' + id);
-    }
+    };
 
     $scope.deleteServer = function(id, $index, $event){
       $event.preventDefault();
-      DataSourceService.remove({ "id" : id }, function(){
+      DataSourceService.remove({ 'id' : id }, function(){
         $scope.renderList();
       });
-    }
+    };
 
     $scope.renderList = function(){
       return renderList();
-    }
+    };
 
     function renderList(){
       DataSourceService.get(function(data){
@@ -136,11 +135,11 @@
 
     $scope.cancelarApiServer = function(){
       $scope.data_source_server = {};
-    }
+    };
 
     $scope.saveApiServer = function(){
       var data =  {
-        "data_source_server" : $scope.data_source_server
+        'data_source_server' : $scope.data_source_server
       };
 
       if ($scope.data_source_server.id) {
@@ -158,7 +157,7 @@
       DataSourceService.get({ id : $routeParams.id }, function(data){
         $scope.data_source_server = data.data_source_server;
       });
-    };
+    }
   }
 
   DashboardIndexController.$inject = ['$scope', '$location', 'DashboardService'];
@@ -175,20 +174,20 @@
 
     $scope.load = function(id){
       $location.path('/dashboard/update/' + id);
-    }
+    };
 
     $scope.delete = function(id, $index, $event){
       $event.preventDefault();
 
-      var data = { "id" : id };
+      var data = { 'id' : id };
       DashboardService.remove(data, function(data){
         $scope.renderList();
       });
-    }
+    };
 
     $scope.renderList = function(){
       return renderList();
-    }
+    };
   }
 
   DashboardCreateController.$inject = ['$scope', '$routeParams', '$location', 'DashboardService'];
@@ -196,7 +195,7 @@
     $scope.dashboard = {};
 
     $scope.salvar = function(){
-      var data =  { "dashboard" : $scope.dashboard };
+      var data =  { 'dashboard' : $scope.dashboard };
 
       if ($scope.dashboard.id) {
         DashboardService.update(data, function(){
@@ -211,13 +210,13 @@
 
     $scope.cancelar = function(){
       $scope.dashboard = {};
-    }
+    };
 
     if ($routeParams.id) {
       DashboardService.get({ id : $routeParams.id}, function(data){
         $scope.dashboard = data.dashboard;
       });
-    };
+    }
   }
 
   IndicatorIndexController.$inject = ['$scope', '$location', 'IndicatorService'];
@@ -228,7 +227,7 @@
       IndicatorService.get(function(data){
         $scope.indicatorList = data.indicators;
       });
-    }
+    };
 
     $scope.load = function(id){
       $location.path('/indicator/update/' + id);
@@ -236,11 +235,11 @@
 
     $scope.delete = function (id, $index, $event) {
       $event.preventDefault();
-      var data = { "id" : id };
+      var data = { 'id' : id };
       IndicatorService.remove(data, function(data){
         $scope.renderList();
       });
-    }
+    };
 
     $scope.renderList();
   }
@@ -259,16 +258,16 @@
     });
 
     $scope.salvar = function(){
-      var data =  { "indicator" : $scope.indicator };
+      var data =  { 'indicator' : $scope.indicator };
 
 
       if ($scope.indicator.id) {
         IndicatorService.update(data, function(){
-          $location.path('/indicator/')
+          $location.path('/indicator/');
         });
       }else{
         IndicatorService.save(data, function(data){
-          $location.path('/indicator/')
+          $location.path('/indicator/');
         });
       }
     };
@@ -544,12 +543,22 @@
       _doc.markClean();
       zCodeMirror.setHints(_editor);
 
-      if (!localStorage.getItem("tables")){
+      if (!localStorage.getItem('tables')){
         SchemaService.get(function(data){
-          localStorage.setItem("tables", JSON.stringify(data.schema.tables));
-          zCodeMirror.setHints(_editor, data.schema.tables);
+          var tables = {};
+          data.schema.tables.forEach(function(val, index, arr){
+            tables[val.name] = [];
+            val.columns.forEach(function(column, index, arr){
+              var hint = column.name + ' <span class="hint-datatype">' + column.type + '(' + column.length + ')</span>';
+              tables[val.name].push(hint);
+            });
+          });
+
+          localStorage.setItem('tables', JSON.stringify(tables));
+
+          zCodeMirror.setHints(_editor, tables);
         });
-      };
+      }
     };
 
     $scope.validateParams = function(){
@@ -573,16 +582,16 @@
 
     $scope.addParam = function(){
       $scope.statement.parameters.push({
-        name : "",
-        value : "",
-        type : "varchar",
+        name : '',
+        value : '',
+        type : 'varchar',
         evaluated: false,
       });
     };
 
     $scope.deleteParam = function(key){
       $scope.statement.parameters.splice(key,1);
-    }
+    };
 
     $scope.executeQuery = function(currentPage){
       Configuration.statement_server = getActiveDataSourceServer();
@@ -623,7 +632,7 @@
           return data + ' registros ' + verbo + 's' ;
       }
 
-      var data   = {"statement" : $scope.statement};
+      var data = {'statement' : $scope.statement};
       var server = Configuration.statement_server;
 
       StatementService.execute(data, server)
@@ -637,18 +646,18 @@
             allData = data.result.rows;
 
             $scope.result = {
-              "records": allData.length,
-              "columns": data.result.columns,
-              "rows": allData.slice(0, rowsPerPage)
-            }
+              'records': allData.length,
+              'columns': data.result.columns,
+              'rows': allData.slice(0, rowsPerPage)
+            };
           }
 
           switch(getStatementType($scope.statement.sql)){
             case 'SELECT':
               $scope.alert = {
-                type : "success",
+                type : 'success',
                 messages : [prepareMessage(data.result.rows.length, 'encontrado')]
-              }
+              };
             break;
 
             case 'UPDATE':
