@@ -11,6 +11,7 @@ module.exports = function(grunt){
       options : {
         // keepSpecialComments: 0,
         rebase : false,
+        sourceMap : true,
       },
       target: {
         files: {
@@ -115,6 +116,9 @@ module.exports = function(grunt){
       css: {
         files: 'public/assets/**/*.css',
         tasks: ['cssmin'],
+        options : {
+          livereload: true,
+        }
       },
       images : {
         files : ["public/assets/**/*.{png,jpg,gif}"],
