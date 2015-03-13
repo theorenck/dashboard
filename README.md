@@ -10,23 +10,23 @@
 Clone o repositório
 
 ```shell
-git clone git@github.com:theorenck/dashboard.git
+$ git clone git@github.com:theorenck/dashboard.git
 ```
 
 Instale as dependências
 ```shell
-cd dashboard
-npm install
+$ cd dashboard
+$ npm install
 ```
 
 E escute as alterações
 ```shell
-grunt watch
+$ grunt watch
 ```
 
 ## Build
 ```shell
-grunt build
+$ grunt build
 ```
 
 ## Third Party Libraries
