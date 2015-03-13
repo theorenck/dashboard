@@ -4,7 +4,7 @@ module.exports = function(grunt){
 
     /**
      * Concatena todo css em apenas um arquivo.
-     * Dentro de "assets/css/app.css" existem @includes para outros arquivos com diferentes localizações
+     * Dentro de 'assets/css/app.css' existem @includes para outros arquivos com diferentes localizações
      * Eles estão em ordem de precedecia correta
      */
     cssmin: {
@@ -121,15 +121,15 @@ module.exports = function(grunt){
         }
       },
       images : {
-        files : ["public/assets/**/*.{png,jpg,gif}"],
+        files : ['public/assets/**/*.{png,jpg,gif}'],
         tasks : ['imagemin']
       },
       templates : {
-        files : ["public/assets/**/*.html", "!public/assets/templates/index.html"],
+        files : ['public/assets/**/*.html', '!public/assets/templates/index.html'],
         tasks : ['htmlmin:templates']
       },
       html : {
-        files : ["public/assets/templates/index.html"],
+        files : ['public/assets/templates/index.html'],
         tasks : ['htmlmin:index']
       }
     },
@@ -252,7 +252,7 @@ module.exports = function(grunt){
    */
   grunt.registerTask('build', ['clean', 'cssmin', 'uglify', 'imagemin', 'htmlmin', 'copy']);
 
-  // Registra task default para "watch"
+  // Registra task default para 'watch'
   grunt.registerTask('default', ['watch']);
 
 }
