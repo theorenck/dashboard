@@ -1,15 +1,11 @@
-<div class="col-xs-12 col-md-{{ widget.size }}"
+<li class="col-xs-12 col-md-{{ widget.size }}"
   data-behaivor="widget"
   data-type="{{ widget.widget_type.name }}"
   data-id="{{ widget.id }}"
   data-position="{{ widget.position }}">
   <div class="graph-content">
 
-    <div class="loader" data-behaivor="loader" ng-show="widget.loading">
-      <svg class="spinner-container" width="65px" height="65px" viewBox="0 0 52 52">
-        <circle class="path" cx="26px" cy="26px" r="20px" fill="none" stroke-width="4px"></circle>
-      </svg>
-    </div>
+    <z-loader inverse="false" ng-show="widget.loading"></z-loader>
 
     <button data-resetbutton class="btn btn-info btn-sm btn-reset-zoom">Resetar Zoom</button>
 
@@ -17,4 +13,4 @@
 
 
   </div>
-</div>
+</li>
