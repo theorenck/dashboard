@@ -1,3 +1,4 @@
+/* global Configuration, console, alert, angular, moment */
 (function(){
   'use strict';
 
@@ -38,7 +39,7 @@
       '$httpProvider'
       , function ($httpProvider){
         $httpProvider.defaults.useXDomain = true;
-        $httpProvider.interceptors.push('httpRequestInterceptor')
+        $httpProvider.interceptors.push('httpRequestInterceptor');
       }
     ])
 
@@ -82,6 +83,11 @@
       .when('/dashboards/:id', {
         controller: 'DashboardDetailController',
         templateUrl: '/dist/templates/dashboard-detail/dashboardDetail.html'
+      })
+
+      .when('/dashboards/v2/:id', {
+        controller: 'DashboardDetailController',
+        templateUrl: '/dist/templates/dashboard-detail/dashboardDetail2.html'
       })
 
       .when('/indicator', {
@@ -153,7 +159,6 @@
      * Verifica se existe token na sessão ou no localStorage e intercepta as requests
      */
     .factory('httpRequestInterceptor', function () {
-      var authorization = null;
       return {
         request: function (config) {
           var token = localStorage.getItem('token') || sessionStorage.getItem('token');
@@ -164,18 +169,18 @@
       };
     })
 
-    .factory("zErrors", function(){
+    .factory('zErrors', function(){
       return {
         handling: function(err){
           var messages = [];
 
           // handling error status
           if(err === null)
-            messages = ["Conexão recusada"];
+            messages = ['Conexão recusada'];
           else if (err.status !== 'undefined' && err.status === 500)
             messages = [err.statusText];
           else if(err.status !== 'undefined' && err.status === 0)
-            messages = ["Servidor indisponível"];
+            messages = ['Servidor indisponível'];
           else{
             for(var index in err.errors) {
               messages.push(index + ': ' + err.errors[index]);
@@ -189,7 +194,6 @@
     .filter('fromNow', function() {
       return function(date) {
         return moment(date).fromNow();
-      }
+      };
     });
 })();
-

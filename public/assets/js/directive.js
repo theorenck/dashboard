@@ -26,7 +26,7 @@
         var windowEl = angular.element($window);
         var handler = function() {
           scope.scroll = windowEl.scrollTop();
-        }
+        };
         windowEl.on('scroll', scope.$apply.bind(scope, handler));
         handler();
       }
@@ -123,9 +123,24 @@
   .directive('zWidgetStatus', function() {
     return {
       restrict: 'E',
+      replace : true,
       templateUrl: '/dist/templates/widget/tplStatus.html',
       link: function($scope, element, attr, ngController) {
 
+      }
+    };
+  })
+
+  .directive('zLoader', function() {
+    return {
+      restrict: 'E',
+      replace : true,
+      templateUrl: '/dist/templates/directives/zLoader.html',
+      scope : {
+        'inverse' : '='
+      },
+      link: function($scope, element, attr, ngController) {
+        console.log($scope);
       }
     };
   })
@@ -344,14 +359,14 @@
                       data: {sql: sql, reindent: 1},
                       success: function(data){
                         e.doc.setValue(data['result']);
-                      },
+                      }
                   });
               }
               autoFormat();
             }
           },
           tabSize : 2,
-          tabMode : "spaces",
+          tabMode : 'spaces',
           styleActiveLine: false,
           matchBrackets: true,
           mode : 'text/x-sql',
@@ -360,8 +375,8 @@
       };
 
       zCodeMirror.setHints = function(instance, tables){
-        var tables = tables ? tables : JSON.parse(localStorage.getItem("tables"));
-        return instance.setOption("hintOptions",{
+        var tables = tables ? tables : JSON.parse(localStorage.getItem('tables'));
+        return instance.setOption('hintOptions',{
             tables: tables
         });
       };
@@ -389,5 +404,5 @@
 
       }
     };
-  }])
+  }]);
 })();

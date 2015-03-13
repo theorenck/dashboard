@@ -257,7 +257,7 @@
     'SchemaService',
     ['$resource',
       function($resource){
-        return $resource('http://127.0.0.1:3000/api/schema/');
+        return $resource('http://prod-01:4567/api/schema/extended');
       }
     ]
   )
