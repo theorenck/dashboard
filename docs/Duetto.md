@@ -1,4 +1,16 @@
-### Datas utilizadas
+# Duetto Dashboard
+Queries utilizadas pelo dashboard da Duetto.
+
+### Sumário
+- [Datas Default](#datas-default)
+- [Faturamento](#faturamento)
+- [RH](#rh)
+- [Despesa Total](#despesa-total)
+- [ADM](#adm)
+- [Impostos](#impostos)
+
+
+### Datas Default
 **inicio** '2014-03-01 00:00:00'
 
 **fim** '2014-03-31 00:00:00'
@@ -35,7 +47,7 @@ WHERE f.modalidade IN ('P','R')
        BETWEEN :inicio AND :fim
 ```
 
-### Despesa total
+### Despesa Total
 
 ```SQL
 SELECT SUM(f.valorfluxo) AS "VALOR_TOTAL_DESPESA"
