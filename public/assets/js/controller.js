@@ -857,8 +857,8 @@
     $scope.addParam = function(){
       $scope.statement.parameters.push({
         name : "",
-        value : "",
-        type : "varchar",
+        value : null,
+        // type : "varchar",
         evaluated: false,
       });
     };
@@ -1358,9 +1358,14 @@
 
             // Verifica todos os parâmetros de inicio e fim que sejam nulos e seta os valores do dash
             _.each(parameters,function(el, index) {
-              if ( el.value === null && (el.name === 'inicio' || el.name === 'fim')){
+              if ( ( el.value === null || el.value.trim() === "" ) && (el.name === 'inicio' || el.name === 'fim')){
                 parameters[index].value = (el.name === 'inicio') ? $scope.indicadores.periodo.inicio : $scope.indicadores.periodo.fim;
-              };
+              }
+              else if(el.name === 'inicio' || el.name === 'fim' && (el.value !== null && el.value.trim() === "" ) && el.evaluated === true)
+              {
+                parameters[index].value = parameters[index].value.replace(':' + el.name, "'" + $scope.indicadores.periodo[el.name] + "'");
+              }
+
             });
 
 
