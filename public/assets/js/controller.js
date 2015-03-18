@@ -476,7 +476,7 @@
     var allData = [];
     $scope.showAdvancedOptions   = true;
     $scope.showResults           = false;
-    $scope.data_types            = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
+    $scope.data_types            = ['varchar', 'decimal', 'integer', 'date', 'time', 'timestamp'];
     $scope.isExecuting           = false;
     $scope.hasLimit              = true;
     $scope.results               = [];
@@ -486,17 +486,17 @@
     $scope.editorOptions         = zCodeMirror.initialize($scope);
     $scope.listDataSourceService = [];
     $scope.resultset = {
-      "records": 0,
-      "fetched": 0,
-      "columns": [],
-      "rows": []
+      'records': 0,
+      'fetched': 0,
+      'columns': [],
+      'rows': []
     };
 
 
     $scope.scrollTop = function(){
       $location.hash('top');
       $anchorScroll();
-    }
+    };
 
     $scope.open = function (size) {
       var modalInstance = $modal.open({
@@ -517,7 +517,7 @@
       });
 
       return el.url;
-    };
+    }
 
     function getStatementType(sql){
       return sql.match(/^\s*(SELECT|DELETE|UPDATE|INSERT|DROP|CREATE)\b/i)[1].toUpperCase() || '';
@@ -535,6 +535,21 @@
       var rowsPerPage    = Math.floor(MAX_ITENS_PAGE / totalCols);
 
       return rowsPerPage;
+    }
+
+    function verifyAllParamsFilled(sql, params){
+      var paramsSql = sql.match(/:\w+/ig);
+      if(paramsSql.length !== params.length){
+        $scope.isExecuting = false;
+        $scope.alert = {
+          'type' : 'danger',
+          'messages' : ['Desculpe, mas os parâmetros parecem estar incorretos.']
+        };
+        return false;
+      }
+
+      return true;
+
     }
 
     $scope.codemirrorLoaded = function(_editor){
@@ -570,7 +585,7 @@
           i--;
         }
       }
-    }
+    };
 
     $scope.resetStatement = function(){
       $scope.statement = {
@@ -595,9 +610,8 @@
 
     $scope.executeQuery = function(currentPage){
       Configuration.statement_server = getActiveDataSourceServer();
-      resetAlert();
 
-      if ($scope.isExecuting)
+      if ($scope.isExecuting || !verifyAllParamsFilled($scope.statement.sql, $scope.statement.parameters))
         return;
 
       $scope.validateParams();
@@ -620,8 +634,7 @@
         $scope.currentPage++;
 
         return;
-      };
-
+      }
 
       function prepareMessage(data, verbo){
         if (data === 1)
@@ -664,7 +677,7 @@
             case 'DELETE':
             case 'INSERT':
               $scope.alert = {
-                type : "success",
+                type : 'success',
                 messages : [prepareMessage(data.result.records, 'afetado')]
               }
               $scope.showResults = false;
@@ -673,21 +686,19 @@
             case 'CREATE':
             case 'DROP':
               $scope.alert = {
-                type : "success",
+                type : 'success',
                 messages : ['Sucesso na operação']
               }
               $scope.showResults = false;
             break;
           }
         })
-        .error(function(err){
-          var messages;
+        .error(function(err, code){
           $scope.isExecuting = false;
-
           $scope.alert = {
-            "type" : "danger",
-            "messages" : zErrors.handling(err)
-          }
+            'type' : 'danger',
+            'messages' : zErrors.handling(err)
+          };
         });
 
     };
@@ -962,7 +973,6 @@
     function loadDashboard(){
       DashboardService.get({ id : $routeParams.id }, function(data){
         $scope.dashboard        = data.dashboard;
-        console.log(data);
         $scope.dataSourceServer = data.dashboard.data_source_servers[0];
 
         if ($scope.dataSourceServer) {
@@ -1336,7 +1346,6 @@
     };
 
     $scope.getHost = function(){
-      console.log($scope.dataSourceServer);
       var re  = new RegExp('https?://(.*:[0-9]{4})', 'i');
       var url = $scope.dataSourceServer.url;
       // var x   = url.match(re);

@@ -116,9 +116,9 @@ module.exports = function(grunt){
       css: {
         files: 'public/assets/**/*.css',
         tasks: ['cssmin'],
-        options : {
-          livereload: true,
-        }
+        // options : {
+        //   livereload: true
+        // }
       },
       images : {
         files : ['public/assets/**/*.{png,jpg,gif}'],

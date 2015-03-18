@@ -140,7 +140,6 @@
         'inverse' : '='
       },
       link: function($scope, element, attr, ngController) {
-        console.log($scope);
       }
     };
   })
