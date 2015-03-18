@@ -75,10 +75,10 @@
         templateUrl: '/dist/templates/dashboard-detail/dashboardsList.html'
       })
 
-      .when('/dashboards/12', {
-        controller: 'DashboardFakeDetailController',
-        templateUrl: '/dist/templates/dashboard-detail/dashboardFakeDetail.html'
-      })
+      // .when('/dashboards/12', {
+      //   controller: 'DashboardFakeDetailController',
+      //   templateUrl: '/dist/templates/dashboard-detail/dashboardFakeDetail.html'
+      // })
 
       .when('/dashboards/:id', {
         controller: 'DashboardDetailController',

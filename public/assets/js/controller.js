@@ -962,6 +962,7 @@
     function loadDashboard(){
       DashboardService.get({ id : $routeParams.id }, function(data){
         $scope.dashboard        = data.dashboard;
+        console.log(data);
         $scope.dataSourceServer = data.dashboard.data_source_servers[0];
 
         if ($scope.dataSourceServer) {
@@ -1335,6 +1336,7 @@
     };
 
     $scope.getHost = function(){
+      console.log($scope.dataSourceServer);
       var re  = new RegExp('https?://(.*:[0-9]{4})', 'i');
       var url = $scope.dataSourceServer.url;
       // var x   = url.match(re);

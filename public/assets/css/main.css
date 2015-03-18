@@ -130,10 +130,11 @@ pre
     border: 1px solid;
 }
 
-.indicators-container > div
+.indicators-container > div,
+.no-padding-col > [class^='.col-']
 {
-    padding-left: 5px;
-    padding-right: 5px;
+/*    padding-left: 5px;
+    padding-right: 5px;*/
 }
 
 .indicators-container [data-type='pie']
