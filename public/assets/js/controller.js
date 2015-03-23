@@ -649,7 +649,7 @@
         case 'SELECT':
           $scope.alert = {
             type : 'success',
-            messages : [prepareMessage(data.result.rows.length, 'encontrado')]
+            messages : [prepareMessage(data.resultset.rows.length, 'encontrado')]
           };
         break;
 
@@ -658,7 +658,7 @@
         case 'INSERT':
           $scope.alert = {
             type : 'success',
-            messages : [prepareMessage(data.result.records, 'afetado')]
+            messages : [prepareMessage(data.resultset.records, 'afetado')]
           }
           $scope.showResults = false;
         break;
@@ -711,13 +711,13 @@
             if(typeof callback !== 'function')
               $scope.showResults = true;
 
-            if (data.result) {
-              var rowsPerPage = criaPaginacao(data.result.columns.length);
-              $scope.allData = data.result.rows;
+            if (data.resultset) {
+              var rowsPerPage = criaPaginacao(data.resultset.columns.length);
+              $scope.allData = data.resultset.rows;
 
               $scope.result = {
                 'records': $scope.allData.length,
-                'columns': data.result.columns,
+                'columns': data.resultset.columns,
                 'rows': $scope.allData.slice(0, rowsPerPage)
               };
               showAlert(data);

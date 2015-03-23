@@ -6,7 +6,7 @@ var RTable = React.createClass({
     var thead = React.DOM.thead({},
       React.DOM.tr({},
         this.props.columns.map(function (col) {
-          return React.DOM.th({}, col.name);
+          return React.DOM.th({}, col);
       })));
 
     var tbody = React.DOM.tbody({},

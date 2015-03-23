@@ -39,6 +39,7 @@
       '$httpProvider'
       , function ($httpProvider){
         $httpProvider.defaults.useXDomain = true;
+        $httpProvider.defaults.headers.post['Content-Type'] = 'application/json';
         $httpProvider.interceptors.push('httpRequestInterceptor');
       }
     ])
