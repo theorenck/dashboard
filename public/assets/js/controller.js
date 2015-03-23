@@ -952,20 +952,11 @@
       $scope.functionList = data.functions;
     });
 
-    $scope.addParam = function(){
-      $scope.aggregation.parameters.push({
-        datatype : 'varchar'
-      });
-    }
-
-    $scope.addExecution = function(){
-      data = {
+    $scope.addOperation = function(){
+      var data = {
         'function_id': $scope.functionList[0].id,
         'name': $scope.functionList[0].name,
-        'parameters': {
-          "name" : $scope.functionList[0].parameters.name,
-          "type" : $scope.functionList[0].parameters.type
-        }
+        'parameters': []
       };
 
       $scope.aggregation.executions.push(data);
@@ -1005,7 +996,6 @@
       });
     }else{
       $scope.aggregation = {
-        parameters : [],
         sources : [],
         executions : []
       }
