@@ -690,8 +690,8 @@
         var i = 0;
         var finalIndex = rowsPerPage * ($scope.currentPage + 1);
 
-        while(i < finalIndex && i < allData.length){
-          data[i] = allData[i];
+        while(i < finalIndex && i < $scope.allData.length){
+          data[i] = $scope.allData[i];
           i++;
         }
 
@@ -699,41 +699,42 @@
         $scope.isExecuting  = false;
         $scope.currentPage++;
 
+      }else{
+        var data = {'statement' : $scope.statement};
+        var server = Configuration.statement_server;
+
+        StatementService.execute(data, server)
+          .success(function(data){
+            $scope.saveHistory();
+            $scope.isExecuting = false;
+
+            if(typeof callback !== 'function')
+              $scope.showResults = true;
+
+            if (data.result) {
+              var rowsPerPage = criaPaginacao(data.result.columns.length);
+              $scope.allData = data.result.rows;
+
+              $scope.result = {
+                'records': $scope.allData.length,
+                'columns': data.result.columns,
+                'rows': $scope.allData.slice(0, rowsPerPage)
+              };
+              showAlert(data);
+            }
+
+            if(typeof callback === 'function')
+              callback($scope.allData);
+          })
+          .error(function(err, code){
+            $scope.isExecuting = false;
+            $scope.alert = {
+              'type' : 'danger',
+              'messages' : zErrors.handling(err)
+            };
+          });
       }
 
-      var data = {'statement' : $scope.statement};
-      var server = Configuration.statement_server;
-
-      StatementService.execute(data, server)
-        .success(function(data){
-          $scope.saveHistory();
-          $scope.isExecuting = false;
-
-          if(typeof callback !== 'function')
-            $scope.showResults = true;
-
-          if (data.result) {
-            var rowsPerPage = criaPaginacao(data.result.columns.length);
-            $scope.allData = data.result.rows;
-
-            $scope.result = {
-              'records': $scope.allData.length,
-              'columns': data.result.columns,
-              'rows': $scope.allData.slice(0, rowsPerPage)
-            };
-            showAlert(data);
-          }
-
-          if(typeof callback === 'function')
-            callback($scope.allData);
-        })
-        .error(function(err, code){
-          $scope.isExecuting = false;
-          $scope.alert = {
-            'type' : 'danger',
-            'messages' : zErrors.handling(err)
-          };
-        });
     };
 
     $scope.salvarOrigem = function(){
