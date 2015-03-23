@@ -470,12 +470,14 @@
     };
   }
 
-  ConsoleController.$inject = ['$scope', '$location', '$anchorScroll', 'StatementService', 'SchemaService', 'HistoryService', 'DataSourceService', 'zCodeMirror', '$modal', 'zErrors'];
-  function ConsoleController($scope, $location, $anchorScroll, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror, $modal, zErrors){
+  ConsoleController.$inject = ['$scope', '$location', '$anchorScroll', 'SourceService', 'StatementService', 'SchemaService', 'HistoryService', 'DataSourceService', 'zCodeMirror', '$modal', 'zErrors'];
+  function ConsoleController($scope, $location, $anchorScroll, SourceService, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror, $modal, zErrors){
 
-    var allData = [];
-    $scope.showAdvancedOptions   = true;
+    $scope.allData = [];
+    $scope.isOptionsOpened       = true;
+    $scope.showParams            = true;
     $scope.showResults           = false;
+    $scope.showExport            = false;
     $scope.data_types            = ['varchar', 'decimal', 'integer', 'date', 'time', 'timestamp'];
     $scope.isExecuting           = false;
     $scope.hasLimit              = true;
@@ -485,6 +487,29 @@
     $scope.historyItems          = [];
     $scope.editorOptions         = zCodeMirror.initialize($scope);
     $scope.listDataSourceService = [];
+    $scope.collections = {
+      'divisor' : [
+        {'value' : ',', 'label' : 'Vírgula'},
+        {'value' : ';', 'label' : 'Ponto e Vírgula'},
+        {'value' : '|', 'label' : 'Pipe'}
+      ],
+      'eol': [
+        {'value' : 'newline', 'label' : 'Em branco'},
+        {'value' : ';', 'label' : 'Ponto e Vírgula'},
+        {'value' : ',', 'label' : 'Vírgula'}
+      ]
+    };
+    $scope.exportModel = {
+      'type' : 'json',
+      'csv' : {
+        'divisor' : ',',
+        'eol' : 'newline'
+      },
+      'consulta' : {
+        'codigo' : null,
+        'descricao' : null
+      }
+    };
     $scope.resultset = {
       'records': 0,
       'fetched': 0,
@@ -492,6 +517,19 @@
       'rows': []
     };
 
+    DataSourceService.get(function(data){
+      $scope.listDataSourceService   = data.data_source_servers;
+      $scope.activeDataSourceService = data.data_source_servers[0].id;
+    });
+
+    function prepareMessage(data, verbo){
+      if (data === 1)
+        return '01 registro ' + verbo;
+      else if (data === 0)
+        return 'Nenhum registro ' + verbo;
+      else if (data > 0)
+        return data + ' registros ' + verbo + 's' ;
+    }
 
     $scope.scrollTop = function(){
       $location.hash('top');
@@ -505,11 +543,6 @@
         size: size,
       });
     };
-
-    DataSourceService.get(function(data){
-      $scope.listDataSourceService   = data.data_source_servers;
-      $scope.activeDataSourceService = data.data_source_servers[0].id;
-    });
 
     function getActiveDataSourceServer(){
       var el =  _.find($scope.listDataSourceService, function(el){
@@ -538,7 +571,7 @@
     }
 
     function verifyAllParamsFilled(sql, params){
-      var paramsSql = sql.match(/:\w+/ig);
+      var paramsSql = sql.match(/:\w+/ig) || [];
       if(paramsSql.length !== params.length){
         $scope.isExecuting = false;
         $scope.alert = {
@@ -602,20 +635,53 @@
         type : 'varchar',
         evaluated: false,
       });
+      window.setTimeout(function(){
+        $('.table-editable tr:last td:first input').focus();
+      },1);
     };
 
     $scope.deleteParam = function(key){
       $scope.statement.parameters.splice(key,1);
     };
 
-    $scope.executeQuery = function(currentPage){
+    function showAlert(data){
+      switch(getStatementType($scope.statement.sql)){
+        case 'SELECT':
+          $scope.alert = {
+            type : 'success',
+            messages : [prepareMessage(data.result.rows.length, 'encontrado')]
+          };
+        break;
+
+        case 'UPDATE':
+        case 'DELETE':
+        case 'INSERT':
+          $scope.alert = {
+            type : 'success',
+            messages : [prepareMessage(data.result.records, 'afetado')]
+          }
+          $scope.showResults = false;
+        break;
+
+        case 'CREATE':
+        case 'DROP':
+          $scope.alert = {
+            type : 'success',
+            messages : ['Sucesso na operação']
+          }
+          $scope.showResults = false;
+        break;
+      }
+    }
+
+    $scope.executeQuery = function(currentPage, callback){
       Configuration.statement_server = getActiveDataSourceServer();
 
+      $scope.validateParams();
       if ($scope.isExecuting || !verifyAllParamsFilled($scope.statement.sql, $scope.statement.parameters))
         return;
 
-      $scope.validateParams();
-      $scope.isExecuting   = true;
+      $scope.isExecuting = true;
 
       // se houver paginação
       if (currentPage) {
@@ -633,16 +699,6 @@
         $scope.isExecuting  = false;
         $scope.currentPage++;
 
-        return;
-      }
-
-      function prepareMessage(data, verbo){
-        if (data === 1)
-          return '01 registro ' + verbo;
-        else if (data === 0)
-          return 'Nenhum registro ' + verbo;
-        else if (data > 0)
-          return data + ' registros ' + verbo + 's' ;
       }
 
       var data = {'statement' : $scope.statement};
@@ -652,46 +708,24 @@
         .success(function(data){
           $scope.saveHistory();
           $scope.isExecuting = false;
-          $scope.showResults = true;
+
+          if(typeof callback !== 'function')
+            $scope.showResults = true;
 
           if (data.result) {
             var rowsPerPage = criaPaginacao(data.result.columns.length);
-            allData = data.result.rows;
+            $scope.allData = data.result.rows;
 
             $scope.result = {
-              'records': allData.length,
+              'records': $scope.allData.length,
               'columns': data.result.columns,
-              'rows': allData.slice(0, rowsPerPage)
+              'rows': $scope.allData.slice(0, rowsPerPage)
             };
+            showAlert(data);
           }
 
-          switch(getStatementType($scope.statement.sql)){
-            case 'SELECT':
-              $scope.alert = {
-                type : 'success',
-                messages : [prepareMessage(data.result.rows.length, 'encontrado')]
-              };
-            break;
-
-            case 'UPDATE':
-            case 'DELETE':
-            case 'INSERT':
-              $scope.alert = {
-                type : 'success',
-                messages : [prepareMessage(data.result.records, 'afetado')]
-              }
-              $scope.showResults = false;
-            break;
-
-            case 'CREATE':
-            case 'DROP':
-              $scope.alert = {
-                type : 'success',
-                messages : ['Sucesso na operação']
-              }
-              $scope.showResults = false;
-            break;
-          }
+          if(typeof callback === 'function')
+            callback($scope.allData);
         })
         .error(function(err, code){
           $scope.isExecuting = false;
@@ -700,8 +734,22 @@
             'messages' : zErrors.handling(err)
           };
         });
-
     };
+
+    $scope.salvarOrigem = function(){
+      if($scope.exportModel.type === 'consulta'){
+        $scope.statement.type      = 'Query';
+        $scope.statement.code      = $scope.exportModel.consulta.codigo;
+        $scope.statement.name      = $scope.exportModel.consulta.descricao;
+        $scope.statement.statement = $scope.statement.sql;
+
+        var data = { source : $scope.statement };
+        console.log(data);
+        SourceService.save(data, function(data){
+          console.log(data);
+        });
+      }
+    }
 
     $scope.saveHistory = function(){
       HistoryService.post($scope.statement, function(){
@@ -1797,7 +1845,7 @@
             toLabel: 'Para',
             customRangeLabel: 'Personalizado',
             daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex','Sab'],
-            monthNames: ['Janeiro', 'Favereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
           }
         },
         function(start, end, range) {

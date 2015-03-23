@@ -34,16 +34,8 @@
             </div>
 
             <div class="col-md-12">
-              <p style="margin-bottom: 20px;">
-                <a href="javascript:;" ng-click="showAdvancedOptions=!showAdvancedOptions;">
-                  Avançado <span class="caret" ng-class="showAdvancedOptions ? 'caret-reversed' : ''"></span>
-                </a>
-              </p>
-            </div>
-
-            <div class="col-md-12" ng-show="showAdvancedOptions">
               <div class="form-group">
-                <label class="control-label">Parâmetros</label>
+                <label for="">Parâmetros</label>
                 <table class="table table-bordered table-striped table-editable">
                   <thead>
                     <tr>
@@ -76,26 +68,101 @@
                     </tr>
                   </tbody>
                 </table>
-                <button class="btn btn-info " type="button" ng-click="addParam()">Adicionar parâmetro</button>
+                <button class="btn btn-info" type="button" ng-click="addParam()">Adicionar parâmetro</button>
               </div>
-
-
             </div>
           </div>
 
           <div class="row">
             <div class="col-md-12">
-              <div>
-                <button class="btn btn-success btn-block" type="submit" ng-disabled="isExecuting" ng-show="!showResults">Executar SQL</button>
+              <span>
+                <button class="btn btn-success btn-block" type="submit" ng-hide="showResults" ng-disabled="isExecuting">
+                  <span ng-hide="isExecuting">Executar SQL</span>
+                  <span ng-show="isExecuting">Processando...</span>
+                </button>
+              </span>
+              <span>
                 <button class="btn btn-default btn-block" type="button" ng-click="showResults=!showResults" ng-show="showResults">Editar SQL</button>
-              </div>
+              </span>
             </div>
           </div>
         </form>
       </div>
 
+      <div class="well more-options" ng-show="showResults">
+        <h3 ng-click="isOptionsOpened=!isOptionsOpened">
+          <a href="">+ Opções</a>
+        </h3>
+        <div class="form-group" collapse="isOptionsOpened">
+          <div class="row">
 
+            <div class="col-md-3">
+              <label for="">Formato:</label>
+              <select
+                class="form-control"
+                ng-model="exportModel.type"
+                ng-options="formato for formato in ['json', 'csv', 'consulta']">
+              </select>
+            </div>
 
+            <div class="col-md-3">
+              <label>
+                <span ng-if="exportModel.type==='csv'">Separador</span>
+                <span ng-if="exportModel.type==='consulta'">Código</span>
+              </label>
+
+              <select
+                class="form-control"
+                ng-model="exportModel.csv.divisor"
+                ng-if="exportModel.type==='csv'"
+                ng-options="divisor.value as divisor.label for divisor in collections.divisor">
+              </select>
+
+              <input
+                type="text"
+                class="form-control"
+                ng-model="exportModel.consulta.codigo"
+                ng-if="exportModel.type==='consulta'">
+            </div>
+
+            <div class="col-md-4">
+              <label>
+                <span ng-if="exportModel.type==='csv'">Final de Linha</span>
+                <span ng-if="exportModel.type==='consulta'">Descrição</span>
+              </label>
+
+              <select
+                class="form-control"
+                ng-model="exportModel.csv.eol"
+                ng-if="exportModel.type==='csv'"
+                ng-options="eol.value as eol.label for eol in collections.eol">
+              </select>
+
+              <input
+                type="text"
+                class="form-control"
+                ng-model="exportModel.consulta.descricao"
+                ng-if="exportModel.type==='consulta'">
+            </div>
+
+          </div>
+          <div class="row">
+            <div class="col-md-2">
+              <label>&nbsp;</label>
+              <button
+                z-jsondownload
+                resultset="allData"
+                columns="result.columns"
+                type-file="{{ exportModel.type }}"
+                options="exportModel"
+                class="btn btn-info btn-block"
+                type="button"
+                ng-click="salvarOrigem()"
+                >Salvar</button>
+              </div>
+          </div>
+        </div>
+      </div>
     </div>
 
 

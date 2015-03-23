@@ -12,9 +12,8 @@
     border-left: 4px solid transparent;
 }
 
-.navbar .navbar-brand img
-{
-    max-height: 21px;
+.navbar-brand{
+    padding: 9.5px 15px 18.5px;
 }
 
 pre
@@ -180,6 +179,10 @@ section
 .table tbody tr td:empty
 {
     height: 38px;
+}
+
+.table.table-editable{
+    margin-bottom: 15px;
 }
 
 .table-editable .col-md-05
@@ -622,7 +625,7 @@ td .btn-remove
     }
     .daterangepicker.dropdown-menu
     {
-        width: calc(100% - 30px);
+        width: calc(100% - 30px) !important;
     }
     .applyBtn,
     .cancelBtn
@@ -1221,4 +1224,14 @@ td .z-checkbox
 .CodeMirror-hint .hint-datatype {
   float: right;
   font-style:italic;
+}
+
+
+.more-options h3{
+    margin: 0px;
+    padding: 0px;
+}
+
+.more-options .form-group{
+    margin-top: 15px;
 }

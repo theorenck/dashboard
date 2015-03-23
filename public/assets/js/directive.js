@@ -16,6 +16,83 @@
     };
   })
 
+  .directive('zJsondownload',function(){
+    return {
+      restrict: 'EA',
+      scope: {
+        'resultset' : '=',
+        'columns'   : '=',
+        'typeFile'  : '@',
+        'options'   : '=',
+      },
+      link : function(scope, el, attr){
+
+        el.on('click', function(){
+          if(scope.typeFile === 'csv'){
+            JSONToCSVConvertor(scope.columns, scope.resultset, 'Console', true);
+          }
+          else if(scope.typeFile === 'json'){
+            JSONDownload(scope.columns, scope.resultset, 'Console', true);
+          }
+        });
+
+        function JSONDownload(JSONColumns, JSONData, reportTitle, showLabel){
+          var result       = { columns : [], resultset : [] };
+          result.columns   = JSONColumns;
+          result.resultset = JSONData;
+
+
+          var fileName  = 'AtlasReport_';
+          fileName      += reportTitle.replace(/ /g,'_');
+          var uri       = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(result));
+          var link      = document.createElement('a');
+          link.href     = uri;
+          link.style    = 'visibility:hidden';
+          link.download = fileName + '.json';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+
+        function JSONToCSVConvertor(JSONColumns, JSONData, reportTitle, showLabel) {
+          var arrColumns = [];
+          var CSV        = [];
+          var eol        = scope.options.csv.eol === 'newline' ? '\r\n' : scope.options.csv.eol + '\r\n';
+
+          JSONColumns.forEach(function(el, i){
+            arrColumns[i] = el.name;
+          });
+
+          if (showLabel)
+            CSV.push(arrColumns.join(scope.options.csv.divisor));
+
+          JSONData.forEach(function(row, i){
+            row = row.join(scope.options.csv.divisor).replace(/(\r\n|\n|\r)/gm,'\\n');
+            CSV.push(row);
+          });
+
+
+          CSV = CSV.join(eol);
+
+          if (CSV === '') {
+            alert('Invalid data');
+            return;
+          }
+
+          var fileName  = 'AtlasReport_';
+          fileName      += reportTitle.replace(/ /g,'_');
+          var uri       = 'data:text/csv;charset=utf-8,' + escape(CSV);
+          var link      = document.createElement('a');
+          link.href     = uri;
+          link.style    = 'visibility:hidden';
+          link.download = fileName + '.csv';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      }
+    };
+  })
 
   .directive('scrollPosition', function($window){
     return {
@@ -288,7 +365,7 @@
     return {
       restrict: 'E',
       scope: {
-        data: '='
+        'data': '='
       },
       link : function(scope, el, attrs) {
 
