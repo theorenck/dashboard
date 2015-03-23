@@ -744,9 +744,11 @@
         $scope.statement.statement = $scope.statement.sql;
 
         var data = { source : $scope.statement };
-        console.log(data);
-        SourceService.save(data, function(data){
-          console.log(data);
+        SourceService.save(data, function(data, err){
+          $scope.resetStatement();
+          $scope.exportModel.consulta = '';
+          $scope.exportModel.codigo   = '';
+          alert('Query salva com sucesso!');
         });
       }
     }
