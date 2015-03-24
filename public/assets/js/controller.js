@@ -587,8 +587,9 @@
 
     $scope.codemirrorLoaded = function(_editor){
       var _doc = _editor.getDoc();
-      _editor.focus();
+      _editor.focus()
       _doc.markClean();
+
       zCodeMirror.setHints(_editor);
 
       if (!localStorage.getItem('tables')){
@@ -607,6 +608,11 @@
           zCodeMirror.setHints(_editor, tables);
         });
       }
+
+      setTimeout(function(){
+        _editor.refresh();
+      }, 100);
+
     };
 
     $scope.validateParams = function(){
@@ -672,6 +678,10 @@
           $scope.showResults = false;
         break;
       }
+    }
+
+    $scope.deactiveResultsTab = function(){
+      $scope.showResults=false;
     }
 
     $scope.executeQuery = function(currentPage, callback){

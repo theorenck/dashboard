@@ -3,6 +3,10 @@
     border-radius: 0 !important;
 }
 
+body{
+    /*background-color: #F7F7F7;*/
+}
+
 /* General Styles */
 .caret.caret-reversed
 {
@@ -797,6 +801,10 @@ button .fa
     min-height: 40px;
 }
 
+.navbar .nav{
+    margin: 0px;
+}
+
 .row.no-pad > [class*='col-']
 {
     padding-right: 0;
@@ -1234,4 +1242,8 @@ td .z-checkbox
 
 .more-options .form-group{
     margin-top: 15px;
+}
+
+.nav{
+    margin-bottom: 15px;
 }

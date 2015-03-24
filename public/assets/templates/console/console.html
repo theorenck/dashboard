@@ -7,97 +7,138 @@
           <div class="col-md-6">
             <h2>Console</h2>
           </div>
-          <div class="col-md-offset-3 col-md-3">
-            <select class="form-control"
-              ng-options="dataSource.id as dataSource.name for dataSource in listDataSourceService"
-              ng-model="activeDataSourceService">
-            </select>
-          </div>
         </div>
       </div>
 
       <z-alertbox ng-model="alert"></z-alertbox>
 
-      <div class="well" style="position:relative">
-        <form ng-submit="executeQuery()">
+      <tabset type="pills">
+        <!-- CONSULTA -->
+        <tab heading="Consulta" active="true">
+          <z-loader ng-show="isExecuting"></z-loader>
+          <form ng-submit="executeQuery()" ng-hide="isExecuting">
+            <!-- <a class="btn btn-question hidden-xs" ng-click="open()" tooltip="Ajuda" tooltip-placement="left">
+              <i class="glyphicon glyphicon-question-sign"></i>
+            </a> -->
 
-          <a class="btn btn-question hidden-xs" ng-click="open()" tooltip="Ajuda" tooltip-placement="left">
-            <i class="glyphicon glyphicon-question-sign"></i>
-          </a>
-
-          <div class="row">
-            <div class="col-md-12">
-              <div class="form-group">
-                <label class="control-label">SQL</label>
-                <div ng-model="statement.sql" ui-codemirror-opts="editorOptions" ui-codemirror="{ onLoad : codemirrorLoaded }"></div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="control-label">Fonte de dados</label>
+                  <select class="form-control"
+                    ng-options="dataSource.id as dataSource.name for dataSource in listDataSourceService"
+                    ng-model="activeDataSourceService">
+                  </select>
+                </div>
               </div>
             </div>
 
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="control-label">SQL</label>
+                  <div
+                    ng-model="statement.sql"
+                    ui-codemirror-opts="editorOptions"
+                    ui-codemirror="{ onLoad : codemirrorLoaded }"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label>Parâmetros</label>
+                  <div class="div">
+                    <table class="table table-bordered table-striped table-editable" ng-show="!!statement.parameters.length">
+                      <thead>
+                        <tr>
+                          <th class="col-md-3">Nome</th>
+                          <th class="col-md-2">Tipo</th>
+                          <th class="col-md-05 text-center">&fnof;<sub>(x)</sub></th>
+                          <th class="col-md-5">Valor</th>
+                          <th class="col-md-05"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr ng-repeat="(key, param) in statement.parameters track by $index">
+                          <td>
+                            <input class="form-control" type="text" ng-model="param.name">
+                          </td>
+                          <td>
+                            <select ng-model="param.type" class="form-control" ng-options="data for data in data_types track by data"></select>
+                          </td>
+                          <td class="text-center">
+                            <div class="z-checkbox">
+                              <z-checkbox ng-model="param.evaluated"></z-checkbox>
+                            </div>
+                          </td>
+                          <td>
+                            <input class="form-control" type="text" ng-model="param.value">
+                          </td>
+                          <td class="text-center">
+                            <a href="#" ng-click="deleteParam(key)" class="btn-remove"><i class="fa fa-close"></i></a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div>
+                    <button class="btn btn-info" type="button" ng-click="addParam()">Adicionar parâmetro</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <span>
+                  <button class="btn btn-success" type="submit" ng-disabled="isExecuting">
+                    <span ng-hide="isExecuting">Executar SQL</span>
+                    <span ng-show="isExecuting">
+                      <z-loader>
+                    </span>
+                  </button>
+                </span>
+
+              </div>
+            </div>
+          </form>
+        </tab>
+        <!-- /CONSULTA -->
+
+        <!-- RESULTADO -->
+        <tab heading="Resultado" disabled="!result.rows" active="showResults" deselect="deactiveResultsTab()">
+          <div class="row" ng-show="!!result.rows">
             <div class="col-md-12">
-              <div class="form-group">
-                <label for="">Parâmetros</label>
-                <table class="table table-bordered table-striped table-editable">
-                  <thead>
-                    <tr>
-                      <th class="col-md-3">Nome</th>
-                      <th class="col-md-2">Tipo</th>
-                      <th class="col-md-05 text-center">&fnof;<sub>(x)</sub></th>
-                      <th class="col-md-5">Valor</th>
-                      <th class="col-md-05"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat="(key, param) in statement.parameters track by $index">
-                      <td>
-                        <input class="form-control" type="text" ng-model="param.name">
-                      </td>
-                      <td>
-                        <select ng-model="param.type" class="form-control" ng-options="data for data in data_types track by data"></select>
-                      </td>
-                      <td class="text-center">
-                        <div class="z-checkbox">
-                          <z-checkbox ng-model="param.evaluated"></z-checkbox>
-                        </div>
-                      </td>
-                      <td>
-                        <input class="form-control" type="text" ng-model="param.value">
-                      </td>
-                      <td class="text-center">
-                        <a href="#" ng-click="deleteParam(key)" class="btn-remove"><i class="fa fa-close"></i></a>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <button class="btn btn-info" type="button" ng-click="addParam()">Adicionar parâmetro</button>
+              <div class="panel panel-default">
+                <div class="table-responsive">
+                  <fast-repeat data="result"></fast-repeat>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12" ng-show="result.records > result.rows.length">
+              <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>
+            </div>
+          </div>
+
+          <div ng-show="result.length">
+            <div class="col-md-12">
+              <div class="panel panel-default">
+                <div class="panel-body">
+                  <b>{{ result.affected_rows }}</b> linhas afetadas.
+                </div>
               </div>
             </div>
           </div>
+        </tab>
+        <!-- /RESULTADO -->
 
+        <!-- EXPORTAR -->
+        <tab heading="Exportar" disabled="!result.rows">
           <div class="row">
-            <div class="col-md-12">
-              <span>
-                <button class="btn btn-success btn-block" type="submit" ng-hide="showResults" ng-disabled="isExecuting">
-                  <span ng-hide="isExecuting">Executar SQL</span>
-                  <span ng-show="isExecuting">Processando...</span>
-                </button>
-              </span>
-              <span>
-                <button class="btn btn-default btn-block" type="button" ng-click="showResults=!showResults" ng-show="showResults">Editar SQL</button>
-              </span>
-            </div>
-          </div>
-        </form>
-      </div>
-
-      <div class="well more-options" ng-show="showResults">
-        <h3 ng-click="isOptionsOpened=!isOptionsOpened">
-          <a href="">+ Opções</a>
-        </h3>
-        <div class="form-group" collapse="isOptionsOpened">
-          <div class="row">
-
             <div class="col-md-3">
-              <label for="">Formato:</label>
+              <label for="">Formato</label>
               <select
                 class="form-control"
                 ng-model="exportModel.type"
@@ -105,7 +146,7 @@
               </select>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-3" ng-show="exportModel.type==='csv' || exportModel.type==='consulta'">
               <label>
                 <span ng-if="exportModel.type==='csv'">Separador</span>
                 <span ng-if="exportModel.type==='consulta'">Código</span>
@@ -125,7 +166,7 @@
                 ng-if="exportModel.type==='consulta'">
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4" ng-show="exportModel.type==='csv' || exportModel.type==='consulta'">
               <label>
                 <span ng-if="exportModel.type==='csv'">Final de Linha</span>
                 <span ng-if="exportModel.type==='consulta'">Descrição</span>
@@ -144,7 +185,6 @@
                 ng-model="exportModel.consulta.descricao"
                 ng-if="exportModel.type==='consulta'">
             </div>
-
           </div>
           <div class="row">
             <div class="col-md-2">
@@ -155,14 +195,48 @@
                 columns="result.columns"
                 type-file="{{ exportModel.type }}"
                 options="exportModel"
-                class="btn btn-info btn-block"
+                class="btn btn-info"
                 type="button"
                 ng-click="salvarOrigem()"
                 >Salvar</button>
-              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </tab>
+        <!-- /EXPORTAR -->
+
+        <!-- HISTÓRICO -->
+        <tab heading="Histórico">
+          <div class="row" data-type="history">
+            <div class="col-md-12">
+              <div class="form-group">
+                <button class="btn btn-info" type="button" ng-click="clearHistory()">Limpar Histórico</button>
+              </div>
+
+              <div class="list-group striped">
+                <a class="list-group-item"
+                   ng-repeat="row in historyItems | orderBy:'created_at':true"
+                   data-id="{{ row.id }}"
+                   ng-click="loadHistoryItem(row)"
+                >
+                  <p class="list-group-item-text">
+                    <span class="close-history-item" ng-click="delete(row.id)">
+                      <span class="fa fa-close"></span>
+                    </span>
+                    <span class="label" ng-class="getStyleType(row.type)">
+                      {{ ::row.type }}
+                    </span>
+                    {{ ::row.statement.sql }}
+                  </p>
+                  <h6 class="list-group-item-heading" style="font-weight:bold; color:#2c3e50; padding-top:10px;">
+                    {{ ::row.created_at | fromNow }}
+                  </h6>
+                </a>
+              </div>
+            </div>
+          </div>
+        </tab>
+        <!-- /HISTÓRICO -->
+      </tabset>
     </div>
 
 
@@ -173,60 +247,6 @@
     </button>
 
     <!-- RESULTADOS -->
-    <div class="row" ng-show="showResults">
-      <div ng-show="!!result.rows">
-        <div class="col-md-12">
-          <div class="panel panel-default">
-            <div class="table-responsive">
-              <fast-repeat data="result"></fast-repeat>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-12" ng-show="result.records > result.rows.length">
-          <button type="button" class="btn btn-primary btn-block" ng-click="executeQuery(currentPage)" ng-disabled="isExecuting">Ver mais</button>
-        </div>
-      </div>
-
-      <div ng-show="result.length">
-        <div class="col-md-12">
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <b>{{ result.affected_rows }}</b> linhas afetadas.
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- HISTÓRICO -->
-    <div class="row" data-type="history" ng-hide="showResults">
-      <!-- <pre>{{ historyItems | json }}</pre> -->
-      <div class="col-md-12 historico" ng-show="historyItems.length">
-        <div class="clear-history">
-          <a ng-click="clearHistory()">Limpar Histórico</a>
-        </div>
-        <div class="list-group striped">
-
-          <a ng-repeat="row in historyItems | orderBy:'created_at':true" href="#" class="list-group-item" data-id="{{ row.id }}" ng-click="loadHistoryItem(row)">
-            <p class="list-group-item-text">
-              <span class="close-history-item" ng-click="delete(row.id)">
-                <span class="fa fa-close"></span>
-              </span>
-              <span class="label" ng-class="getStyleType(row.type)">
-                {{ ::row.type }}
-              </span>
-              {{ ::row.statement.sql }}
-            </p>
-            <h6 class="list-group-item-heading" style="font-weight:bold; color:#2c3e50; padding-top:10px;">
-              {{ ::row.created_at | fromNow }}
-            </h6>
-          </a>
-
-        </div>
-      </div>
-    </div>
 
     <!-- MODAL ATALHOS -->
     <script type="text/ng-template" id="myModalContent.html">
