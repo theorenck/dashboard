@@ -489,7 +489,6 @@
     $scope.listDataSourceService = [];
     $scope.DataSource = { activeDataSourceService : ''};
     $scope.activeDataSourceService = null;
-
     $scope.collections = {
       'divisor' : [
         {'value' : ',', 'label' : 'Vírgula'},
@@ -519,18 +518,25 @@
       'columns': [],
       'rows': []
     };
+    var codeMirror;
 
     DataSourceService.get(function(data){
-      $scope.listDataSourceService   = data.data_source_servers;
-      $scope.DataSource.activeDataSourceService = parseInt(localStorage.getItem('activeDataSourceService')) || data.data_source_servers[0].id;
+      $scope.listDataSourceService              = data.data_source_servers;
+      var source = JSON.parse(localStorage.getItem('activeDataSourceService')) || {};
+      $scope.DataSource.activeDataSourceService = source.id || data.data_source_servers[0].id;
     });
 
     function getActiveDataSourceServer(){
       var el =  _.find($scope.listDataSourceService, function(el){
-        return $scope.DataSource.activeDataSourceService === el.id;
+        return !!el && $scope.DataSource.activeDataSourceService === el.id;
       });
-      localStorage.setItem('activeDataSourceService', el.id);
-      return el.url;
+
+      if(!!el){
+        localStorage.setItem('activeDataSourceService', JSON.stringify(el));
+        return el.url;
+      }else{
+        return false;
+      }
     }
 
     function prepareMessage(data, verbo){
@@ -589,35 +595,50 @@
 
     }
 
+    function createHint(data){
+      var tables = {};
+      data.schema.tables.forEach(function(val, index, arr){
+        tables[val.name] = [];
+        val.columns.forEach(function(column, index, arr){
+          var hint = column.name + ' <span class="hint-datatype">' + column.type + '(' + column.length + ')</span>';
+          tables[val.name].push(hint);
+        });
+      });
+
+      localStorage.setItem('tables_' + $scope.DataSource.activeDataSourceService, JSON.stringify(tables));
+      return tables;
+    }
+
     $scope.codemirrorLoaded = function(_editor){
-      var _doc = _editor.getDoc();
-      _editor.focus()
+      codeMirror = _editor;
+      var _doc = codeMirror.getDoc();
+      codeMirror.focus()
       _doc.markClean();
 
-      zCodeMirror.setHints(_editor);
-
-      if (!localStorage.getItem('tables')){
-        SchemaService.get(function(data){
-          var tables = {};
-          data.schema.tables.forEach(function(val, index, arr){
-            tables[val.name] = [];
-            val.columns.forEach(function(column, index, arr){
-              var hint = column.name + ' <span class="hint-datatype">' + column.type + '(' + column.length + ')</span>';
-              tables[val.name].push(hint);
-            });
-          });
-
-          localStorage.setItem('tables', JSON.stringify(tables));
-
-          zCodeMirror.setHints(_editor, tables);
-        });
-      }
-
-      setTimeout(function(){
-        _editor.refresh();
-      }, 100);
-
+      $scope.loadSchema();
     };
+
+    $scope.loadSchema = function(){
+      Configuration.middleware_server = getActiveDataSourceServer();
+
+      // verifica se tem as tabelas
+      var tables = localStorage.getItem('tables_' + $scope.DataSource.activeDataSourceService);
+      if(Configuration.middleware_server){
+        if (!tables){
+          SchemaService.get({}, Configuration.middleware_server)
+          .success(function(data){
+            tables = createHint(data);
+            zCodeMirror.setHints(codeMirror, tables);
+          });
+        }else{
+          zCodeMirror.setHints(codeMirror, JSON.parse(tables));
+          codeMirror.refresh();
+        }
+      }
+      setTimeout(function(){
+        codeMirror.refresh();
+      }, 100);
+    }
 
     $scope.validateParams = function(){
       var i;
@@ -886,6 +907,7 @@
       zCodeMirror.setHints(_editor);
 
       if (!localStorage.getItem("tables")){
+        SchemaService.setServer();
         SchemaService.get(function(data){
           localStorage.setItem("tables", JSON.stringify(data.schema.tables));
           zCodeMirror.setHints(_editor, data.schema.tables);

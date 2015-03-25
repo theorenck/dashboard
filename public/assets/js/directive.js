@@ -391,7 +391,7 @@
                   return $table.closest('.wrapper');
                 }
               });
-            }, 100);
+            }, 200);
           }
         }
 
@@ -451,7 +451,6 @@
       };
 
       zCodeMirror.setHints = function(instance, tables){
-        var tables = tables ? tables : JSON.parse(localStorage.getItem('tables'));
         return instance.setOption('hintOptions',{
             tables: tables
         });

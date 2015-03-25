@@ -33,10 +33,14 @@
             this.req.method = method;
           },
 
-          get : function(data, server){
+          get : function(data, server, callback){
             var self = this;
             self.setParams('GET', data, server);
-            return $http(self.req);
+            if(typeof callback === 'function'){
+              return $http(self.req).success(callback);
+            }else{
+              return $http(self.req);
+            }
           },
 
           post : function(data, server, callback){
@@ -97,6 +101,24 @@
         x.url = '/api/aggretations';
         return x;
 
+      }
+    ]
+  )
+
+  /**
+   * MIDDLEWARE
+   */
+  /**
+   * MIDDLEWARE - dinamico
+   */
+  .factory(
+    'SchemaService',
+    ['zHttp',
+      function(zHttp){
+        var x = Object.create(zHttp);
+
+        x.url = '/api/schema/extended';
+        return x;
       }
     ]
   )
@@ -246,18 +268,6 @@
         return $resource( Configuration.business_server + '/api/widget_types/:id', { id: '@widget_types.id' }, {
            'update': { method:'PUT' }
         });
-      }
-    ]
-  )
-
-  /**
-   * MIDDLEWARE - dinamico
-   */
-  .factory(
-    'SchemaService',
-    ['$resource',
-      function($resource){
-        return $resource('http://prod-01:4567/api/schema/extended');
       }
     ]
   )
