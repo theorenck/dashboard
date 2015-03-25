@@ -25,9 +25,11 @@
               <div class="col-md-3">
                 <div class="form-group">
                   <label class="control-label">Fonte de dados</label>
-                  <select class="form-control"
-                    ng-options="dataSource.id as dataSource.name for dataSource in listDataSourceService"
-                    ng-model="activeDataSourceService">
+                  <select
+                    class="form-control"
+                    ng-model="DataSource.activeDataSourceService"
+                    ng-options="value.id as value.name for (key , value) in listDataSourceService"
+                    >
                   </select>
                 </div>
               </div>
@@ -138,67 +140,72 @@
         <tab heading="Exportar" disabled="!result.rows">
           <div class="row">
             <div class="col-md-3">
-              <label for="">Formato</label>
-              <select
-                class="form-control"
-                ng-model="exportModel.type"
-                ng-options="formato for formato in ['json', 'csv', 'consulta']">
-              </select>
+              <div class="form-group">
+                <label for="">Formato</label>
+                <select
+                  class="form-control"
+                  ng-model="exportModel.type"
+                  ng-options="formato for formato in ['json', 'csv', 'consulta']">
+                </select>
+              </div>
             </div>
 
             <div class="col-md-3" ng-show="exportModel.type==='csv' || exportModel.type==='consulta'">
-              <label>
-                <span ng-if="exportModel.type==='csv'">Separador</span>
-                <span ng-if="exportModel.type==='consulta'">Código</span>
-              </label>
+              <div class="form-group">
+                <label>
+                  <span ng-if="exportModel.type==='csv'">Separador</span>
+                  <span ng-if="exportModel.type==='consulta'">Código</span>
+                </label>
 
-              <select
-                class="form-control"
-                ng-model="exportModel.csv.divisor"
-                ng-if="exportModel.type==='csv'"
-                ng-options="divisor.value as divisor.label for divisor in collections.divisor">
-              </select>
+                <select
+                  class="form-control"
+                  ng-model="exportModel.csv.divisor"
+                  ng-if="exportModel.type==='csv'"
+                  ng-options="divisor.value as divisor.label for divisor in collections.divisor">
+                </select>
 
-              <input
-                type="text"
-                class="form-control"
-                ng-model="exportModel.consulta.codigo"
-                ng-if="exportModel.type==='consulta'">
+                <input
+                  type="text"
+                  class="form-control"
+                  ng-model="exportModel.consulta.codigo"
+                  ng-if="exportModel.type==='consulta'">
+              </div>
             </div>
 
             <div class="col-md-4" ng-show="exportModel.type==='csv' || exportModel.type==='consulta'">
-              <label>
-                <span ng-if="exportModel.type==='csv'">Final de Linha</span>
-                <span ng-if="exportModel.type==='consulta'">Descrição</span>
-              </label>
+              <div class="form-group">
+                <label>
+                  <span ng-if="exportModel.type==='csv'">Final de Linha</span>
+                  <span ng-if="exportModel.type==='consulta'">Descrição</span>
+                </label>
 
-              <select
-                class="form-control"
-                ng-model="exportModel.csv.eol"
-                ng-if="exportModel.type==='csv'"
-                ng-options="eol.value as eol.label for eol in collections.eol">
-              </select>
+                <select
+                  class="form-control"
+                  ng-model="exportModel.csv.eol"
+                  ng-if="exportModel.type==='csv'"
+                  ng-options="eol.value as eol.label for eol in collections.eol">
+                </select>
 
-              <input
-                type="text"
-                class="form-control"
-                ng-model="exportModel.consulta.descricao"
-                ng-if="exportModel.type==='consulta'">
+                <input
+                  type="text"
+                  class="form-control"
+                  ng-model="exportModel.consulta.descricao"
+                  ng-if="exportModel.type==='consulta'">
+              </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-2">
-              <label>&nbsp;</label>
-              <button
-                z-jsondownload
-                resultset="allData"
-                columns="result.columns"
-                type-file="{{ exportModel.type }}"
-                options="exportModel"
-                class="btn btn-info"
-                type="button"
-                ng-click="salvarOrigem()"
-                >Salvar</button>
+                <button
+                  z-jsondownload
+                  resultset="allData"
+                  columns="result.columns"
+                  type-file="{{ exportModel.type }}"
+                  options="exportModel"
+                  class="btn btn-success"
+                  type="button"
+                  ng-click="salvarOrigem()"
+                  >Salvar</button>
             </div>
           </div>
         </tab>
@@ -298,5 +305,5 @@
 </div>
 
 
-
+{{ Configurarion | json }}
 

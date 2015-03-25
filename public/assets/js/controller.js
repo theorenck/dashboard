@@ -487,6 +487,9 @@
     $scope.historyItems          = [];
     $scope.editorOptions         = zCodeMirror.initialize($scope);
     $scope.listDataSourceService = [];
+    $scope.DataSource = { activeDataSourceService : ''};
+    $scope.activeDataSourceService = null;
+
     $scope.collections = {
       'divisor' : [
         {'value' : ',', 'label' : 'Vírgula'},
@@ -519,8 +522,16 @@
 
     DataSourceService.get(function(data){
       $scope.listDataSourceService   = data.data_source_servers;
-      $scope.activeDataSourceService = data.data_source_servers[0].id;
+      $scope.DataSource.activeDataSourceService = parseInt(localStorage.getItem('activeDataSourceService')) || data.data_source_servers[0].id;
     });
+
+    function getActiveDataSourceServer(){
+      var el =  _.find($scope.listDataSourceService, function(el){
+        return $scope.DataSource.activeDataSourceService === el.id;
+      });
+      localStorage.setItem('activeDataSourceService', el.id);
+      return el.url;
+    }
 
     function prepareMessage(data, verbo){
       if (data === 1)
@@ -544,13 +555,6 @@
       });
     };
 
-    function getActiveDataSourceServer(){
-      var el =  _.find($scope.listDataSourceService, function(el){
-        return $scope.activeDataSourceService === el.id;
-      });
-
-      return el.url;
-    }
 
     function getStatementType(sql){
       return sql.match(/^\s*(SELECT|DELETE|UPDATE|INSERT|DROP|CREATE)\b/i)[1].toUpperCase() || '';
