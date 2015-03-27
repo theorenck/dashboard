@@ -42,32 +42,31 @@
           result.resultset = JSONData;
 
 
-          var fileName  = 'AtlasReport_';
-          fileName      += reportTitle.replace(/ /g,'_');
-          var uri       = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(result));
-          var link      = document.createElement('a');
-          link.href     = uri;
-          link.style    = 'visibility:hidden';
-          link.download = fileName + '.json';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+          try{
+            var fileName  = 'AtlasReport_';
+            fileName      += reportTitle.replace(/ /g,'_');
+            var uri       = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(result));
+            var link      = document.createElement('a');
+            link.href     = uri;
+            link.style    = 'visibility:hidden';
+            link.download = fileName + '.json';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }catch(err){
+            console.log(err);
+          }
         }
 
         function JSONToCSVConvertor(JSONColumns, JSONData, reportTitle, showLabel) {
-          var arrColumns = [];
           var CSV        = [];
           var eol        = scope.options.csv.eol === 'newline' ? '\r\n' : scope.options.csv.eol + '\r\n';
 
-          JSONColumns.forEach(function(el, i){
-            arrColumns[i] = el.name;
-          });
-
           if (showLabel)
-            CSV.push(arrColumns.join(scope.options.csv.divisor));
+            CSV.push(JSONColumns.join(scope.options.csv.divisor));
 
           JSONData.forEach(function(row, i){
-            row = row.join(scope.options.csv.divisor).replace(/(\r\n|\n|\r)/gm,'\\n');
+            row = row.join(scope.options.csv.divisor).replace(/(\r\n|\n|\r|\t|\s+)/gm, ' ');
             CSV.push(row);
           });
 

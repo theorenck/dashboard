@@ -209,6 +209,10 @@ td .btn-remove
     height: 100%;
 }
 
+.btn-remove.text-danger:hover{
+    opacity: 0.8;
+}
+
 .table-striped > tbody > tr:nth-child(even)
 {
     background: #fff;
@@ -1240,10 +1244,24 @@ td .z-checkbox
     padding: 0px;
 }
 
+.form-group{
+    margin-bottom: 25px;
+}
+
 .more-options .form-group{
     margin-top: 15px;
 }
 
-.nav{
-    margin-bottom: 15px;
+
+.container .nav{
+    margin-bottom: 30px;
+}
+
+.container .navbar .nav{
+    margin-bottom: 0px;
+}
+
+.tab-content>.tab-pane{
+    position: relative;
+    min-height: 400px;
 }

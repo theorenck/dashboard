@@ -30,8 +30,7 @@
     .controller('AggregationCreateController', AggregationCreateController)
 
     .controller('DashboardsController', DashboardsController)
-    .controller('DashboardDetailController', DashboardDetailController)
-    .controller('DashboardFakeDetailController', DashboardFakeDetailController);
+    .controller('DashboardDetailController', DashboardDetailController);
 
 
   AppController.$inject = ['$scope', '$rootScope', '$location', 'AuthService', 'zErrors'];
@@ -549,7 +548,6 @@
     }
 
     $scope.scrollTop = function(){
-      $location.hash('top');
       $anchorScroll();
     };
 
@@ -620,15 +618,16 @@
 
     $scope.loadSchema = function(){
       Configuration.middleware_server = getActiveDataSourceServer();
-
       // verifica se tem as tabelas
       var tables = localStorage.getItem('tables_' + $scope.DataSource.activeDataSourceService);
       if(Configuration.middleware_server){
         if (!tables){
+          $scope.isLoadingSchema = true;
           SchemaService.get({}, Configuration.middleware_server)
           .success(function(data){
             tables = createHint(data);
             zCodeMirror.setHints(codeMirror, tables);
+            $scope.isLoadingSchema = false;
           });
         }else{
           zCodeMirror.setHints(codeMirror, JSON.parse(tables));
@@ -656,7 +655,6 @@
         parameters : [],
         sql : localStorage.getItem('draft') || 'SELECT p.codproduto, p.codbarras, p.descricao1 FROM zw14ppro p WHERE p.situacao = \'N\' LIMIT 1000'
       };
-      $scope.addParam();
     };
 
     $scope.addParam = function(){
@@ -740,6 +738,7 @@
 
         StatementService.execute(data, server)
           .success(function(data){
+
             $scope.saveHistory();
             $scope.isExecuting = false;
 
@@ -784,7 +783,10 @@
           $scope.resetStatement();
           $scope.exportModel.consulta = '';
           $scope.exportModel.codigo   = '';
-          alert('Query salva com sucesso!');
+          $scope.alert = {
+            'type' : 'success',
+            'messages' : ["Origem salva com sucesso!"],
+          };
         });
       }
     }
@@ -845,8 +847,8 @@
     $scope.renderHistory();
   }
 
-  DashboardsController.$inject = ['$scope', '$location', 'DashboardService', 'QueryService'];
-  function DashboardsController($scope, $location, DashboardService, QueryService){
+  DashboardsController.$inject = ['$scope', '$location', 'DashboardService'];
+  function DashboardsController($scope, $location, DashboardService){
     $scope.dashboards = [];
 
     DashboardService.get(function(data){
@@ -904,15 +906,7 @@
       var _doc = _editor.getDoc();
       _editor.focus();
       _doc.markClean();
-      zCodeMirror.setHints(_editor);
-
-      if (!localStorage.getItem("tables")){
-        SchemaService.setServer();
-        SchemaService.get(function(data){
-          localStorage.setItem("tables", JSON.stringify(data.schema.tables));
-          zCodeMirror.setHints(_editor, data.schema.tables);
-        });
-      };
+      zCodeMirror.setHints(_editor, []);
     };
 
     $scope.save = function(){
@@ -1138,7 +1132,7 @@
     },
 
     $scope.getGraph = function(widget, data){
-      var valores = $scope.prepareDataset(data.result.rows);
+      var valores = $scope.prepareDataset(data.resultset.rows);
       var title   = widget.customized ? widget.name : widget.indicator.name;
       var hasZoom = false;
       var chart;
@@ -1333,9 +1327,9 @@
       var enabledTooltip = true;
       widget.hasData     = true;
 
-      if(data.result.rows.length > 0){
+      if(data.resultset.rows.length > 0){
         var volumeTotal = 0;
-        var produtos    = (data.result.rows).sort(function(a,b){
+        var produtos    = (data.resultset.rows).sort(function(a,b){
           if (a[1] > b[1])
             return -1;
           if (a[1] < b[1])
@@ -1453,16 +1447,23 @@
               {
                 parameters[index].value = parameters[index].value.replace(':' + el.name, "'" + $scope.indicadores.periodo[el.name] + "'");
               }
-
             });
 
+            _.each(parameters, function(el, index){
+              parameters[index] = {
+                type: el.datatype,
+                evaluated: el.evaluated,
+                name: el.name,
+                value: el.value
+              }
+            })
 
             Service.post(data, $scope.getHost(), function(data){
               var type = widget.widget_type.name;
 
               switch(type){
                 case 'status':
-                  $scope.getStatus(data.result.rows[0][0], widget);
+                  $scope.getStatus(data.resultset.rows[0][0], widget);
                 break;
                 case 'line':
                   $scope.getGraph(widget, data);
@@ -1493,441 +1494,6 @@
         },
       },
     };
-  }
-
-  DashboardFakeDetailController.$inject = ['$scope', '$routeParams', '$window', 'DashboardService', 'SourceService', 'QueryService', 'AggregationService'];
-  function DashboardFakeDetailController($scope, $routeParams, $window, DashboardService, SourceService, QueryService, AggregationService){
-    data = {"id":1, "name":"Painel de Mecânica", "description":"Painel de Mecânica", "data_source_servers":[{"id":1, "url":"http://localhost:3000/api", "name":"localhost", "description":"localhost", "alive":true } ], "widgets":[{"id":9, "customized":false, "name":"Faturamento", "description":"Faturamento", "color":"green", "position":0, "size":3, "dashboard_id":1, "indicator":{"id":9, "name":"Faturamento", "description":"faturamento", "code":"faturamento", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"R$"} }, "widget_type":{"id":2, "name":"status"} }, {"id":6, "customized":false, "name":"Ticket Médio Peças", "description":"Ticket Médio Peças", "color":"orange", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":6, "name":"Ticket Médio Peças", "description":"ticket_medio_pecas", "code":"ticket_medio_pecas", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"R$"} }, "widget_type":{"id":2, "name":"status"} }, {"id":7, "customized":false, "name":"Ticket Médio MO", "description":"Ticket Médio MO", "color":"blue", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":7, "name":"Ticket Médio PO", "description":"ticket_medio_mao_de_obra", "code":"ticket_medio_mao_de_obra", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"R$"} }, "widget_type":{"id":2, "name":"status"} }, {"id":8, "customized":false, "name":"Inadimplência", "description":"Inadimplência", "color":"red", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":8, "name":"Inadimplência", "description":"inadimplencia", "code":"inadimplencia", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":1, "customized":false, "name":"Rentabilidade Peças", "description":"Rentabilidade Peças", "color":"purple", "position":0, "size":3, "dashboard_id":1, "indicator":{"id":1, "name":"Rentabilidade Peças", "description":"rent_pecas", "code":"rent_pecas", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":2, "customized":false, "name":"Rentabilidade MO", "description":"Rentabilidade MO", "color":"purple", "position":1, "size":3, "dashboard_id":1, "indicator":{"id":2, "name":"Rentabilidade MO", "description":"rent_mo", "code":"rent_mo", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":3, "customized":false, "name":"Rentabilidade Terceiros", "description":"Rentabilidade Terceiros", "color":"purple", "position":2, "size":3, "dashboard_id":1, "indicator":{"id":3, "name":"Rentabilidade Terceiros", "description":"rent_terceiros", "code":"rent_terceiros", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":4, "customized":false, "name":"Rentabilidade MC", "description":"Rentabilidade MC", "color":"purple", "position":3, "size":3, "dashboard_id":1, "indicator":{"id":4, "name":"Rentabilidade MC", "description":"rent_mc", "code":"rent_mc", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"status"} }, {"id":5, "customized":false, "name":"Novas OS por dia", "description":"Novas OS por dia", "color":"blue", "position":3, "size":12, "dashboard_id":1, "indicator":{"id":5, "name":"Novas OS por dia", "description":"novas_os_dia", "code":"novas_os_dia", "unity_id":1, "source_id":3, "unity":{"id":1, "name":"Moeda", "symbol":"%"} }, "widget_type":{"id":2, "name":"line"} }, ] };
-    $scope.dashboard              = {};
-    $scope.sourceList             = [];
-    $scope.dataSourceServer       = {};
-    $scope.activeDataSourceServer = {};
-    $scope.dashboard              = data;
-    $scope.dataSourceServer       = data.data_source_servers[0];
-    $scope.activeDataSourceServer = $scope.dataSourceServer.id;
-
-    $scope.getStatus = function(result, widget){
-      x  = NumberHelpers.number_to_human(result, {
-        labels : { thousand : 'mil', million : 'Mi', billion : 'Bi', trillion : 'Tri' },
-        precision: 3,
-        significant : true,
-        separator : ",",
-        delimiter : '.'
-      });
-
-      x = x.split(' ');
-      widget.result   = x[0];
-      widget.grandeza = x[1];
-    };
-
-    $scope.prepareDataset = function(rows){
-      var dataSet   = [];
-      var dataAtual = moment($scope.indicadores.periodo.inicio).format("YYYY-MM-DD");
-      var dataFinal = moment($scope.indicadores.periodo.fim).format("YYYY-MM-DD");
-
-      var valores   = {
-        values    : [],
-        labels    : [],
-        plotBands : []
-      };
-
-
-
-      /**
-       * Procura nas linhas se existe valor para todos os dias,
-       * se não existir insere a data e valor zero no array das linhas
-       */
-      while(dataAtual <= dataFinal){
-
-        var find = _.find(rows, function(el) {
-          return (el[0] === dataAtual);
-        });
-
-        find === undefined ? dataSet.push([dataAtual,0,0,0,0]) : dataSet.push(find);
-
-        dataAtual = moment(dataAtual).add(1, 'day').format("YYYY-MM-DD");
-      }
-
-
-      $.each(dataSet, function(el, val){
-        diaSemana = moment(val[0]).format('dd');
-        valores.values.push([moment(val[0]).format('x'), val[1]]);
-
-        if (diaSemana === 'sáb') {
-          valores.plotBands.push({
-            from: moment(val[0]).format('x'),
-            to: moment(val[0]).add(1,'day').format('x'),
-            color: 'rgba(192, 192, 192, .2)'
-          });
-        }
-
-      });
-
-      valores.values = (valores.values).sort(function(a, b) {
-        return a[0] - b[0];
-      });
-
-      return valores;
-    },
-
-    $scope.getGraph = function(widget, data){
-      var valores = $scope.prepareDataset(data.result.rows);
-      var title   = widget.customized ? widget.name : widget.indicator.name;
-
-      $.each(valores.values, function(index, val) {
-        valores.values[index][0] = parseInt(val[0]);
-      });
-
-      function grafico(valores) {
-        chart = $('[data-behaivor="widget"][data-id=' + widget.id + '] .content').highcharts('StockChart', {
-            colors : [ Configuration.colors[widget.color] ],
-            title : {
-              text : "<h3>" + title + "</h3>",
-              useHtml : true,
-              style : {
-                fontFamily : "Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif",
-                fontSize : '19px'
-              }
-            },
-
-            chart : {
-              zoomType : 'x',
-              panning: true,
-              panKey: 'shift',
-              resetZoomButton: {
-                theme: {
-                  fill: '#2c3e50',
-                  stroke: '#2c3e50',
-                  style: {
-                    color: 'white',
-                  },
-                  r: 0,
-                  states: {
-                    hover: {
-                      fill: '#1a242f',
-                      stroke: '#2c3e50',
-                      style: {
-                        color: 'white',
-                        cursor: "pointer"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-
-            navigation: {
-              buttonOptions: {
-                width: 120
-              }
-            },
-
-            navigator :{
-              enabled : false
-            },
-
-            credits : {
-              enabled: false
-            },
-
-            legend: {
-                layout: 'vertical',
-                align: 'left',
-                verticalAlign: 'top',
-                x: 150,
-                y: 100,
-                floating: true,
-                borderWidth: 1,
-                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-            },
-
-            rangeSelector : {
-                buttonTheme: {
-                  width: 90,
-                  r : 0,
-                },
-
-                inputEnabled : false,
-                selected : 1,
-                buttons: [
-                {
-                  type: 'month',
-                  count: 1,
-                  text: '1m'
-                },
-                {
-                  type: 'month',
-                  count: 3,
-                  text: '3m'
-                },
-                {
-                  type: 'month',
-                  count: 6,
-                  text: '6m'
-                },
-                {
-                  type: 'all',
-                  text: 'Tudo'
-                }]
-            },
-
-            plotOptions: {
-              areaspline: {
-                fillOpacity: 0.5
-              },
-              series: {
-                states: {
-                  hover: {
-                    lineWidthPlus: 10
-                  }
-                },
-              }
-            },
-
-            xAxis : {
-                type: 'datetime',
-                minRange: 14 * 24 * 3600000,
-                minTickInterval: 24 * 3600 * 1000,
-                plotBands: valores.plotBands,
-                labels : { maxStaggerLines : 1 }
-            },
-
-            series : [{
-                type : 'areaspline',
-                name : 'Contratos',
-                data : valores.values,
-                lineWidth: 2,
-                marker : {
-                  enabled : true,
-                  radius : 3
-                },
-                tooltip: {
-                  valueDecimals: 2
-                }
-            }],
-        });
-      }
-
-      window.setTimeout(function(){
-        grafico(valores);
-      }, 500);
-    };
-
-    $scope.getPie = function(widget, data){
-      var colors     = ['#1abc9c', "#2ecc71", "#e74c3c", "#e67e22", "#f1c40f", "#3498db", "#9b59b6", "#34495e","#95a5a6", "#ecf0f1" ].reverse();
-      var dataset    = [];
-      var percentual = 0;
-      var total      = 0;
-      var title      = widget.customized ? widget.name : widget.indicator.name;
-      var serie      = 'Quantidade';
-
-      if(data.result.rows.length > 0){
-        var volumeTotal = 0;
-        var produtos = (data.result.rows).sort(function(a,b){
-          if (a[1] > b[1])
-            return -1;
-          if (a[1] < b[1])
-            return 1;
-          return 0;
-        });
-
-        _.each(produtos, function(widget, index){
-          volumeTotal+= widget[1];
-        });
-
-        for (var i = 0; i < 9; i++) {
-          percentual = (produtos[i][1] * 100) / volumeTotal;
-          dataset.push([ $.trim(produtos[i][0].toUpperCase()), percentual ]);
-          total += percentual;
-        };
-        dataset.push([ "OUTROS", 100 - total ]);
-      }
-
-
-      $('[data-behaivor=widget][data-id=' + widget.id + '] .content').highcharts({
-        colors : colors,
-        chart: {
-          type: 'pie',
-          plotBackgroundColor: null,
-          plotBorderWidth: null,
-          plotShadow: false
-        },
-        credits: {
-          enabled: false
-        },
-        legend : false,
-        plotOptions: {
-          pie: {
-            borderColor: '#FFF',
-            innerSize: '60%',
-            dataLabels: {
-              enabled: false
-            }
-          }
-        },
-        title: {
-          text: title,
-          useHtml : true,
-        },
-        tooltip: {
-          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        series: [{
-          type: 'pie',
-          name: serie,
-          data: dataset
-        }]
-      },
-      function(chart) {
-        var xpos = '50%';
-        var ypos = '53%';
-        var circleradius = 102;
-
-        chart.renderer.circle(xpos, ypos, circleradius).attr({
-            fill: '#fff'
-        }).add();
-      });
-    };
-
-    $scope.setActiveDataSourceServer = function(){
-      $scope.dataSourceServer = _.find($scope.dashboard.data_source_servers,function(el){
-        return $scope.activeDataSourceServer === el.id;
-      });
-    };
-
-    $scope.getHost = function(){
-      var re  = new RegExp('https?://(.*:[0-9]{4})', 'i');
-      var url = $scope.dataSourceServer.url;
-      var x   = url.match(re);
-      return x[1];
-    };
-
-    $scope.loadWidgets = function(){
-
-      widgets = {
-        "rent_pecas"     : {"statement":{"records":1,"fetched":1,"columns":[{"name":"faturamento_tipo_item_peca","type":3}],"rows":[["0.3714"]]}},
-        "rent_mo"        : {"statement":{"records":1,"fetched":1,"columns":[{"name":"faturamento_tipo_item_servico","type":3}],"rows":[["1.1396"]]}},
-        "rent_mc"        : {"statement":{"records":1,"fetched":1,"columns":[{"name":"faturamento_tipo_item_servico","type":3}],"rows":[["0.2845"]]}},
-        "rent_terceiros" : {"statement":{"records":1,"fetched":1,"columns":[{"name":"faturamento_tipo_item_servico","type":3}],"rows":[["0.2634"]]}},
-
-        "inadimplencia"  : {"statement":{"records":1,"fetched":1,"columns":[{"name":"faturamento_tipo_item_servico","type":3}],"rows":[["1.987"]]}},
-        "faturamento"    : {"statement":{"records":1,"fetched":1,"columns":[{"name":"faturamento","type":3}],"rows":[["103546.5514"]]}},
-        "novas_os_dia"   : {"statement": {"records":19, "fetched":19, "columns":[{"name":"data_emissao","type":91}, {"name":"quantidade","type":4} ], "rows":[["2014-12-01", 17], ["2014-12-02", 20], ["2014-12-03", 9], ["2014-12-04", 9], ["2014-12-05", 5], ["2014-12-08", 17], ["2014-12-09", 11], ["2014-12-10", 6], ["2014-12-11", 8], ["2014-12-12", 3], ["2014-12-15", 15], ["2014-12-16", 12], ["2014-12-17", 14], ["2014-12-18", 9], ["2014-12-19", 5], ["2014-12-22", 9], ["2014-12-23", 12], ["2014-12-24", 4], ["2014-12-29", 1] ] } },
-        "ticket_medio_pecas" : {"statement":{"records":1,"fetched":1,"columns":[{"name":"faturamento_tipo_item_peca","type":3}],"rows":[["1348.4246"]]}},
-        "ticket_medio_mao_de_obra" : {"statement":{"records":1,"fetched":1,"columns":[{"name":"faturamento_tipo_item_servico","type":3}],"rows":[["1076.4129"]]}},
-      };
-
-      $scope.isLoadingWidgets = true;
-      $scope.dashboard.widgets.forEach(function(widget, index) {
-        $scope.dashboard.widgets[index].loading = true;
-
-
-        var type       = widget.widget_type.name;
-        data           = widgets[widget.indicator.code];
-
-        switch(type){
-          case 'status':
-            $scope.getStatus(data.result.rows[0][0], widget);
-          break;
-          case 'line':
-            $scope.getGraph(widget, data);
-          break;
-          case 'pie':
-            $scope.getPie(widget, data);
-          break;
-        };
-
-
-        $scope.dashboard.widgets[index].loading = false;
-      });
-      $scope.isLoadingWidgets = false;
-    };
-
-    $scope.initDaterangepicker = function(){
-      var i = document.createElement("input");
-          i.setAttribute("type", "date");
-      hasInputDate = i.type !== "text";
-
-      format = hasInputDate ? 'YYYY-MM-DD' : 'DD/MM/YYYY';
-
-      $('#reportrange').daterangepicker(
-        {
-          ranges: {
-            'Hoje': [moment(), moment()],
-            'Ontem': [moment().subtract(1,'days'), moment().subtract(1,'days')],
-            'Últimos 7 Dias': [moment().subtract(6,'days'), moment()],
-            'Últimos 30 Dias': [moment().subtract(29,'days'), moment()],
-            'Últimos 90 Dias': [moment().subtract(89,'days'), moment()],
-            'Este Mês': [moment().startOf('month'), moment().endOf('month')],
-            'Último Mês': [moment().subtract(1,'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-          },
-          format : format,
-          showDropdowns : true,
-          minDate : moment({year : 2000, month: 0, day: 1}),
-          maxDate : moment().add(1, 'month'),
-          startDate: moment().subtract(29,'days'),
-          endDate: moment(),
-          locale: {
-            applyLabel: 'Aplicar',
-            cancelLabel: 'Limpar',
-            fromLabel: 'De',
-            toLabel: 'Para',
-            customRangeLabel: 'Personalizado',
-            daysOfWeek: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex','Sab'],
-            monthNames: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
-          }
-        },
-        function(start, end, range) {
-            var text;
-            if (range !== undefined && range !== "Personalizado") {
-              text = range;
-            }else{
-              var formato = "D [de] MMMM";
-              if (start.format('YYYY') === end.format('YYYY')) {
-                if (start.format('MMMM') === end.format('MMMM')) {
-                  formato = 'D';
-                };
-              }else{
-                formato = 'D [de] MMMM, YYYY';
-              }
-              text = start.format(formato) + '  até  ' + end.format('D [de] MMMM, YYYY');
-            }
-
-            $('[data-behaivor=show-actual-date]').html(text);
-
-            $scope.indicadores.periodo.inicio = start.format("YYYY-MM-DD 00:00:00");
-            $scope.indicadores.periodo.fim    = end.format("YYYY-MM-DD 00:00:00");
-
-
-            $scope.loadWidgets();
-        }
-      );
-
-      $('.daterangepicker').css('width', $('#reportrange').innerWidth() + 'px');
-
-      if(hasInputDate){
-        $('[name=daterangepicker_start]').attr('type','date');
-        $('[name=daterangepicker_end]').attr('type','date');
-      }
-    };
-
-    $scope.indicadores = {
-      periodo : {
-        inicio    : (moment({ month : 11, day: 1, year: 2014}).format("YYYY-MM-DD 00:00:00")),
-        fim       : (moment({ month : 11, day: 31, year: 2014}).format("YYYY-MM-DD 00:00:00")),
-        duracao   : function(grandeza) {
-          var grandeza  = grandeza || 'days';
-          var fim       = moment($scope.indicadores.periodo.fim);
-          var inicio    = moment($scope.indicadores.periodo.inicio);
-          var diferenca = fim.diff(inicio,grandeza);
-          return diferenca + 1;
-        },
-      },
-    };
-
-    $scope.loadWidgets();
-
-    $scope.initDaterangepicker();
   }
 
 })();

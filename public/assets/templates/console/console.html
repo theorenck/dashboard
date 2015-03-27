@@ -33,7 +33,15 @@
                       >
                     </select>
                     <span class="input-group-btn">
-                      <button class="btn btn-info" type="button" ng-click="loadSchema()">Carregar</button>
+                      <button
+                        class="btn btn-info"
+                        type="button"
+                        ng-click="loadSchema()"
+                        tooltip="Atualizar lista de tabelas"
+                        tooltip-placement="top"
+                        >
+                        <span class="fa fa-refresh" ng-class="{ 'fa-spin' : isLoadingSchema }"></span>
+                      </button>
                     </span>
                   </div>
                 </div>
@@ -83,7 +91,7 @@
                             <input class="form-control" type="text" ng-model="param.value">
                           </td>
                           <td class="text-center">
-                            <a href="#" ng-click="deleteParam(key)" class="btn-remove"><i class="fa fa-close"></i></a>
+                            <span ng-click="deleteParam(key)" class="btn-remove text-danger"><i class="fa fa-close"></i></span>
                           </td>
                         </tr>
                       </tbody>
@@ -98,15 +106,9 @@
 
             <div class="row">
               <div class="col-md-12">
-                <span>
-                  <button class="btn btn-success" type="submit" ng-disabled="isExecuting">
-                    <span ng-hide="isExecuting">Executar SQL</span>
-                    <span ng-show="isExecuting">
-                      <z-loader>
-                    </span>
-                  </button>
-                </span>
-
+                <button class="btn btn-success btn-block btn-action" type="submit" ng-disabled="isExecuting">
+                  <span ng-hide="isExecuting">Executar SQL</span>
+                </button>
               </div>
             </div>
           </form>
@@ -200,17 +202,17 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-12">
                 <button
                   z-jsondownload
                   resultset="allData"
                   columns="result.columns"
                   type-file="{{ exportModel.type }}"
                   options="exportModel"
-                  class="btn btn-success"
+                  class="btn btn-success btn-block"
                   type="button"
                   ng-click="salvarOrigem()"
-                  >Salvar</button>
+                  >Exportar</button>
             </div>
           </div>
         </tab>
@@ -253,9 +255,7 @@
 
 
     <button type="button" scroll-position="scroll" ng-show="scroll > 700" class="btn btn-info btn-scroll-top" ng-click="scrollTop()">
-      <span class="fa fa-caret-up"></span>
-      &nbsp;
-      Voltar ao topo
+      <span class="fa fa-chevron-up"></span>
     </button>
 
     <!-- RESULTADOS -->

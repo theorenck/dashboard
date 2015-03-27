@@ -63,7 +63,16 @@
 
           setData : function(data){
             var self = this;
-            $.extend(self.req, { "data" : data });
+            data = data.query || data.aggretation;
+            var prepared = {
+              "statement" : {
+                "parameters" : data.parameters,
+                "sql"        : data.statement,
+                "limit"      : data.limit,
+                "offset"     : data.offset,
+              }
+            };
+            $.extend(self.req, { "data" : prepared });
           }
         }
 
@@ -81,7 +90,7 @@
 
       function(zHttp){
         var x = Object.create(zHttp);
-        x.url = '/api/queries';
+        x.url = '/api/statements';
         return x;
 
       }
@@ -105,9 +114,6 @@
     ]
   )
 
-  /**
-   * MIDDLEWARE
-   */
   /**
    * MIDDLEWARE - dinamico
    */
@@ -310,6 +316,7 @@
 
           setData : function(data){
             var self = this;
+            console.log(data);
             $.extend(self.req, { "data" : data });
           }
         }
