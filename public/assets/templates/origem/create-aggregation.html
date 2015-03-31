@@ -15,7 +15,6 @@
 </ul>
 
 <div class="row">
-
   <div class="col-md-12">
 
      <form ng-submit="save()">
@@ -66,12 +65,13 @@
                   <button class="btn btn-info " type="button" ng-click="addSource()">Adicionar fonte de dados</button>
                 </div>
 
-                <div ng-repeat="(key, execution) in aggregation.executions track by $index"  ng-show="!execution._destroy">
-                  <z-executions></z-executions>
-                </div>
 
                 <div class="form-group">
                   <label class="control-label">Operações</label>
+
+                  <div ng-repeat="execution in aggregation.executions track by $index"  ng-show="!execution._destroy">
+                    <z-executions></z-executions>
+                  </div>
 
 
                   <div class="clearfix"></div>

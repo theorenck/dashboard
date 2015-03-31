@@ -1,18 +1,20 @@
 <div class="panel panel-info">
     <div class="panel-heading">
-      <strong>#{{ key }}</strong>
+      <strong>#{{ $index }}</strong>
     </div>
 
     <div class="panel-body">
       <div class="row">
         <div class="col-md-12">
           <div class="form-group">
-
             <select
               class="form-control"
               ng-model="execution.function_id"
               ng-options="fn.id as fn.name for (key, fn) in functionList"
-              ng-change="loadParametersFromFunction(execution)"></select>
+              ng-change="addParamsToExecution(execution)"
+              >
+              <option value="">Selecione</option>
+              </select>
 
           </div>
 
@@ -24,9 +26,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="(key, param) in execution.parameters track by $index">
+              <tr ng-repeat="param in execution.parameters">
                 <td>
-                  <span class="form-control">{{param.name}}</span>
+                  <span class="form-control">{{::param.name}}</span>
                 </td>
                 <td>
                   <input class="form-control" type="text" ng-model="param.value">

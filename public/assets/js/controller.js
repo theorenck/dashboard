@@ -968,8 +968,8 @@
     }
   }
 
-  AggregationCreateController.$inject = ['$scope', '$routeParams', '$location', 'SourceService', 'FunctionService'];
-  function AggregationCreateController($scope, $routeParams, $location, SourceService, FunctionService){
+  AggregationCreateController.$inject = ['$scope', '$routeParams', '$location', 'SourceService', 'FunctionService', 'AggregationService'];
+  function AggregationCreateController($scope, $routeParams, $location, SourceService, FunctionService, AggregationService){
     $scope.data_types     = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
 
     SourceService.get(function(data){
@@ -984,12 +984,33 @@
 
     $scope.addOperation = function(){
       var data = {
-        'function_id': $scope.functionList[0].id,
-        'name': $scope.functionList[0].name,
+        'function_id': null,
+        'name': null,
         'parameters': []
       };
 
       $scope.aggregation.executions.push(data);
+    }
+
+    $scope.addParamsToExecution = function(execution){
+      // encontra os parâmetros default
+      var fnAux = _.find($scope.functionList, function(el, i){
+        console.log(el);
+        if(el.id === execution.function_id)
+          return el;
+      });
+
+      // map dos parâmetros excluindo os valores passados anteriormente
+      var params = [];
+      fnAux.parameters.forEach(function(el, i){
+        params.push({
+          "type": el.type,
+          "name": el.name
+        });
+      });
+
+      execution.parameters = params;
+      execution.name = fnAux.name;
     }
 
     $scope.addSource = function(){
@@ -1004,10 +1025,56 @@
       $scope.aggregation.sources.splice(key,1);
     }
 
-    $scope.save = function(){
-      $scope.aggregation.type = "Aggregation";
+    function prepareParams(parameters){
+      return parameters.map(function(p){
+        return {
+          "type": p.datatype,
+          "name": p.name,
+          "value": p.value || "2014-11-30 00:00:00",
+          "evaluated": false
+        }
+      });
+    }
 
+    $scope.save = function(){
       var data = { source : $scope.aggregation };
+      data.source.aggregated_sources = $scope.aggregation.sources.map(function(el){
+          return { source_id : el.id };
+      });
+      delete data.source.sources;
+
+      // Isso é para enviar corregamente para execução
+      var nuncaCaiAqui = false;
+      if(nuncaCaiAqui === true){
+        var Data_ = { aggregation : {}};
+        // prepara os statements
+        Data_.aggregation.statements = [];
+        $scope.aggregation.sources.forEach(function(s, i){
+          _.find($scope.sourceList, function(source){
+            if(s.id === source.id){
+              Data_.aggregation.statements.push({
+                "sql" : source.statement,
+                "parameters" : prepareParams(source.parameters)
+              });
+            }
+          });
+        });
+
+        //operations
+        Data_.aggregation.operations = [];
+        $scope.aggregation.executions.forEach(function(operation){
+          var params = operation.parameters.map(function(el){
+            return !isNaN(el.value) ? parseInt(el.value) : el.value;
+          });
+
+          Data_.aggregation.operations.push({
+            "type": operation.name,
+            "parameters" : params
+          });
+        });
+
+        Data_.aggregation.result = $scope.aggregation.result;
+      }
 
       if ($scope.aggregation.id) {
         SourceService.update(data, function(data){
@@ -1026,8 +1093,11 @@
       });
     }else{
       $scope.aggregation = {
-        sources : [],
-        executions : []
+        "type" : "Aggregation",
+        "code" : null,
+        "name" : null,
+        "sources" : [],
+        "executions" : [],
       }
     }
   }
@@ -1452,7 +1522,7 @@
             _.each(parameters, function(el, index){
               parameters[index] = {
                 type: el.datatype,
-                evaluated: el.evaluated,
+                evaluated: el.evaluated || false,
                 name: el.name,
                 value: el.value
               }
@@ -1463,7 +1533,7 @@
 
               switch(type){
                 case 'status':
-                  $scope.getStatus(data.resultset.rows[0][0], widget);
+                  $scope.getStatus(data.resultset.rows[0][0] || 0, widget);
                 break;
                 case 'line':
                   $scope.getGraph(widget, data);

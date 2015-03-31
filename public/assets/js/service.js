@@ -67,9 +67,7 @@
             var prepared = {
               "statement" : {
                 "parameters" : data.parameters,
-                "sql"        : data.statement,
-                "limit"      : data.limit,
-                "offset"     : data.offset,
+                "sql"        : data.statement
               }
             };
             $.extend(self.req, { "data" : prepared });
