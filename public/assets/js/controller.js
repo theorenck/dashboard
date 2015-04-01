@@ -970,7 +970,8 @@
 
   AggregationCreateController.$inject = ['$scope', '$routeParams', '$location', 'SourceService', 'FunctionService', 'AggregationService'];
   function AggregationCreateController($scope, $routeParams, $location, SourceService, FunctionService, AggregationService){
-    $scope.data_types     = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
+    $scope.data_types = ["varchar", "decimal", "integer", "date", "time", "timestamp"];
+    $scope.hasResult  = true;
 
     SourceService.get(function(data){
       $scope.sourceList = data.sources.filter(function(index, elem) {
@@ -1043,39 +1044,6 @@
       });
       delete data.source.sources;
 
-      // Isso é para enviar corregamente para execução
-      var nuncaCaiAqui = false;
-      if(nuncaCaiAqui === true){
-        var Data_ = { aggregation : {}};
-        // prepara os statements
-        Data_.aggregation.statements = [];
-        $scope.aggregation.sources.forEach(function(s, i){
-          _.find($scope.sourceList, function(source){
-            if(s.id === source.id){
-              Data_.aggregation.statements.push({
-                "sql" : source.statement,
-                "parameters" : prepareParams(source.parameters)
-              });
-            }
-          });
-        });
-
-        //operations
-        Data_.aggregation.operations = [];
-        $scope.aggregation.executions.forEach(function(operation){
-          var params = operation.parameters.map(function(el){
-            return !isNaN(el.value) ? parseInt(el.value) : el.value;
-          });
-
-          Data_.aggregation.operations.push({
-            "type": operation.name,
-            "parameters" : params
-          });
-        });
-
-        Data_.aggregation.result = $scope.aggregation.result;
-      }
-
       if ($scope.aggregation.id) {
         SourceService.update(data, function(data){
           $location.path('/origem/');
@@ -1086,6 +1054,10 @@
         });
       }
     };
+
+    $scope.cancelar = function(){
+      $location.path('/origem/');
+    }
 
     if ( !isNaN($routeParams.id) ) {
       SourceService.get({ id : $routeParams.id }, function(data){
@@ -1493,8 +1465,76 @@
       return url;
     };
 
+    // Verifica todos os parâmetros de inicio e fim que sejam nulos e seta os valores do dash
+    function fillParameters(parameters){
+      _.each(parameters,function(el, index) {
+        if ( ( el.value === null || el.value.trim() === "" ) && (el.name === 'inicio' || el.name === 'fim')){
+          parameters[index].value = (el.name === 'inicio') ? $scope.indicadores.periodo.inicio : $scope.indicadores.periodo.fim;
+        }
+        else if(el.name === 'inicio' || el.name === 'fim' && (el.value !== null && el.value.trim() === "" ) && el.evaluated === true)
+        {
+          parameters[index].value = parameters[index].value.replace(':' + el.name, "'" + $scope.indicadores.periodo[el.name] + "'");
+        }
+      });
+
+      return parameters;
+    }
+
+    // Mapeia os parâmetros e formata para o formato esperado
+    function formatParameters(parameters){
+      _.each(parameters, function(el, index){
+        parameters[index] = {
+          type: el.datatype,
+          evaluated: el.evaluated || false,
+          name: el.name,
+          value: el.value
+        }
+      });
+
+      return parameters;
+    }
+
+    // percorre todas executions e preenche os parâmetros
+    function prepareParamsAggregation(aggregation){
+      aggregation.executions.forEach(function(el, i){
+        var parameters = fillParameters(el.parameters);
+      });
+
+      return aggregation;
+
+    }
+
+    function prepareAggregation(aggregation){
+      var data = {
+        "result": aggregation.result,
+        "statements" : [],
+        "operations" : []
+      };
+
+      aggregation.sources.forEach(function(s, i){
+        data.statements.push({
+          "sql" : s.statement,
+          "parameters" : fillParameters(formatParameters(s.parameters))
+        });
+      });
+
+      aggregation.executions.forEach(function(operation){
+        var params = operation.parameters.map(function(el){
+          return !isNaN(el.value) ? parseInt(el.value) : el.value;
+        });
+        data.operations.push({
+          "type": operation.function.name,
+          "parameters" : params
+        });
+      });
+
+      return data;
+    }
+
     $scope.loadWidgets = function(){
+      var Service, parameters;
       $scope.isLoadingWidgets = true;
+
       if (Object.keys($scope.dashboard).length === 0) {
         loadDashboard();
       }
@@ -1505,28 +1545,16 @@
 
           SourceService.get({ id : widget.indicator.source_id }, function(data){
             $scope.alert   = {};
-            var Service    = data.query.type === 'Query' ? QueryService : AggregationService;
-            var parameters = data.query.type === 'Query' ? data.query.parameters : data.aggregation.parameters;
 
-            // Verifica todos os parâmetros de inicio e fim que sejam nulos e seta os valores do dash
-            _.each(parameters,function(el, index) {
-              if ( ( el.value === null || el.value.trim() === "" ) && (el.name === 'inicio' || el.name === 'fim')){
-                parameters[index].value = (el.name === 'inicio') ? $scope.indicadores.periodo.inicio : $scope.indicadores.periodo.fim;
-              }
-              else if(el.name === 'inicio' || el.name === 'fim' && (el.value !== null && el.value.trim() === "" ) && el.evaluated === true)
-              {
-                parameters[index].value = parameters[index].value.replace(':' + el.name, "'" + $scope.indicadores.periodo[el.name] + "'");
-              }
-            });
-
-            _.each(parameters, function(el, index){
-              parameters[index] = {
-                type: el.datatype,
-                evaluated: el.evaluated || false,
-                name: el.name,
-                value: el.value
-              }
-            })
+            if(data.query){
+              Service    = QueryService;
+              parameters = data.query.parameters;
+              parameters = fillParameters(parameters);
+              parameters = formatParameters(parameters);
+            }else{
+              Service          = AggregationService;
+              data.aggregation = prepareAggregation(data.aggregation);
+            }
 
             Service.post(data, $scope.getHost(), function(data){
               var type = widget.widget_type.name;

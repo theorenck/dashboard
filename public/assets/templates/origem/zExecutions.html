@@ -42,15 +42,15 @@
 
     <div class="panel-footer">
       <div class="btn-group btn-group-justified">
-        <a href="#" class="btn btn-info" ng-click="move(key, 'up')" ng-disabled="key===0">
+        <a href="#" class="btn btn-info" ng-click="move($index, 'up')" ng-disabled="$index===0">
           <span class="fa fa-arrow-up"></span>
         </a>
 
-        <a href="#" class="btn btn-info" ng-click="deleteExecution(key)">
+        <a href="#" class="btn btn-info" ng-click="deleteExecution($index)">
           <span class="fa fa-close"></span>
         </a>
 
-        <a href="#" class="btn btn-info" ng-click="move(key, 'down')"  ng-disabled="key===(aggregation.executions).length-1">
+        <a href="#" class="btn btn-info" ng-click="move($index, 'down')"  ng-disabled="$index===(aggregation.executions).length-1">
           <span class="fa fa-arrow-down"></span>
         </a>
       </div>

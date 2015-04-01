@@ -63,13 +63,17 @@
 
           setData : function(data){
             var self = this;
-            data = data.query || data.aggretation;
-            var prepared = {
-              "statement" : {
-                "parameters" : data.parameters,
-                "sql"        : data.statement
-              }
-            };
+            if(data.query){
+              var prepared = {
+                "statement" : {
+                  "parameters" : data.query.parameters,
+                  "sql"        : data.query.statement
+                }
+              };
+            }else{
+              prepared = data;
+            }
+
             $.extend(self.req, { "data" : prepared });
           }
         }
@@ -105,7 +109,7 @@
       function(zHttp){
         var x = Object.create(zHttp);
 
-        x.url = '/api/aggretations';
+        x.url = '/api/aggregations';
         return x;
 
       }
