@@ -1471,9 +1471,15 @@
         if ( ( el.value === null || el.value.trim() === "" ) && (el.name === 'inicio' || el.name === 'fim')){
           parameters[index].value = (el.name === 'inicio') ? $scope.indicadores.periodo.inicio : $scope.indicadores.periodo.fim;
         }
-        else if(el.name === 'inicio' || el.name === 'fim' && (el.value !== null && el.value.trim() === "" ) && el.evaluated === true)
+        else if(el.name === 'inicio' || el.name === 'fim' && (el.value !== null && el.value.trim() !== "" ))
         {
-          parameters[index].value = parameters[index].value.replace(':' + el.name, "'" + $scope.indicadores.periodo[el.name] + "'");
+          var wrap = (el.evaluated === true) ? "'" : '';
+          if(parameters[index].value.match(/:inicio/)){
+            parameters[index].value = parameters[index].value.replace(/:inicio/ig, wrap + $scope.indicadores.periodo.inicio + wrap);
+          }
+          if(parameters[index].value.match(/:fim/)){
+            parameters[index].value = parameters[index].value.replace(/:fim/ig, wrap + $scope.indicadores.periodo.fim + wrap);
+          }
         }
       });
 
