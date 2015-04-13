@@ -996,7 +996,6 @@
     $scope.addParamsToExecution = function(execution){
       // encontra os parâmetros default
       var fnAux = _.find($scope.functionList, function(el, i){
-        console.log(el);
         if(el.id === execution.function_id)
           return el;
       });
@@ -1044,6 +1043,7 @@
       });
       delete data.source.sources;
 
+
       if ($scope.aggregation.id) {
         SourceService.update(data, function(data){
           $location.path('/origem/');
@@ -1059,9 +1059,10 @@
       $location.path('/origem/');
     }
 
+    $scope.aggregation = {};
     if ( !isNaN($routeParams.id) ) {
       SourceService.get({ id : $routeParams.id }, function(data){
-        $scope.aggregation = data.aggregation;
+        $scope.aggregation = prepareAggregationFromServer(data.aggregation);
       });
     }else{
       $scope.aggregation = {
@@ -1071,6 +1072,25 @@
         "sources" : [],
         "executions" : [],
       }
+    }
+
+    function prepareAggregationFromServer(aggregation){
+      // console.log(aggregation);
+      aggregation.executions = aggregation.executions.map(function(elem, index) {
+        if(!!elem.function){
+          elem.function_id = elem.function.id;
+          elem.order       = index;
+          delete elem.function;
+        }
+        return elem;
+      });
+
+      aggregation.sources = aggregation.sources.map(function(elem, index) {
+        elem = { "id" : elem.id };
+        return elem;
+      });
+      delete aggregation.parameters;
+      return aggregation;
     }
   }
 
