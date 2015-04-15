@@ -93,7 +93,7 @@
     };
 
     $scope.isAdmin = function(){
-      return !!localStorage.getItem('logged-in-admin') && localStorage.getItem('logged-in-admin') === true && !!localStorage.getItem('token') || false;
+      return !!localStorage.getItem('logged-in-admin') && localStorage.getItem('logged-in-admin') === "true" && !!localStorage.getItem('token') || false;
     };
 
     $scope.isLoggedIn = function(){
