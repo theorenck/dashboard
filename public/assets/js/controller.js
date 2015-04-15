@@ -33,8 +33,8 @@
     .controller('DashboardDetailController', DashboardDetailController);
 
 
-  AppController.$inject = ['$scope', '$rootScope', '$location', 'AuthService', 'zErrors'];
-  function AppController($scope, $rootScope, $location, AuthService, zErrors){
+  AppController.$inject = ['$http','$scope', '$rootScope', '$location', 'AuthService', 'zErrors'];
+  function AppController($http, $scope, $rootScope, $location, AuthService, zErrors){
     $scope.credentials = { username : '', password : ''};
     $scope.open = false;
     $scope.showResponsiveMenu = true;
@@ -67,9 +67,11 @@
         AuthService.save(authentication, function(res){
           if (res.authentication && res.authentication.token) {
             var token = res.authentication.token;
+            var admin = res.authentication.admin;
 
             localStorage.setItem('token', token);
             localStorage.setItem('logged-in', true);
+            localStorage.setItem('logged-in-admin', admin);
 
             $location.path('/dashboards');
           }
@@ -88,6 +90,10 @@
     $scope.logout = function(){
       localStorage.removeItem('token');
       localStorage.removeItem('logged-in');
+    };
+
+    $scope.isAdmin = function(){
+      return !!localStorage.getItem('logged-in-admin') && !!localStorage.getItem('token') || false;
     };
 
     $scope.isLoggedIn = function(){
@@ -1025,16 +1031,16 @@
       $scope.aggregation.sources.splice(key,1);
     }
 
-    function prepareParams(parameters){
-      return parameters.map(function(p){
-        return {
-          "type": p.datatype,
-          "name": p.name,
-          "value": p.value || "2014-11-30 00:00:00",
-          "evaluated": false
-        }
-      });
-    }
+    // function prepareParams(parameters){
+    //   return parameters.map(function(p){
+    //     return {
+    //       "type": p.datatpye,
+    //       "name": p.name,
+    //       "value": p.value || "2014-11-30 00:00:00",
+    //       "evaluated": false
+    //     }
+    //   });
+    // }
 
     $scope.save = function(){
       var data = { source : $scope.aggregation };
