@@ -67,7 +67,9 @@
       if (validateParams(credentials)) {
         AuthService.save(authentication, function(res){
           if (res.authentication && res.authentication.token) {
-            var token = res.authentication.token;
+            var token   = res.authentication.token;
+            $scope.user = res.authentication.user;
+
             delete res.authentication.user.id;
 
             localStorage.setItem('token', token);
