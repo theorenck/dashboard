@@ -382,6 +382,7 @@
   UserCreateController.$inject = ['$scope', '$routeParams', '$location', 'UserService'];
   function UserCreateController($scope, $routeParams, $location, UserService){
     $scope.user     = {};
+    $scope.passwordConfirm = '';
 
     $scope.cancelar = function(){
       $scope.user = {};
@@ -389,10 +390,6 @@
 
     $scope.salvar = function(){
       var data =  { "user" : $scope.user };
-
-      // if($scope.password === $scope.passwordConfirm){
-
-      // }
 
       if ($scope.user.id) {
         UserService.update(data, function(){
