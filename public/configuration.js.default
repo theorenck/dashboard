@@ -1,14 +1,10 @@
 var Configuration = {
 
-  "time_to_refresh" : 1000 * 1000, // default: 30 seconds
+  "time_to_refresh" : 15 * 60 * 1000, // default: 30 seconds
 
   "statement_server" : null,
 
   "business_server" : null,
-
-  "api" : {
-    "address" : "http://localhost:3000/api"
-  },
 
   "colors": {
     red    : '#e74c3c',
