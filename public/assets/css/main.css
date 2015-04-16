@@ -1265,3 +1265,40 @@ td .z-checkbox
     position: relative;
     min-height: 400px;
 }
+
+.navbar-default .navbar-text{
+    color: #FFF;
+}
+
+.label.label-red    {
+    background-color: #E74C3C;
+    color: #E74C3C;
+}
+.label.label-blue   {
+    background-color: #3498DB;
+    color: #3498DB;
+}
+.label.label-orange {
+    background-color: #F39C12;
+    color: #F39C12;
+}
+.label.label-green  {
+    background-color: #18BC9C;
+    color: #18BC9C;
+}
+.label.label-yellow {
+    background-color: #F1C40F;
+    color: #F1C40F;
+}
+.label.label-purple {
+    background-color: #8E44AD;
+    color: #8E44AD;
+}
+.label.label-dark-grey {
+    background-color: #34495E;
+    color: #34495E;
+}
+.label.label-grey {
+    background-color: #95A5A6;
+    color: #95A5A6;
+}

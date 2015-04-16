@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-12">
       <h1>
-        User <small></small>
+        Usuário <small></small>
       </h1>
     </div>
   </div>
@@ -10,7 +10,7 @@
 
 <ul class="breadcrumb">
   <li><a href="#">Atlas</a></li>
-  <li><a href="#">User</a></li>
+  <li><a href="#">Usuário</a></li>
   <li class="active">Novo</li>
 </ul>
 
@@ -38,10 +38,10 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="user in userList | filter:search" ng-click="load(user.id)">
-          <td>{{ user.id }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.username }}</td>
+        <tr ng-repeat="user in userList | filter:search | orderBy:'id'" ng-click="load(user.id)">
+          <td>{{ ::user.id }}</td>
+          <td>{{ ::user.email }}</td>
+          <td>{{ ::user.username }}</td>
           <td class="text-center no-padding">
             <a href="#" ng-click="delete(user.id, $index, $event); $event.stopPropagation();" class="btn-remove"><i class="fa fa-close"></i></a>
           </td>

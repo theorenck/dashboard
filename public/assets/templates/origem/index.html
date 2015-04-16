@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-12">
       <h1>
-        Origens <small></small>
+        Origem <small></small>
       </h1>
     </div>
   </div>
@@ -10,7 +10,7 @@
 
 <ul class="breadcrumb">
   <li><a href="#">Atlas</a></li>
-  <li><a href="#">Origens</a></li>
+  <li><a href="#">Origem</a></li>
   <li class="active">Lista</li>
 </ul>
 
@@ -44,7 +44,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="source in queriesList | filter:search" ng-click="loadSource(source.type, source.id)">
+        <tr ng-repeat="source in queriesList | filter:search | orderBy:'id'" ng-click="loadSource(source.type, source.id)">
           <td>{{ $index + 1 }}</td>
           <td>
             <span ng-if="source.type=='Query'" class="label-success label">consulta</span>

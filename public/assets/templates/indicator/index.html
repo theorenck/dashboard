@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-12">
       <h1>
-        Indicadores <small></small>
+        Indicador <small></small>
       </h1>
     </div>
   </div>
@@ -10,7 +10,7 @@
 
 <ul class="breadcrumb">
   <li><a href="#">Atlas</a></li>
-  <li><a href="#">Indicadores</a></li>
+  <li><a href="#">Indicador</a></li>
   <li class="active">Lista</li>
 </ul>
 
@@ -45,19 +45,19 @@
         <tbody>
           <tr
             ng-click="load(indicator.id)"
-            ng-repeat="indicator in indicatorList | filter:search">
-            <td>{{ indicator.id }}</td>
-            <td>{{ indicator.code }}</td>
-            <td>{{ indicator.name }}</td>
-            <td><div style="overflow:hidden; height: 21px;">{{ indicator.query.statement | limitTo:70 }}</div></td>
+            ng-repeat="indicator in indicatorList | filter:search | orderBy:'id'">
+            <td>{{ ::indicator.id }}</td>
+            <td>{{ ::indicator.code }}</td>
+            <td>{{ ::indicator.name }}</td>
+            <td>{{ ::indicator.description }}</td>
             <td>
               <span class="label label-info"
                 ng-if="indicator.unity.symbol==='%'">
-                {{ indicator.unity.symbol }}
+                {{ ::indicator.unity.symbol }}
               </span>
               <span class="label label-success"
                 ng-if="indicator.unity.symbol==='R$'">
-                {{ indicator.unity.symbol }}
+                {{ ::indicator.unity.symbol }}
               </span>
             </td>
             <td class="text-center no-padding">
@@ -73,3 +73,4 @@
 
   </div>
 </div>
+

@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-sm-12">
       <h1>
-        Permission <small></small>
+        Permissão <small></small>
       </h1>
     </div>
   </div>
@@ -10,7 +10,7 @@
 
 <ul class="breadcrumb">
   <li><a href="#">Atlas</a></li>
-  <li><a href="#">Permission</a></li>
+  <li><a href="#">Permissão</a></li>
   <li class="active">new</li>
 </ul>
 
@@ -34,16 +34,16 @@
           <th class="col-md-1">#</th>
           <th class="col-md-2">Usuário</th>
           <th class="col-md-2">Dashboard</th>
-          <th class="col-md-2">Servidor de fonde de dados</th>
+          <th class="col-md-2">Servidor de fonte de dados</th>
           <th class="col-md-1"></th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="permission in permissionList | filter:search" ng-click="load(permission.id)">
-          <td>{{ permission.id }}</td>
-          <td>{{ permission.user.username }}</td>
-          <td>{{ permission.dashboard.name }}</td>
-          <td>{{ permission.data_source_server.name }}</td>
+        <tr ng-repeat="permission in permissionList | filter:search | orderBy:'id'" ng-click="load(permission.id)">
+          <td>{{ ::permission.id }}</td>
+          <td>{{ ::permission.user.username }}</td>
+          <td>{{ ::permission.dashboard.name }}</td>
+          <td>{{ ::permission.data_source_server.name }}</td>
           <td class="text-center no-padding">
             <a href="#" ng-click="delete(permission.id, $index, $event); $event.stopPropagation();" class="btn-remove"><i class="fa fa-close"></i></a>
           </td>

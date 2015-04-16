@@ -38,7 +38,8 @@
     $scope.credentials = { username : '', password : ''};
     $scope.open = false;
     $scope.showResponsiveMenu = true;
-
+    var user = localStorage.getItem('user') || null;
+    $scope.user = !!user ? JSON.parse(user) : {};
 
     // Esconde o menu quando troca de página
     $rootScope.$on('$routeChangeSuccess', function (e, data) {
@@ -67,11 +68,12 @@
         AuthService.save(authentication, function(res){
           if (res.authentication && res.authentication.token) {
             var token = res.authentication.token;
-            var admin = res.authentication.admin;
+            delete res.authentication.user.id;
 
             localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(res.authentication.user));
             localStorage.setItem('logged-in', true);
-            localStorage.setItem('logged-in-admin', admin);
+            localStorage.setItem('logged-in-admin', res.authentication.user.admin);
 
             $location.path('/dashboards');
           }
@@ -90,6 +92,8 @@
     $scope.logout = function(){
       localStorage.removeItem('token');
       localStorage.removeItem('logged-in');
+      localStorage.removeItem('user');
+      localStorage.removeItem('logged-in-admin');
     };
 
     $scope.isAdmin = function(){
@@ -385,6 +389,10 @@
 
     $scope.salvar = function(){
       var data =  { "user" : $scope.user };
+
+      // if($scope.password === $scope.passwordConfirm){
+
+      // }
 
       if ($scope.user.id) {
         UserService.update(data, function(){
