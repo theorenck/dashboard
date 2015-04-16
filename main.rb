@@ -10,7 +10,7 @@ class Main < Sinatra::Base
   get '/ping' do
     status 200
     headers['Content-Type'] = 'application/json'
-    body '{ alive : true }'
+    body '{ "alive" : true }'
   end
 
   get '/*' do
