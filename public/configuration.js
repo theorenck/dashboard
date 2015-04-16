@@ -8,11 +8,13 @@ var Configuration = {
   'middleware_server' : null,
 
   'colors': {
-    'red'    : '#e74c3c',
-    'blue'   : '#3498db',
-    'orange' : '#f39c12',
-    'green'  : '#18bc9c',
-    'yellow' : '',
-    'purple' : ''
+    'red'    : '#E74C3C',
+    'blue'   : '#3498DB',
+    'orange' : '#F39C12',
+    'green'  : '#18BC9C',
+    'yellow' : '#F1C40F',
+    'purple' : '#8E44AD',
+    'dark-grey' : "#34495E",
+    'grey' : "#95A5A6"
   }
 };
