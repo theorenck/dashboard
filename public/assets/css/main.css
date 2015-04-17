@@ -126,6 +126,20 @@ pre
     border-color: #8e44ad;
     background-color: #8e44ad;
 }
+.widget.grey
+{
+    border-color: #ecf0f1;
+    background-color: #ecf0f1;
+}
+
+
+.widget.grey .title{
+    font-weight: 600;
+}
+
+.widget.grey .title button{
+    color: #2C3E50;
+}
 
 .alert.alert-default
 {
