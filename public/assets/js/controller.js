@@ -1208,7 +1208,7 @@
 
     $scope.getGraph = function(widget, data){
       var valores = $scope.prepareDataset(data.resultset.rows);
-      var title   = widget.customized ? widget.name : widget.indicator.name;
+      var title   = widget.name;
       var hasZoom = false;
       var chart;
 
@@ -1397,7 +1397,7 @@
       var dataset        = [];
       var percentual     = 0;
       var total          = 0;
-      var title          = widget.customized ? widget.name : widget.indicator.name;
+      var title          = widget.name;
       var serie          = 'Quantidade';
       var enabledTooltip = true;
       widget.hasData     = true;
@@ -1482,7 +1482,6 @@
             fill: '#fff'
         }).add();
       });
-
     };
 
     $scope.setActiveDataSourceServer = function(){
@@ -1597,6 +1596,8 @@
 
             Service.post(data, $scope.getHost(), function(data){
               var type = widget.widget_type.name;
+
+              widget.name = widget.customized ? widget.name : widget.indicator.name;
 
               switch(type){
                 case 'status':
