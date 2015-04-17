@@ -68,7 +68,6 @@
         AuthService.save(authentication, function(res){
           if (res.authentication && res.authentication.token) {
             var token   = res.authentication.token;
-            $scope.user = res.authentication.user;
 
             delete res.authentication.user.id;
 
@@ -592,7 +591,8 @@
     }
 
     function verifyAllParamsFilled(sql, params){
-      var paramsSql = sql.match(/:\w+/ig) || [];
+      var paramsSql = sql.match(/:([a-zA-Z_][a-zA-Z0-9]+)/ig) || [];
+      console.log(paramsSql);
       if(paramsSql.length !== params.length){
         $scope.isExecuting = false;
         $scope.alert = {
