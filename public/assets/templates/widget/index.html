@@ -43,7 +43,10 @@
       <tbody>
         <tr ng-repeat="widget in widgetList | filter:search | orderBy:'id'" ng-click="load(widget.id)">
           <td>{{ ::widget.id }}</td>
-          <td>{{ ::widget.name }}</td>
+          <td>
+            <span ng-show="widget.customized">{{ ::widget.name }}</span>
+            <span ng-show="!widget.customized">{{ ::widget.indicator.name }}</span>
+          </td>
           <td><span class="label label-{{ ::widget.color }}">___</span></td>
           <td>{{ ::widget.description }}</td>
           <td>{{ ::widget.position }}</td>
