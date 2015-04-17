@@ -484,6 +484,7 @@
   ConsoleController.$inject = ['$scope', '$location', '$anchorScroll', 'SourceService', 'StatementService', 'SchemaService', 'HistoryService', 'DataSourceService', 'zCodeMirror', '$modal', 'zErrors'];
   function ConsoleController($scope, $location, $anchorScroll, SourceService, StatementService, SchemaService, HistoryService, DataSourceService, zCodeMirror, $modal, zErrors){
 
+    $scope.tabs = [true,false,false,false];
     $scope.allData = [];
     $scope.isOptionsOpened       = true;
     $scope.showParams            = true;
@@ -631,7 +632,6 @@
 
     $scope.loadSchema = function(){
       Configuration.middleware_server = getActiveDataSourceServer();
-      // verifica se tem as tabelas
       var tables = localStorage.getItem('tables_' + $scope.DataSource.activeDataSourceService);
       if(Configuration.middleware_server){
         if (!tables){
@@ -702,7 +702,8 @@
             type : 'success',
             messages : [prepareMessage(data.resultset.records, 'afetado')]
           }
-          $scope.showResults = false;
+          $scope.tabs[1] = false;
+          $scope.tabs[0] = true;
         break;
 
         case 'CREATE':
@@ -711,13 +712,10 @@
             type : 'success',
             messages : ['Sucesso na operação']
           }
-          $scope.showResults = false;
+          $scope.tabs[1] = false;
+          $scope.tabs[0] = true;
         break;
       }
-    }
-
-    $scope.deactiveResultsTab = function(){
-      $scope.showResults=false;
     }
 
     $scope.executeQuery = function(currentPage, callback){
@@ -755,8 +753,10 @@
             $scope.saveHistory();
             $scope.isExecuting = false;
 
-            if(typeof callback !== 'function')
-              $scope.showResults = true;
+            if(typeof callback !== 'function'){
+              $scope.tabs[1] = true;
+              $scope.tabs[0] = false;
+            }
 
             if (data.resultset) {
               var rowsPerPage = criaPaginacao(data.resultset.columns.length);
@@ -811,7 +811,14 @@
     },
 
     $scope.loadHistoryItem = function(row){
-      $scope.statement = row.statement;
+      $scope.statement    = row.statement;
+      $scope.tabs[0] = true;
+
+      setTimeout(function(){
+        codeMirror.refresh();
+        codeMirror.focus();
+      }, 50);
+
     }
 
     $scope.renderHistory = function(){
