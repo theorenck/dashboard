@@ -34,3 +34,4 @@ build/
 .rvmrc
 
 /node_modules/
+/public/configuration.js
