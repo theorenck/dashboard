@@ -76,6 +76,7 @@
             localStorage.setItem('logged-in', true);
             localStorage.setItem('logged-in-admin', res.authentication.user.admin);
 
+            $location.path('dasboards');
           }
           else {
             localStorage.setItem('logged-in', false);
@@ -1219,13 +1220,24 @@
     },
 
     $scope.getGraph = function(widget, data){
-      var valores = $scope.prepareDataset(data.resultset.rows);
+
+      if(Array.isArray(data)){
+        var valores = [];
+        var legenda = [];
+
+        data.forEach(function(el, i){
+          valores.push($scope.prepareDataset(el.resultset.rows));
+          legenda.push(el.resultset.columns[1]);
+        });
+      }else{
+        var valores = $scope.prepareDataset(data.resultset.rows);
+        var legenda = data.resultset.columns[1];
+      }
+
+
       var title   = widget.name;
-      var legenda = data.resultset.columns[1];
       var hasZoom = false;
       var chart;
-
-
 
       try{
         $('[data-behaivor="widget"][data-id=' + widget.id + '] .content').highcharts().destroy();
@@ -1235,10 +1247,56 @@
       }
 
       function grafico(valores) {
+        var series = [];
+        var colors = [];
+        var plotBands;
 
-        window.dataset = valores.values;
+        if(Array.isArray(valores)){
+          plotBands = valores[0].plotBands;
+          valores.forEach(function(el, i){
+            series.push({
+                type : 'areaspline',
+                name : legenda[i],
+                data : el.values,
+                lineWidth: 2,
+                marker : {
+                  enabled : true,
+                  radius : 3
+                },
+                tooltip: {
+                  valueDecimals: 2
+                }
+            });
+          });
+        }else{
+          series.push({
+              type : 'areaspline',
+              name : legenda,
+              data : valores.values,
+              lineWidth: 2,
+              marker : {
+                enabled : true,
+                radius : 3
+              },
+              tooltip: {
+                valueDecimals: 2
+              }
+          });
+          plotBands = valores.plotBands;
+        }
+
+        if(widget.color.match(/\|/ig)){
+          var colorStr = widget.color.split('|');
+          colorStr.forEach(function(el, i){
+            colors.push(Configuration.colors[el])
+          });
+        }else{
+          colors.push(Configuration.colors[widget.color]);
+        }
+
+
         return chart = new Highcharts.StockChart({
-            colors : [ Configuration.colors[widget.color] ],
+            colors : colors,
             title : {
               text : "<h3>" + title + "</h3>",
               useHtml : true,
@@ -1375,7 +1433,7 @@
                 type: 'datetime',
                 minRange: 14 * 24 * 3600000,
                 minTickInterval: 24 * 3600 * 1000,
-                plotBands: valores.plotBands,
+                plotBands: plotBands,
                 labels : { maxStaggerLines : 1 },
                 dateTimeLabelFormats: {
                   week: '%d/%b',
@@ -1384,19 +1442,7 @@
                 }
             },
 
-            series : [{
-                type : 'areaspline',
-                name : legenda,
-                data : valores.values,
-                lineWidth: 2,
-                marker : {
-                  enabled : true,
-                  radius : 3
-                },
-                tooltip: {
-                  valueDecimals: 2
-                }
-            }],
+            series : series,
         });
       }
 

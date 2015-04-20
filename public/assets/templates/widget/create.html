@@ -46,7 +46,7 @@
           <ul class="color-list">
             <li ng-repeat="(color, hex) in colors" title="{{ ::color }} - {{::hex}}">
               <label>
-                <input type="radio" ng-model="widget.color" value="{{color}}">
+                <input type="checkbox" ng-model="widget.color" value="{{color}}" name="color">
                 <span class="label label-{{::color}}">___</span>
               </label>
             </li>
