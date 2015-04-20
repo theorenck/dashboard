@@ -43,7 +43,16 @@
 
 
           <label class="control-label">Cor</label>
-          <select class="form-control" ng-model="widget.color">
+          <ul>
+            <li ng-repeat="(color, hex) in Configuration.colors">
+              <span class="label label-{{::color}}">___</span>
+            </li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+          <!-- <select class="form-control" ng-model="widget.color">
             <option value="">Selecione a cor</option>
             <option value="orange">Laranja</option>
             <option value="green">Verde</option>
@@ -51,7 +60,7 @@
             <option value="purple">Roxo</option>
             <option value="red">Vermelho</option>
             <option value="grey">Cinza</option>
-          </select>
+          </select> -->
 
           <label class="control-label">Tipo</label>
           <select class="form-control" ng-model="widget.widget_type.id">

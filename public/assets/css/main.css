@@ -53,12 +53,12 @@ pre
 .widget .title
 {
     margin-top: 0;
+    color: #fff;
 }
 
-.widget .title span
+.widget .title
 {
-    opacity: .5;
-    color: #fff;
+    /*opacity: .5;*/
 }
 
 .widget .title span:hover
@@ -153,6 +153,7 @@ pre
 
 .widget.grey .title{
     font-weight: 600;
+    color: #2C3E50;
 }
 
 .widget.grey .title button{
