@@ -19,7 +19,8 @@
     </h4>
 
     <h2 class="info" ng-if="widget.indicator.unity.symbol=='R$'">
-      <span class="valor">{{ widget.indicator.unity.symbol }} {{ widget.result | limitTo:4 }}</span>
+      <span class="grandeza">{{ widget.indicator.unity.symbol }} </span>
+      <span class="valor">{{ widget.result | limitTo:4 }}</span>
       <span class="grandeza">{{ widget.grandeza }}</span>
     </h2>
 

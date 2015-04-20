@@ -37,7 +37,7 @@ pre
 .indicators-container .info
 {
     font-size: 36px;
-
+    color: #FFF;
     text-align: right;
 }
 
@@ -156,7 +156,8 @@ pre
     color: #2C3E50;
 }
 
-.widget.grey .title button{
+.widget.grey .title button,
+.widget.grey .info{
     color: #2C3E50;
 }
 
