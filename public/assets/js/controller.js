@@ -41,7 +41,6 @@
     var user = localStorage.getItem('user') || null;
     $scope.user = !!user ? JSON.parse(user) : {};
 
-    // Esconde o menu quando troca de página
     $rootScope.$on('$routeChangeSuccess', function (e, data) {
       $scope.showResponsiveMenu = true;
     });
@@ -1628,8 +1627,8 @@
 
     $scope.indicadores = {
       periodo : {
-        inicio    : (moment({ day : 01, month: 10, year : 2014 }).format("YYYY-MM-DD 00:00:00")),
-        fim       : (moment({ day : 30, month: 10, year : 2014 }).format("YYYY-MM-DD 00:00:00")),
+        inicio    : (moment().subtract(30, 'days').format("YYYY-MM-DD 00:00:00")),
+        fim       : (moment().format("YYYY-MM-DD 00:00:00")),
         duracao   : function(grandeza) {
           var grandeza  = grandeza || 'days';
           var fim       = moment($scope.indicadores.periodo.fim);
