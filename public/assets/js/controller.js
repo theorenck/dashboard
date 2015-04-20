@@ -38,8 +38,8 @@
     $scope.credentials = { username : '', password : ''};
     $scope.open = false;
     $scope.showResponsiveMenu = true;
-    var user = localStorage.getItem('user') || null;
-    $scope.user = !!user ? JSON.parse(user) : {};
+    var user    = localStorage.getItem('user') || null;
+    $rootScope.user = !!user ? JSON.parse(user) : {};
 
     $rootScope.$on('$routeChangeSuccess', function (e, data) {
       $scope.showResponsiveMenu = true;
@@ -70,12 +70,13 @@
 
             delete res.authentication.user.id;
 
+
+            $rootScope.user = res.authentication.user;
             localStorage.setItem('token', token);
             localStorage.setItem('user', JSON.stringify(res.authentication.user));
             localStorage.setItem('logged-in', true);
             localStorage.setItem('logged-in-admin', res.authentication.user.admin);
 
-            $location.path('/dashboards');
           }
           else {
             localStorage.setItem('logged-in', false);
@@ -592,7 +593,6 @@
 
     function verifyAllParamsFilled(sql, params){
       var paramsSql = sql.match(/:([a-zA-Z_][a-zA-Z0-9]+)/ig) || [];
-      console.log(paramsSql);
       if(paramsSql.length !== params.length){
         $scope.isExecuting = false;
         $scope.alert = {
