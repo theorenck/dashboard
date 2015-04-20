@@ -1227,11 +1227,11 @@
 
         data.forEach(function(el, i){
           valores.push($scope.prepareDataset(el.resultset.rows));
-          legenda.push(el.resultset.columns[1]);
+          legenda.push(_.capitalize(el.resultset.columns[1]));
         });
       }else{
         var valores = $scope.prepareDataset(data.resultset.rows);
-        var legenda = data.resultset.columns[1];
+        var legenda = _.capitalize(data.resultset.columns[1]);
       }
 
 
