@@ -70,7 +70,6 @@
 
             delete res.authentication.user.id;
 
-
             $rootScope.user = res.authentication.user;
             localStorage.setItem('token', token);
             localStorage.setItem('user', JSON.stringify(res.authentication.user));
