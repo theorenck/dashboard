@@ -317,6 +317,7 @@
   function WidgetCreateController($scope, $routeParams, $location, WidgetService, IndicatorService, DashboardService, WidgetTypeService){
     $scope.widget     = {};
     $scope.widgetList = [];
+    $scope.colors     = Configuration.colors;
 
     IndicatorService.get(function(data){
       $scope.availableIndicators = data.indicators;
