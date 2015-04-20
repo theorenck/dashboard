@@ -30,7 +30,8 @@
     </div>
 
     <div class="info" ng-if="widget.indicator.unity_id===null">
-      <span class="valor">{{ widget.result | limitTo:4 }} {{ widget.grandeza }}</span>
+      <span class="valor">{{ widget.result | limitTo:4 }}</span>
+      <span class="grandeza">{{ widget.grandeza }}</span>
     </div>
   </div>
 </div>
