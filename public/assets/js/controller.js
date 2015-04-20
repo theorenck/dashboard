@@ -789,10 +789,16 @@
         $scope.statement.code      = $scope.exportModel.consulta.codigo;
         $scope.statement.name      = $scope.exportModel.consulta.descricao;
         $scope.statement.statement = $scope.statement.sql;
+        $scope.copyStatement = {};
 
-        var data = { source : $scope.statement };
+        angular.copy($scope.statement, $scope.copyStatement);
+        var data = { source : $scope.copyStatement };
+        data.source.parameters.forEach(function(el, id){
+          el.datatype = el.type;
+          delete el.type;
+        });
+
         SourceService.save(data, function(data, err){
-          $scope.resetStatement();
           $scope.exportModel.consulta = '';
           $scope.exportModel.codigo   = '';
           $scope.alert = {
@@ -1215,8 +1221,11 @@
     $scope.getGraph = function(widget, data){
       var valores = $scope.prepareDataset(data.resultset.rows);
       var title   = widget.name;
+      var legenda = data.resultset.columns[1];
       var hasZoom = false;
       var chart;
+
+
 
       try{
         $('[data-behaivor="widget"][data-id=' + widget.id + '] .content').highcharts().destroy();
@@ -1228,7 +1237,6 @@
       function grafico(valores) {
 
         window.dataset = valores.values;
-
         return chart = new Highcharts.StockChart({
             colors : [ Configuration.colors[widget.color] ],
             title : {
@@ -1378,7 +1386,7 @@
 
             series : [{
                 type : 'areaspline',
-                name : 'Contratos',
+                name : legenda,
                 data : valores.values,
                 lineWidth: 2,
                 marker : {

@@ -44,7 +44,7 @@
 
           <label class="control-label">Cor</label>
           <ul class="color-list">
-            <li ng-repeat="(color, hex) in colors">
+            <li ng-repeat="(color, hex) in colors" title="{{ ::color }} - {{::hex}}">
               <label>
                 <input type="radio" ng-model="widget.color" value="{{color}}">
                 <span class="label label-{{::color}}">___</span>
