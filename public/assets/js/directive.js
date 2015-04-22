@@ -361,11 +361,11 @@
             ranges: {
               'Hoje': [moment(), moment()],
               'Ontem': [moment().subtract(1,'days'), moment().subtract(1,'days')],
-              'Últimos 7 Dias': [moment().subtract(6,'days'), moment()],
-              'Últimos 30 Dias': [moment().subtract(29,'days'), moment()],
-              'Últimos 90 Dias': [moment().subtract(89,'days'), moment()],
-              'Este Mês': [moment().startOf('month'), moment().endOf('month')],
-              'Último Mês': [moment().subtract(1,'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+              'Últimos 7 dias': [moment().subtract(6,'days'), moment()],
+              'Últimos 30 dias': [moment().subtract(29,'days'), moment()],
+              'Últimos 90 dias': [moment().subtract(89,'days'), moment()],
+              'Este mês': [moment().startOf('month'), moment().endOf('month')],
+              'Último mês': [moment().subtract(1,'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
             },
             format : format,
             showDropdowns : true,
