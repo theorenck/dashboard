@@ -308,7 +308,6 @@
     $scope.renderList = function(){
       WidgetService.get(function(data){
         data.widgets.map(function(elem, index) {
-          console.log(elem);
           elem.color = elem.color === null ? [] : elem.color.split('|');
           return elem;
         });
@@ -1112,7 +1111,6 @@
     }
 
     function prepareAggregationFromServer(aggregation){
-      // console.log(aggregation);
       aggregation.executions = aggregation.executions.map(function(elem, index) {
         if(!!elem.function){
           elem.function_id = elem.function.id;
@@ -1313,7 +1311,8 @@
               useHtml : true,
               style : {
                 fontFamily : "Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif",
-                fontSize : '19px'
+                fontSize : '19px',
+                fontWeight: 'bold'
               }
             },
             scrollbar: {
@@ -1652,6 +1651,9 @@
         $scope.dashboard.widgets.forEach(function(widget, index){
           widget.loading = true;
 
+          if(widget.widget_type.name !== 'line')
+            widget.color = widget.color.split('|')[0] || '';
+
           SourceService.get({ id : widget.indicator.source_id }, function(data){
             $scope.alert   = {};
 
@@ -1672,14 +1674,12 @@
 
               switch(type){
                 case 'status':
-                  widget.color = widget.color.split('|')[0]  || '';
                   $scope.getStatus(data.resultset.rows[0][0] || 0, widget);
                 break;
                 case 'line':
                   $scope.getGraph(widget, data);
                 break;
                 case 'pie':
-                  widget.color = widget.color.split('|')[0] || '';
                   $scope.getPie(widget, data);
                 break;
               };

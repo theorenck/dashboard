@@ -151,6 +151,12 @@ pre
     background-color: #ecf0f1;
 }
 
+.widget.grey .loader.loader-inverse,
+.widget.grey .loader.loader-inverse .spinner-container .path
+{
+    stroke: #2C3E50;
+}
+
 .widget.emerald
 {
     border-color: #27AE60;
