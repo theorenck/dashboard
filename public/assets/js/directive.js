@@ -93,6 +93,42 @@
     };
   })
 
+  .directive('colorlist', function() {
+    return {
+      restrict: 'E',
+      scope: {
+        "selectedColors" : '=',
+        "colors" : '='
+      },
+      templateUrl: '/dist/templates/widget/tplColorlist.html',
+
+      link: function(scope, element, attr, ngController) {
+        scope.arrColors = {};
+
+        scope.$watchCollection('selectedColors', function(newValue, oldValue){
+          if(newValue && Array.isArray(newValue)){
+            newValue.forEach(function(el, i){
+              scope.arrColors[el] = i + 1;
+            });
+          }
+        });
+
+        scope.addRemoveColor = function(color){
+          console.log(scope.selectedColors);
+          var index = scope.selectedColors.indexOf(color);
+          if(index != -1){
+            scope.selectedColors.splice(index,1);
+            scope.arrColors[color] = null;
+          }else{
+            scope.selectedColors.push(color);
+          }
+        }
+
+
+      }
+    };
+  })
+
   .directive('scrollPosition', function($window){
     return {
       scope: {

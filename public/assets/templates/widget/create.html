@@ -43,14 +43,7 @@
 
 
           <label class="control-label">Cor</label>
-          <ul class="color-list">
-            <li ng-repeat="(color, hex) in colors" title="{{ ::color }} - {{::hex}}">
-              <label>
-                <input type="radio" ng-model="widget.color" value="{{color}}">
-                <span class="label label-{{::color}}">___</span>
-              </label>
-            </li>
-          </ul>
+          <colorlist colors="colors" selected-colors="selectedColors"></colorlist>
 
           <label class="control-label">Tipo</label>
           <select class="form-control" ng-model="widget.widget_type.id">

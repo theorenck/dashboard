@@ -69,7 +69,7 @@
                 <div class="form-group">
                   <label class="control-label">Operações</label>
 
-                  <div ng-repeat="execution in aggregation.executions track by $index"  ng-show="!execution._destroy">
+                  <div ng-repeat="execution in aggregation.executions track by $index | orderBy:'execution.order'"  ng-show="!execution._destroy">
                     <z-executions></z-executions>
                   </div>
 

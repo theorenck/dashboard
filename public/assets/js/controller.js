@@ -307,6 +307,11 @@
 
     $scope.renderList = function(){
       WidgetService.get(function(data){
+        data.widgets.map(function(elem, index) {
+          console.log(elem);
+          elem.color = elem.color === null ? [] : elem.color.split('|');
+          return elem;
+        });
         $scope.widgetList = data.widgets;
       });
     }
@@ -316,9 +321,10 @@
 
   WidgetCreateController.$inject = ['$scope', '$routeParams', '$location', 'WidgetService', 'IndicatorService', 'DashboardService', 'WidgetTypeService'];
   function WidgetCreateController($scope, $routeParams, $location, WidgetService, IndicatorService, DashboardService, WidgetTypeService){
-    $scope.widget     = {};
-    $scope.widgetList = [];
-    $scope.colors     = Configuration.colors;
+    $scope.widget      = {};
+    $scope.widgetList  = [];
+    $scope.colors      = Configuration.colors;
+    $scope.selectedColors = {};
 
     IndicatorService.get(function(data){
       $scope.availableIndicators = data.indicators;
@@ -334,14 +340,16 @@
 
     if ($routeParams.id) {
       WidgetService.get({ id : $routeParams.id }, function(data){
-        $scope.widget = data.widget;
+        $scope.selectedColors = data.widget.color.split('|');
+        $scope.widget         = data.widget;
       });
     };
 
     $scope.salvar = function(){
-      var data =  { "widget" : $scope.widget };
-      data.widget.indicator_id   = $scope.widget.indicator.id;
+      var data                   =  { "widget" : $scope.widget };
+      data.widget.color          = $scope.selectedColors.join('|');
       data.widget.widget_type_id = $scope.widget.widget_type.id;
+      data.widget.indicator_id   = $scope.widget.indicator.id;
 
       if ($scope.widget.id) {
         WidgetService.update(data, function(){
@@ -901,6 +909,10 @@
       $location.path("origem/" + type + "/" + id);
     }
 
+    // $scope.$watch('search', function(newValue, oldValue){
+    //   $location.search('q', newValue);
+    // });
+
     $scope.deleteQuery = function(id, $index, $event){
       $event.preventDefault();
       var data = { "id" : id };
@@ -1065,7 +1077,6 @@
         //     "aggregation_id": 60
         //   });
         // });
-
 
         SourceService.update(data, function(data){
           $location.path('/origem/');
@@ -1661,12 +1672,14 @@
 
               switch(type){
                 case 'status':
+                  widget.color = widget.color.split('|')[0]  || '';
                   $scope.getStatus(data.resultset.rows[0][0] || 0, widget);
                 break;
                 case 'line':
                   $scope.getGraph(widget, data);
                 break;
                 case 'pie':
+                  widget.color = widget.color.split('|')[0] || '';
                   $scope.getPie(widget, data);
                 break;
               };
