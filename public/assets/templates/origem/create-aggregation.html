@@ -49,7 +49,7 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr ng-repeat="(key, source) in aggregation.sources track by $index">
+                      <tr ng-repeat="(key, source) in aggregation.sources track by $index" ng-show="!source._destroy">
                         <td>
                           <span class="form-control">{{$index}}</span>
                         </td>

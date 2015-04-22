@@ -1048,33 +1048,33 @@
     }
 
     $scope.deleteSource = function(key){
-      $scope.aggregation.sources.splice(key,1);
+      $scope.aggregation.sources[key]._destroy = true;
     }
-
-    // function prepareParams(parameters){
-    //   return parameters.map(function(p){
-    //     return {
-    //       "type": p.datatpye,
-    //       "name": p.name,
-    //       "value": p.value || "2014-11-30 00:00:00",
-    //       "evaluated": false
-    //     }
-    //   });
-    // }
 
     $scope.save = function(){
       var data = { source : $scope.aggregation };
-      data.source.aggregated_sources = $scope.aggregation.sources.map(function(el){
-          return { source_id : el.id };
-      });
-      delete data.source.sources;
-
 
       if ($scope.aggregation.id) {
+        data.source.aggregated_sources = $scope.aggregation.aggregated_sources;
+
+        // $scope.aggregation.sources.forEach(function(el, i){
+        //   _.find()
+        //   data.source.aggregated_sources.push({
+        //     "id": 41,
+        //     "source_id": 10,
+        //     "aggregation_id": 60
+        //   });
+        // });
+
+
         SourceService.update(data, function(data){
           $location.path('/origem/');
         });
       }else{
+        data.source.aggregated_sources = $scope.aggregation.sources.map(function(el){
+          return { source_id : el.id };
+        });
+        delete data.source.sources;
         SourceService.save(data, function(data){
           $location.path('/origem/');
         });
