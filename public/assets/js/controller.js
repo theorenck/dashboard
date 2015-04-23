@@ -637,11 +637,11 @@
       $scope.loadSchema();
     };
 
-    $scope.loadSchema = function(){
+    $scope.loadSchema = function(force){
       Configuration.middleware_server = getActiveDataSourceServer();
       var tables = localStorage.getItem('tables_' + $scope.DataSource.activeDataSourceService);
       if(Configuration.middleware_server){
-        if (!tables){
+        if (!tables || force){
           $scope.isLoadingSchema = true;
           SchemaService.get({}, Configuration.middleware_server)
           .success(function(data){
@@ -821,6 +821,8 @@
               'messages' : ["Origem salva com sucesso!"],
             };
           });
+          $location.search('id', null).path('/origem/query/' + data.source.id);
+
         }else{
           SourceService.save(data, function(data, err){
             $scope.exportModel.consulta = '';
