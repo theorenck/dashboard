@@ -946,6 +946,11 @@
       zCodeMirror.setHints(_editor, []);
     };
 
+    $scope.testarOrigem = function(){
+      sessionStorage.setItem('query', JSON.stringify({ teste : "Olá :D" }));
+      alert('Olá, vamo lá testar?')
+    };
+
     $scope.save = function(){
       $scope.validateParams();
       $scope.statement.type = "Query";
@@ -1500,8 +1505,6 @@
         // dataset.push([ "", 75 ]);
         enabledTooltip = false;
       }
-
-
 
       $('[data-behaivor=widget][data-id=' + widget.id + '] .content').highcharts({
         colors : colors,
