@@ -114,7 +114,9 @@
         });
 
         scope.addRemoveColor = function(color){
-          console.log(scope.selectedColors);
+          if(!Array.isArray(scope.selectedColors)){
+            scope.selectedColors = [];
+          }
           var index = scope.selectedColors.indexOf(color);
           if(index != -1){
             scope.selectedColors.splice(index,1);
