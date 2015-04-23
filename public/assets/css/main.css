@@ -1411,3 +1411,21 @@ td .z-checkbox
 .color-list li:hover span{ cursor: pointer; }
 .color-list li input{ display: none; }
 .color-list li input:checked + span{ outline: 2px solid #2C3E50; }
+
+.dash-list .widget h6{
+    line-height: 18px;
+    color: #FFF;
+}
+
+.dash-list .widget .title{
+    font-weight: 600;
+}
+
+.title-icon{
+    color: #2980B9;
+    font-size: 86%;
+    display: inline-block;
+    margin-top: 3px;
+    float: left;
+    margin-right: 5px;
+}
