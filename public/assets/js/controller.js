@@ -663,13 +663,13 @@
       var i;
       for(i = 0; i < $scope.statement.parameters.length; i++){
         var param = $scope.statement.parameters[i];
-
+        param.value = param.value === null ? '' : param.value;
         if (!!param.id) {
           delete $scope.statement.parameters[i].id;
           delete $scope.statement.parameters[i].datatype;
         }
 
-        if( param.name.trim() === '' || param.value.trim() === ''){
+        if( param.name.trim() === '' ||  param.value.trim() === ''){
           $scope.statement.parameters.splice(i,1);
           i--;
         }
@@ -804,6 +804,7 @@
         $scope.statement.statement = $scope.statement.sql;
         $scope.copyStatement = {};
 
+
         angular.copy($scope.statement, $scope.copyStatement);
         var data = { source : $scope.copyStatement };
         data.source.parameters.forEach(function(el, id){
@@ -811,14 +812,25 @@
           delete el.type;
         });
 
-        SourceService.save(data, function(data, err){
-          $scope.exportModel.consulta = '';
-          $scope.exportModel.codigo   = '';
-          $scope.alert = {
-            'type' : 'success',
-            'messages' : ["Origem salva com sucesso!"],
-          };
-        });
+        if (!!data.source.id) {
+          SourceService.update(data, function(data, err){
+            $scope.exportModel.consulta = '';
+            $scope.exportModel.codigo   = '';
+            $scope.alert = {
+              'type' : 'success',
+              'messages' : ["Origem salva com sucesso!"],
+            };
+          });
+        }else{
+          SourceService.save(data, function(data, err){
+            $scope.exportModel.consulta = '';
+            $scope.exportModel.codigo   = '';
+            $scope.alert = {
+              'type' : 'success',
+              'messages' : ["Origem salva com sucesso!"],
+            };
+          });
+        }
       }
     }
 
@@ -884,9 +896,17 @@
     var search = $location.search();
     if(!!search.id && sessionStorage.getItem('query')){
       var sessionStatement = JSON.parse(sessionStorage.getItem('query'));
+
+      $scope.exportModel.consulta.codigo = sessionStatement.statement.code;
+      $scope.exportModel.consulta.descricao = sessionStatement.statement.name;
+      delete sessionStatement.statement.code;
+      delete sessionStatement.statement.name;
+
       sessionStatement.statement.parameters.forEach(function(el, i){
         sessionStatement.statement.parameters[i].type = el.datatype;
       });
+
+
       $scope.statement = sessionStatement.statement;
     }else{
       $scope.resetStatement();
@@ -965,7 +985,9 @@
         "statement" : {
           "id"  : $scope.statement.id,
           "sql" : $scope.statement.statement,
-          "parameters" : $scope.statement.parameters
+          "parameters" : $scope.statement.parameters,
+          "code" : $scope.statement.code,
+          "name" : $scope.statement.name,
         }
       };
       sessionStorage.setItem('query', JSON.stringify(data));
