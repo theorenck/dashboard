@@ -663,6 +663,12 @@
       var i;
       for(i = 0; i < $scope.statement.parameters.length; i++){
         var param = $scope.statement.parameters[i];
+
+        if (!!param.id) {
+          delete $scope.statement.parameters[i].id;
+          delete $scope.statement.parameters[i].datatype;
+        }
+
         if( param.name.trim() === '' || param.value.trim() === ''){
           $scope.statement.parameters.splice(i,1);
           i--;
@@ -788,7 +794,6 @@
             };
           });
       }
-
     };
 
     $scope.salvarOrigem = function(){
@@ -876,7 +881,16 @@
       localStorage.setItem('draft', newValue);
     });
 
-    $scope.resetStatement();
+    var search = $location.search();
+    if(!!search.id && sessionStorage.getItem('query')){
+      var sessionStatement = JSON.parse(sessionStorage.getItem('query'));
+      sessionStatement.statement.parameters.forEach(function(el, i){
+        sessionStatement.statement.parameters[i].type = el.datatype;
+      });
+      $scope.statement = sessionStatement.statement;
+    }else{
+      $scope.resetStatement();
+    }
     $scope.renderHistory();
   }
 
@@ -947,8 +961,15 @@
     };
 
     $scope.testarOrigem = function(){
-      sessionStorage.setItem('query', JSON.stringify({ teste : "Olá :D" }));
-      alert('Olá, vamo lá testar?')
+      var data = {
+        "statement" : {
+          "id"  : $scope.statement.id,
+          "sql" : $scope.statement.statement,
+          "parameters" : $scope.statement.parameters
+        }
+      };
+      sessionStorage.setItem('query', JSON.stringify(data));
+      $location.path('/console').search('id', $scope.statement.id);
     };
 
     $scope.save = function(){
@@ -1533,8 +1554,13 @@
           }
         },
         title: {
-          text: title,
+          text : "<h3>" + title + "</h3>",
           useHtml : true,
+          style : {
+            fontFamily : "Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif",
+            fontSize : '19px',
+            fontWeight: '600'
+          }
         },
         tooltip: {
           enabled : enabledTooltip,
@@ -1654,8 +1680,8 @@
         $scope.dashboard.widgets.forEach(function(widget, index){
           widget.loading = true;
 
-          if(widget.widget_type.name !== 'line')
-            widget.color = widget.color.split('|')[0] || '';
+          if(widget.widget_type.name !== 'line' && widget.color !== null)
+            widget.color = widget.color.split('|')[0];
 
           SourceService.get({ id : widget.indicator.source_id }, function(data){
             $scope.alert   = {};
