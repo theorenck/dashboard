@@ -1353,6 +1353,7 @@
           colors.push(Configuration.colors[widget.color]);
         }
 
+        console.log(widget);
 
         return chart = new Highcharts.StockChart({
             colors : colors,
@@ -1398,6 +1399,22 @@
                   });
                 }
               }
+            },
+
+            tooltip: {
+              valuePrefix: (function(){
+                if(widget.indicator.unity.symbol === "R$")
+                  return widget.indicator.unity.symbol + " ";
+                else
+                  return false;
+              })(),
+              valueSuffix: (function(){
+                if(widget.indicator.unity.symbol !== "R$")
+                  return " " + widget.indicator.unity.symbol;
+                else
+                  return false;
+              })(),
+              shared: true
             },
 
             navigation: {
