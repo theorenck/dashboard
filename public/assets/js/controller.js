@@ -1403,13 +1403,13 @@
 
             tooltip: {
               valuePrefix: (function(){
-                if(widget.indicator.unity.symbol === "R$")
+                if(!!widget.indicator.unity && widget.indicator.unity.symbol === "R$")
                   return widget.indicator.unity.symbol + " ";
                 else
                   return false;
               })(),
               valueSuffix: (function(){
-                if(widget.indicator.unity.symbol !== "R$")
+                if(!!widget.indicator.unity && widget.indicator.unity.symbol !== "R$")
                   return " " + widget.indicator.unity.symbol;
                 else
                   return false;
