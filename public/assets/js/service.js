@@ -125,7 +125,7 @@
       function(zHttp){
         var x = Object.create(zHttp);
 
-        x.url = '/api/schema/extended';
+        x.url = '/api/schema?extended=true';
         return x;
       }
     ]
