@@ -1764,8 +1764,8 @@
 
     $scope.indicadores = {
       periodo : {
-        inicio    : (moment().subtract(30, 'days').format("YYYY-MM-DD 00:00:00")),
-        fim       : (moment().format("YYYY-MM-DD 00:00:00")),
+        inicio    : (moment().startOf('month').format("YYYY-MM-DD 00:00:00")),
+        fim       : (moment().endOf('month').format("YYYY-MM-DD 00:00:00")),
         duracao   : function(grandeza) {
           var grandeza  = grandeza || 'days';
           var fim       = moment($scope.indicadores.periodo.fim);
