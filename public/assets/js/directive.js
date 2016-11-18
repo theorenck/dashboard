@@ -373,8 +373,8 @@
             showDropdowns : true,
             minDate : moment({year : 2000, month: 0, day: 1}),
             maxDate : moment().add(1, 'month'),
-            startDate: moment().subtract(29,'days'),
-            endDate: moment(),
+            startDate: moment().startOf('month'), 
+            endDate: moment().endOf('month'),
             locale: {
               applyLabel: 'Aplicar',
               cancelLabel: 'Limpar',
