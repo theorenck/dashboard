@@ -20,6 +20,10 @@ body{
     text-align: center;
 }
 
+.clear {
+    clear: both;
+}
+
 
 .caret.caret-reversed
 {
@@ -277,10 +281,10 @@ td .btn-remove
     opacity: 0.8;
 }
 
-.table-striped > tbody > tr:nth-child(even)
+/*.table-striped > tbody > tr:nth-child(even)
 {
     background: #fff;
-}
+}*/
 
 .table-editable td button
 {
@@ -1403,6 +1407,10 @@ td .z-checkbox
     color: #FFF;
     font-size: 14px;
     line-height: 25px;
+}
+
+.item-list {
+    cursor: pointer;
 }
 
 .label-list{ margin: 2px; height: 25px; width: 25px; padding: 0px; display: inline-block; }

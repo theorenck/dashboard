@@ -9,17 +9,13 @@
   </div>
 </div>
 
-
 <div class="row dash-list">
-
-  <div class="col-md-3" ng-repeat="dash in dashboards">
-
+  <div class="col-md-3" ng-repeat="dash in dashboards" ng-class="{'clear': $index % 4 === 0}">
     <div class="widget asphalt hover" ng-click="loadDash(dash.id)">
       <h4 class="title">
         {{ ::dash.name }}
       </h4>
       <h6>{{ ::dash.description }}</h6>
     </div>
-
   </div>
 </div>
