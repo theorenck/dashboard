@@ -1230,7 +1230,7 @@
      * Prapara o dataset para o gráfico de linha.
      * Percorre desde a data inicial até a final criando valores em branco para preencher os dias sem registros
      * Prepara os plots de fins de semana e as labels do gráfico
-     * 
+     *
      * @param array rows    Result do webservice
      * @return Object       Valores formatados
      */
