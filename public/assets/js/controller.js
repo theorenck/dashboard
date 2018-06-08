@@ -1179,8 +1179,8 @@
     }
   }
 
-  DashboardDetailController.$inject = ['$scope', '$routeParams', '$interval', 'DashboardService', 'SourceService', 'QueryService', 'AggregationService', 'zErrors'];
-  function DashboardDetailController($scope, $routeParams, $interval,  DashboardService, SourceService, QueryService, AggregationService, zErrors){
+  DashboardDetailController.$inject = ['$scope', '$routeParams', '$interval', '$location', 'DashboardService', 'SourceService', 'QueryService', 'AggregationService', 'zErrors'];
+  function DashboardDetailController($scope, $routeParams, $interval, $location, DashboardService, SourceService, QueryService, AggregationService, zErrors){
     $scope.dashboard        = {};
     $scope.sourceList       = [];
     $scope.dataSourceServer = {};
@@ -1205,6 +1205,10 @@
         }
         $scope.isLoadingWidgets = false;
       });
+    }
+
+    $scope.loadWidget = function(id){
+      $location.path('/widget/update/' + id);
     }
 
     $scope.getStatus = function(result, widget){

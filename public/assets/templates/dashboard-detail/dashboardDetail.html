@@ -58,8 +58,7 @@
 <!-- Fim Daterangepicker -->
 <div class="row">
   <div class="area indicators-container" data-behaivor="widgets-container">
-    <div ng-repeat="widget in dashboard.widgets" class="col-md-{{ widget.size }} col-xs-12" ng-click="console.log('teste')">
-      <!-- ng-click="load(widget.id)" -->
+    <div ng-repeat="widget in dashboard.widgets" class="col-md-{{ widget.size }} col-xs-12">
       <z-widget-status ng-if="widget.widget_type.name=='status'"></z-widget-status>
       <z-widget-line   ng-if="widget.widget_type.name=='line'"></z-widget-line>
       <z-widget-pie    ng-if="widget.widget_type.name=='pie'"></z-widget-pie>
