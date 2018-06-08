@@ -1208,7 +1208,9 @@
     }
 
     $scope.loadWidget = function(id){
-      $location.path('/widget/update/' + id);
+      if ($scope.isAdmin()) {
+        $location.path('/widget/update/' + id);
+      }
     }
 
     $scope.getStatus = function(result, widget){
