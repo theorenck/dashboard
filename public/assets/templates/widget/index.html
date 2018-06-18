@@ -41,7 +41,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="widget in widgetList | filter:search | orderBy:'id'" ng-click="load(widget.id)">
+        <tr class="item-list" ng-repeat="widget in widgetList | filter:search | orderBy:'id'" ng-click="load(widget.id)">
           <td class="text-right">{{ ::widget.id }}</td>
           <td>
             <span ng-show="widget.customized">{{ ::widget.name }}</span>

@@ -1,4 +1,4 @@
-<div class="widget {{ widget.color }}" tooltip="{{ widget.full_result }}" tooltip-placement="bottom">
+<div class="widget {{ widget.color }}" tooltip="{{ widget.full_result }}" tooltip-placement="bottom" ng-class="{'item-list':isAdmin()}" ng-click="loadWidget(widget.id)">
 
   <z-loader inverse="true" ng-show="widget.loading"></z-loader>
 
